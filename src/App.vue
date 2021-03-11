@@ -36,7 +36,9 @@ body {
   width: 100%;
   margin: 0px;
   padding: 0px;
-  font-family: Nunito, sans-serif;
+  /* font-family: Nunito, sans-serif; */
+  font-family: SFMono-Regular, Consolas, Liberation Mono, Menlo, monospace;
+  font-size: 12px;
 
   font-weight: 400;
   line-height: 1.5;
