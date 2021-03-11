@@ -36,7 +36,10 @@
           property="MaterialName"
           label="产品名称"
         ></el-table-column>
-
+        <el-table-column
+          property="MaterialSpec"
+          label="规格型号"
+        ></el-table-column>
         <el-table-column
           property="MaterialPrice"
           label="产品价格"
@@ -89,6 +92,24 @@
                 <el-form-item label="需出库数">
                   <el-input v-model="form.DeliverGoods"></el-input>
                 </el-form-item>
+                <el-form-item label="收货人">
+                  <el-input v-model="form.Receiver"></el-input>
+                </el-form-item>
+                <el-form-item label="收货电话">
+                  <el-input v-model="form.ReceivingPhone"></el-input>
+                </el-form-item>
+                <el-form-item label="收货地址">
+                  <el-input v-model="form.ReceivingAddress"></el-input>
+                </el-form-item>
+                <el-form-item label="出库日期">
+                  <el-input v-model="form.DeliveryDate"></el-input>
+                </el-form-item>
+                <el-form-item label="合同模板">
+                  <el-select v-model="form.HTModel">
+                    <el-option value="送货单"></el-option>
+                    <el-option value="发货清单"></el-option>
+                  </el-select>
+                </el-form-item>
               </el-form>
               <el-button
                 style="float: right"
@@ -127,6 +148,12 @@ export default {
       tableData1: [],
 
       form: {
+        Receiver: "", //收货人
+        ReceivingPhone: "", //收货人电话
+        ReceivingAddress: "", //收货地址
+        DeliveryDate: "", //出库日期
+        HTModel: "", //合同模板
+        //////
         OrderNumber: "", //订单编号
         MaterialNumber: "", //产品编号
         MaterialName: "", //产品名称

@@ -36,6 +36,7 @@
                 <template slot="title">主 页</template>
                 <el-menu-item index="status">控制中心</el-menu-item>
                 <el-menu-item index="message">订单状态</el-menu-item>
+                <el-menu-item index="Approval">审 批</el-menu-item>
 
                 <el-submenu index="12-1">
                   <template slot="title">通 用</template>
@@ -49,9 +50,13 @@
               <el-submenu index="51">
                 <template slot="title">销 售</template>
                 <el-menu-item index="salesOrder">销售订单</el-menu-item>
+                <!-- <el-menu-item index="salesOrders">成品备库订单</el-menu-item> -->
+
                 <el-menu-item index="salesInvoice">销售发货单</el-menu-item>
                 <el-menu-item index="customerManager">客户管理</el-menu-item>
                 <el-menu-item index="customerContacts">客户联系人</el-menu-item>
+                <el-menu-item index="customerMaterial">客户物料单</el-menu-item>
+
                 <el-menu-item index="XSCollectionAndPaymentPlan"
                   >收款计划单</el-menu-item
                 >
@@ -81,10 +86,10 @@
                 <el-menu-item index="supplierContacts"
                   >供应商联系人</el-menu-item
                 >
-                <!-- <el-menu-item index="supplierMaterial"
+                <el-menu-item index="supplierMaterial"
                   >供应商物料单</el-menu-item
                 >
-                <el-menu-item index="supplierSeq">物料供应商</el-menu-item> -->
+                <!-- <el-menu-item index="supplierSeq">物料供应商</el-menu-item> -->
                 <el-menu-item index="CGCollectionAndPaymentPlan"
                   >付款计划单</el-menu-item
                 >
@@ -134,6 +139,7 @@
                 <el-menu-item index="ManufacturingExecution"
                   >制造执行单</el-menu-item
                 >
+                <el-menu-item index="ProductsInProcess">在制产品</el-menu-item>
               </el-submenu>
               <el-submenu index="31">
                 <template slot="title">技 术</template>
@@ -150,6 +156,20 @@
                 <el-menu-item index="diagram">材料明细关系图</el-menu-item>
               </el-submenu>
 
+              <el-submenu index="191">
+                <template slot="title">售 后</template>
+                <el-menu-item index="SHWorkOrder">售后工单</el-menu-item>
+
+                <el-menu-item index="SHFaultCategory"
+                  >售后故障类别表</el-menu-item
+                >
+                <el-menu-item index="SHProductClass"
+                  >售后产品类别表</el-menu-item
+                >
+                <el-menu-item index="SHTreatmentMethod"
+                  >售后处理方式维护表</el-menu-item
+                >
+              </el-submenu>
               <el-submenu index="91">
                 <template slot="title">设 置</template>
                 <el-menu-item index="messContent">系统通知</el-menu-item>
@@ -163,14 +183,18 @@
               </el-submenu>
 
               <!-- 撑起底部 -->
-              <el-menu-item index="-999" class="endstart"></el-menu-item>
+              <el-menu-item
+                index="-999"
+                class="endstart"
+                v-if="iscenters"
+              ></el-menu-item>
             </el-menu>
           </transition>
         </div>
 
         <div class="lang">
           <el-dropdown>
-            <el-button icon="el-icon-more" circle class="exit"></el-button>
+            <el-button circle class="exit">{{ loginNames }}</el-button>
             <el-dropdown-menu slot="dropdown">
               <el-dropdown-item @click.native="printing">查询</el-dropdown-item>
               <el-dropdown-item @click.native="user">登陆</el-dropdown-item>
@@ -206,6 +230,7 @@ export default {
       isMessShow: true,
       isMessShowBK: true,
       tempd: "",
+      loginNames: "未登陆",
     };
   },
 
@@ -218,8 +243,8 @@ export default {
     },
     exit() {
       window.sessionStorage.removeItem("loginName");
-
-      this.usernameq = "未登陆";
+      this.$router.push({ path: "/login" });
+      // this.usernameq = "未登陆";
     },
     handleSelect(key, keyPath) {
       console.log(key, keyPath);
@@ -280,6 +305,8 @@ export default {
     },
   },
   created() {
+    this.loginNames = sessionStorage.getItem("loginNames") || "未登陆";
+    //
     // this.$https({
     //   //这里是你自己的请求方式、url和data参数
     //   method: "get",
@@ -385,7 +412,8 @@ export default {
   background-color: transparent;
   border: none;
   color: #f5f8fa;
-  font-size: 18px;
+  font-size: 12px;
+  color: rgb(241, 241, 131);
   // margin-top: 5px;
   height: 60px;
 }

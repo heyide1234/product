@@ -80,7 +80,7 @@
           label="规格型号"
         ></el-table-column>
         <el-table-column property="Number" label="数量"></el-table-column>
-
+        <el-table-column property="Purpose" label="用途"></el-table-column>
         <el-table-column label="关于" min-width="80">
           <template slot-scope="scope">
             <el-popover trigger="hover" placement="top">
@@ -279,6 +279,7 @@ export default {
             id: row._id,
             form: {
               status: "2",
+              IsDeliverGoods: "制造待入库",
             },
           },
         })

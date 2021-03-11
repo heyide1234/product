@@ -22,16 +22,17 @@
           </el-option>
         </el-select>
       </div>
-      <div class="dialogBody" id="dialogBody">
-        <div class="tabH">
+      <div class="dialogBody">
+        <!-- <div class="tabH">
           <div>表名：{{ dtsa }}</div>
           <div>创建人：{{ creat }}</div>
           <div>创建时间：{{ times }}</div>
-        </div>
+        </div> -->
 
-        <table id="printTable">
+        <table id="dialogBody">
           <thead>
             <th>N0.</th>
+            <th>table</th>
             <th v-for="(item, index) in querydataH" :key="index">
               {{ item }}
             </th>
@@ -39,6 +40,7 @@
           <tbody>
             <tr v-for="(item1, index) in querydata" :key="index">
               <td>{{ index + 1 }}</td>
+              <td>{{ dtsa }}</td>
               <td v-for="(item, index) in querydataH" :key="index">
                 {{ item1[item] }}
               </td>
@@ -60,21 +62,22 @@
               <el-option value="salesOrder">销售订单</el-option>
               <el-option value="salesOrderDetail">销售订单明细</el-option>
               <el-option value="salesInvoice">销售发货单</el-option>
-              <el-option value="customerManager">客户管理</el-option>
-              <el-option value="customerContacts">客户联系人</el-option>
+              <el-option value="__customerManager">客户管理</el-option>
+              <el-option value="__customerContacts">客户联系人</el-option>
             </el-option-group>
             <el-option-group label="计划">
-              <el-option value="MaterialPlanDemand">物料计划需求</el-option>
-              <el-option value="MaterialDemand">物料需求</el-option>
+              <!-- <el-option value="MaterialPlanDemand">材料明细需求计划单</el-option> -->
+              <el-option value="MaterialDemand">物料采购计划单</el-option>
             </el-option-group>
 
             <el-option-group label="采购">
               <el-option value="PurchaseOrder">预购单</el-option>
               <el-option value="ReturnOrder">退货单</el-option>
-              <el-option value="supplierManager">供应商管理</el-option>
-              <el-option value="supplierContacts">供应商联系人</el-option>
-              <!-- <el-option value="supplierMaterial">供应商物料</el-option>
-              <el-option value="supplierSeq">物料供应商</el-option> -->
+              <el-option value="__supplierManager">供应商管理</el-option>
+              <el-option value="__supplierContacts">供应商联系人</el-option>
+
+              <el-option value="__supplierMaterial">供应商物料单</el-option>
+              <!-- <el-option value="supplierSeq">物料供应商</el-option> -->
             </el-option-group>
 
             <el-option-group label="品检">
@@ -101,9 +104,9 @@
             </el-option-group>
 
             <el-option-group label="技术">
-              <el-option value="materialclass">物料分类</el-option>
-              <el-option value="basicMaterialList">物料基础资料</el-option>
-              <el-option value="MaterialDetails">材料明细</el-option>
+              <el-option value="__materialclass">物料分类</el-option>
+              <el-option value="__basicMaterialList">物料基础资料</el-option>
+              <el-option value="__MaterialDetails">材料明细</el-option>
             </el-option-group>
           </el-select>
         </el-form-item>
@@ -116,6 +119,7 @@
             <el-option value="OrderNumber">订单编号</el-option>
             <el-option value="PurchaseNumber">采购编号</el-option>
             <el-option value="CheckNumber">质检编号</el-option>
+            <el-option value="MaterialNumber">物料编号</el-option>
           </el-select>
 
           <el-input
@@ -142,6 +146,16 @@
           </el-date-picker>
         </el-form-item>
         <el-form-item>
+          <!-- <el-button
+            type="warning"
+            icon="el-icon-top-left"
+            size="mini"
+            plain
+            style="float: left"
+            circle
+            title="将系统订单从预采购回滚到销售订单"
+            @click="bdhg"
+          ></el-button> -->
           <el-button>取消</el-button>
           <el-button type="primary" @click="onSubmit">查询</el-button>
         </el-form-item>
@@ -174,18 +188,21 @@ export default {
       creat: "",
       options: [],
       value2: "",
+
       dtsd: {
         salesOrder: "销售订单",
         salesOrderDetail: "销售订单明细",
         salesInvoice: "销售发货单",
-        customerManager: "客户管理",
-        customerContacts: "客户联系人",
+        __customerManager: "客户管理",
+        __customerContacts: "客户联系人",
+        __customerMaterial: "客户物料单",
         MaterialPlanDemand: "物料计划需求",
         MaterialDemand: "物料需求",
         PurchaseOrder: "预购单",
         ReturnOrder: "退货单",
-        supplierManager: "供应商管理",
-        supplierContacts: "供应商联系人",
+        __supplierManager: "供应商管理",
+        __supplierContacts: "供应商联系人",
+        __supplierMaterial: "供应商物料单",
         IncomingCheck: "材料检验",
         productCheck: "成品检验",
         stock: "库存管理",
@@ -198,24 +215,67 @@ export default {
         ManufacturingPlan: "制造计划单",
         ManufacturingExecution: "制造执行单",
         ManufacturingExecutionDetail: "制造执行单明细",
-        materialclass: "物料分类",
-        basicMaterialList: "物料基础资料",
-        MaterialDetails: "材料明细",
+        __materialclass: "物料分类",
+        __basicMaterialList: "物料基础资料",
+        __MaterialDetails: "材料明细",
       },
     };
   },
   methods: {
+    bdhg() {
+      if (confirm("表单回滚后不可更改，是否继续？")) {
+        if (!this.form.whereNumber || this.form.whereNumber.length == 0) {
+          alert("表名或订单号不能为空！");
+          return;
+        }
+
+        const loading = this.$loading({
+          lock: true,
+          text: "表单回滚中...",
+          spinner: "el-icon-loading",
+          background: "rgba(0, 0, 0, 0.7)",
+        });
+        this.$https({
+          method: "post",
+          url: "api/transaction/BDHGTransaction",
+          data: {
+            OrderNumber: this.form.whereNumber,
+          },
+        })
+          .then((res) => {
+            console.log("返回：", res);
+            if (res.status) {
+              alert("【" + this.form.whereNumber + "】回滚结束！");
+            }
+            loading.close();
+          })
+          .catch((err) => {
+            console.log(err);
+            loading.close();
+          });
+        // alert(
+        //   "回退成功！" +
+        //     "，表名：" +
+        //     this.form.tables +
+        //     "，订单号：" +
+        //     this.form.whereNumber
+        // );
+      }
+    },
     selectChange() {
       this.querydataH = this.value2;
     },
     onSubmit() {
+      let database = false;
+      if (this.form.tables.indexOf("__") > -1) {
+        database = true;
+      }
       this.dtsa = this.dtsd[this.form.tables];
       this.times = getTime();
       this.creat = sessionStorage.getItem("loginName");
       let value = {
         table: this.form.tables,
         where: {},
-        sortJson: { _id: -1 },
       };
       let wheres = {};
       if (this.form.status != "" && this.form.status != null)
@@ -230,9 +290,12 @@ export default {
       if (this.form.whereState != "" && this.form.whereState != null)
         wheres[this.form.whereState] = this.form.whereNumber;
       value.where = wheres;
-
+      if (database) {
+        value.dataBase = "base";
+      } else {
+        value.dataBase = undefined;
+      }
       this.find(value);
-
       this.dialogFormVisible = true;
     },
     find(wheres) {
@@ -274,6 +337,7 @@ export default {
           console.log(err);
         });
     },
+
     prints() {
       console.log("打印。。");
       QRCode.toCanvas(document.querySelector("table"), "value", function () {

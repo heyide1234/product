@@ -200,11 +200,8 @@
               label="产品价格"
             ></el-table-column>
 
-            <el-table-column property="PNum" label="计划数"></el-table-column>
-            <el-table-column
-              property="Number"
-              label="产品数量"
-            ></el-table-column>
+            <el-table-column property="PNum" label="产品数量"></el-table-column>
+            <el-table-column property="Number" label="计划数"></el-table-column>
 
             <el-table-column
               property="CustomerMaterialNumber"

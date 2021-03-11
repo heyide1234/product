@@ -34,6 +34,13 @@ const routes = [
         component: () => import("views/home/workstation/materialRequisition/index"),
       },
       {
+        path: "/Approval",
+        name: "Approval",
+        component: () => import("views/home/workstation/Approval/index"),
+      },
+
+
+      {
         path: "/workOrderSummary",
         name: "workOrderSummary",
         component: () =>
@@ -113,6 +120,28 @@ const routes = [
       },
 
       {
+        path: "/SHFaultCategory",
+        name: "SHFaultCategory",
+        component: () => import("views/home/sh/SHFaultCategory/index"),
+      },
+      {
+        path: "/SHProductClass",
+        name: "SHProductClass",
+        component: () => import("views/home/sh/SHProductClass/index"),
+      },
+      {
+        path: "/SHTreatmentMethod",
+        name: "SHTreatmentMethod",
+        component: () => import("views/home/sh/SHTreatmentMethod/index"),
+      },
+      {
+        path: "/SHWorkOrder",
+        name: "SHWorkOrder",
+        component: () => import("views/home/sh/SHWorkOrder/index"),
+      },
+
+
+      {
         path: "/messContent",
         name: "messContent",
         component: () => import("views/home/config/messContent/index"),
@@ -170,6 +199,7 @@ const routes = [
         name: "salesOrder",
         component: () => import("views/home/sale/salesOrder/index"),
       },
+
       {
         path: "/XSCollectionAndPaymentPlan",
         name: "XSCollectionAndPaymentPlan",
@@ -189,6 +219,11 @@ const routes = [
         path: "/customerContacts",
         name: "customerContacts",
         component: () => import("views/home/sale/customerContacts/index"),
+      },
+      {
+        path: "/customerMaterial",
+        name: "customerMaterial",
+        component: () => import("views/home/sale/customerMaterial/index"),
       },
 
 
@@ -286,9 +321,9 @@ const routes = [
         component: () => import("views/home/manufacturing/ManufacturingExecution/index"),
       },
       {
-        path: "/ManufacturingExecutionDetail",
-        name: "ManufacturingExecutionDetail",
-        component: () => import("views/home/manufacturing/ManufacturingExecutionDetail/index"),
+        path: "/ProductsInProcess",
+        name: "ProductsInProcess",
+        component: () => import("views/home/manufacturing/ProductsInProcess/index"),
       },
       {
         path: "/message",
@@ -311,12 +346,20 @@ const routes = [
 
 ];
 
+const originalPush = VueRouter.prototype.push
 
-const originalPush = VueRouter.prototype.push;
-VueRouter.prototype.push = function push(location, onResolve, onReject) {
-  if (onResolve || onReject) return originalPush.call(this, location, onResolve, onReject)
+VueRouter.prototype.push = function push(location) {
+
   return originalPush.call(this, location).catch(err => err)
+
 }
+
+
+// const originalPush = VueRouter.prototype.push;
+// VueRouter.prototype.push = function push(location, onResolve, onReject) {
+//   if (onResolve || onReject) return originalPush.call(this, location, onResolve, onReject)
+//   return originalPush.call(this, location).catch(err => err)
+// }
 const router = new VueRouter({
   // mode: "history",
   routes: routes,
@@ -324,30 +367,30 @@ const router = new VueRouter({
 
 // //路由守卫
 router.beforeEach(async (to, from, next) => {
-  // let token = sessionStorage.getItem("loginName");
-  // if (to.name == "login") { //前往登陆不检测
-  //   next();
-  // }
-  // else if (!token) {//未登陆前往登陆
-  //   next('/login');
-  // }
-  // else if (to.path == "/") {//根组件
-  //   next();
-  // }
-  // else {
-  //   var au = await beforeEachIsNext(token, to.name);
-  //   if (au) {
-  //     to.query.auth = au
-  //     next();
-  //   }
-  //   else {
-  //     alert("无权访问！")
-  //   }
-  // }
+  let token = sessionStorage.getItem("loginName");
+  if (to.name == "login") { //前往登陆不检测
+    next();
+  }
+  else if (!token) {//未登陆前往登陆
+    next('/login');
+  }
+  else if (to.path == "/") {//根组件
+    next();
+  }
+  else {
+    var au = await beforeEachIsNext(token, to.name);
+    if (au) {
+      to.query.auth = au
+      next();
+    }
+    else {
+      alert("无权访问！")
+    }
+  }
 
 
-  beforeEachIsNext("token", "to.name");
-  next()
+  // beforeEachIsNext("token", "to.name");
+  // next()
 });
 
 export default router;

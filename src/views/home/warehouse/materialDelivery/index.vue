@@ -52,13 +52,10 @@
       </div>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="printss">打 印</el-button>
-        <el-button
-          type="primary"
-          v-print="printTable"
-          @click="prints"
-          v-show="false"
-        ></el-button>
+        <!-- <el-button type="primary" @click="printss">打 印</el-button> -->
+        <el-button type="primary" v-print="printTable" @click="prints">
+          打 印</el-button
+        >
       </div>
     </el-dialog>
     <div class="tabels">
@@ -70,7 +67,7 @@
         highlight-current-row
       >
         <el-table-column type="selection" width="50"></el-table-column>
-
+        <el-table-column property="SN" label="SN"></el-table-column>
         <el-table-column
           property="OrderNumber"
           label="订单编号"
@@ -86,8 +83,11 @@
           property="MaterialName"
           label="物料名称"
         ></el-table-column>
-
-        <el-table-column property="Thumbnail" label="缩略图"></el-table-column>
+        <el-table-column property="Thumbnail" label="缩略图">
+          <template slot-scope="scope">
+            <img class="bigImg" :src="scope.row.Thumbnail" alt="" />
+          </template>
+        </el-table-column>
 
         <el-table-column
           property="MaterialSpec"
@@ -166,7 +166,11 @@
           label="物料名称"
         ></el-table-column>
 
-        <el-table-column property="Thumbnail" label="缩略图"></el-table-column>
+        <el-table-column property="Thumbnail" label="缩略图">
+          <template slot-scope="scope">
+            <img class="bigImg" :src="scope.row.Thumbnail" alt="" />
+          </template>
+        </el-table-column>
 
         <el-table-column
           property="MaterialSpec"
@@ -240,6 +244,7 @@ export default {
       pagenums: 0,
       OrderNumbers: "",
       idArray: [],
+      SNarray: [],
       dts: [],
 
       form: {
@@ -388,6 +393,8 @@ export default {
     },
 
     prints() {
+      if (!confirm("将开启流程控制，是否继续？")) return;
+
       this.doStore();
       this.dialogFormVisible = false;
     },
@@ -402,6 +409,7 @@ export default {
           datas: this.tableData1,
           jsr: this.jsr,
           idArray: this.idArray,
+          SNarray: this.SNarray,
           clckdh: this.clckdh,
           Proportioner: sessionStorage.getItem("loginName"),
         },
@@ -566,8 +574,10 @@ export default {
       let cdew = JSON.parse(
         JSON.stringify(this.$refs.tableselectData.selection)
       );
+      this.SNarray = [];
       for (let k = 0; k < cdew.length; k++) {
         this.idArray.push(cdew[k]._id);
+        this.SNarray.push(cdew[k].SN);
       }
       this.$myloading({
         show: true,
@@ -785,5 +795,17 @@ h1 {
 }
 .d {
   float: right;
+}
+.bigImg {
+  height: 20px;
+  width: 20px;
+}
+.bigImg:hover {
+  height: 280px;
+  width: 280px;
+  background-color: teal;
+  position: absolute;
+  z-index: 9999;
+  border: 3px solid rgb(45, 228, 8);
 }
 </style>

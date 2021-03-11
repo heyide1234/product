@@ -47,6 +47,7 @@
         ></el-table-column>
 
         <el-table-column property="Number" label="产品数量"></el-table-column>
+        <el-table-column property="Purpose" label="用途"></el-table-column>
         <el-table-column
           property="ConfirmNumer"
           label="入库数"
@@ -230,7 +231,7 @@ export default {
       scope._self.$refs[`popover-${scope.$index}`].doClose();
       if (scope.row.Number != this.form.ConfirmNumer) return; //校验数据
       //入库记录
-      let vd = scope.row;
+      let vd = JSON.parse(JSON.stringify(scope.row));
       vd.ConfirmNumer = scope.row.Number;
       this.$delete(vd, "_id");
       this.$delete(vd, "SN");
@@ -243,6 +244,7 @@ export default {
         url: "api/transaction/goodsWarehousingTransaction",
         data: {
           row: scope.row,
+          Purpose: scope.row.Purpose,
           vd: vd,
           datatemp: this.datatemp,
           creater: sessionStorage.getItem("loginName"), //创建人

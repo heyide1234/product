@@ -1,12 +1,16 @@
 <template>
   <div class="container">
     <el-steps :active="0" finish-status="success" simple style="margin: 5px">
-      <el-step title="盈余表"></el-step>
-      <!--<el-step title="制程"></el-step>
-      <el-step title="配料"></el-step>
+      <el-step title="盈余表"></el-step
+      ><font style="color: red; font-size: 12px">
+        仓:{{ ckNum }}-剩:{{ sycknum }}</font
+      >
+
+      <!--<el-step title="配料"></el-step>
       <el-step title="领料"></el-step>
       <el-step title="检验"></el-step>-->
     </el-steps>
+
     <el-dialog
       title="表单"
       :visible.sync="dialogFormVisible"
@@ -20,12 +24,19 @@
             :disabled="operation == 'update'"
           ></el-input>
         </el-form-item>
+
+        <el-form-item label="总金额">
+          <el-input v-model="form.TotalAmount" type="text"></el-input>
+        </el-form-item>
         <el-form-item label="历史数量">
           <el-input v-model="currentNum" type="text" disabled></el-input>
         </el-form-item>
 
-        <el-form-item label="数量">
+        <el-form-item label="调库数量">
           <el-input v-model="form.Number" type="text"></el-input>
+        </el-form-item>
+        <el-form-item label="调库剩余数">
+          <el-input v-model="synums" type="text"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -44,17 +55,33 @@
 
         <el-table-column property="MaterialNumber" label="物料编号">
           <template #header>
-            <el-input
-              size="mini"
-              v-model="search"
-              prefix-icon="el-icon-search"
-              placeholder="输入物料编号"
-              @change="searchs"
-            />
+            <div style="display: flex">
+              <el-input
+                size="mini"
+                v-model="search"
+                prefix-icon="el-icon-search"
+                placeholder="输入物料编号"
+                @change="searchs"
+              />
+              <el-button size="mini" @click="searchs" style="height: 28px"
+                >查询</el-button
+              >
+            </div>
           </template>
         </el-table-column>
-
+        <el-table-column
+          property="MaterialName"
+          label="物料名称"
+        ></el-table-column>
+        <el-table-column
+          property="MaterialSpec"
+          label="规格型号"
+        ></el-table-column>
         <el-table-column property="Number" label="数量"></el-table-column>
+        <el-table-column
+          property="TotalAmount"
+          label="总金额"
+        ></el-table-column>
 
         <!-- <el-table-column label="关于" min-width="80">
           <template slot-scope="scope">
@@ -70,39 +97,76 @@
         </el-table-column> -->
         <el-table-column label="操作" min-width="90" fixed="right">
           <template slot="header">
-            <el-button
+            <!-- <el-button
               type="success"
               icon="el-icon-document-add"
               plain
               circle
               size="mini"
               @click="handleAdd"
-            ></el-button>
+            ></el-button> -->
             <el-button
               type="danger"
               icon="el-icon-sold-out"
               plain
               circle
               size="mini"
+              title="同步数据库"
               @click="ressdd"
             ></el-button>
           </template>
           <template slot-scope="scope">
             <el-button
               type="primary"
-              icon="el-icon-edit"
+              icon="el-icon-sort"
               circle
               size="mini"
               p
               @click="handleEdit(scope.row)"
             ></el-button>
+            <el-popover
+              placement="left"
+              width="300"
+              trigger="click"
+              :ref="`popover-${scope.$index}`"
+            >
+              <el-form ref="form" :model="form" label-width="90px">
+                <el-form-item
+                  label="盈余数量"
+                  :rules="[{ required: true, message: '不能为空' }]"
+                >
+                  <el-input v-model="numsdd"></el-input>
+                </el-form-item>
+              </el-form>
+              <el-button
+                style="float: right"
+                type="primary"
+                @click="Edityy(scope)"
+                >确定</el-button
+              >
+              <el-button
+                style="float: right; margin: 0 10px"
+                @click="scope._self.$refs[`popover-${scope.$index}`].doClose()"
+                >取消</el-button
+              >
+
+              <el-button
+                slot="reference"
+                type="primary"
+                icon="el-icon-edit"
+                circle
+                size="mini"
+                style="margin: 0 5px"
+              ></el-button>
+            </el-popover>
+
             <el-button
               type="danger"
-              icon="el-icon-delete"
+              icon="el-icon-search"
               plain
               circle
               size="mini"
-              @click="handleDelete(scope.row)"
+              @click="finds(scope.row)"
             ></el-button>
           </template>
         </el-table-column>
@@ -124,10 +188,12 @@
 export default {
   data() {
     return {
+      numsdd: "",
       operation: "", //当前操作切换
       pagenums: 0,
       form: {
         MaterialNumber: "", //物料编号
+        TotalAmount: "", //总金额
         Number: "", //数量
         // creater: "", //创建人
         // creatdate: "", //创建时间
@@ -145,9 +211,50 @@ export default {
       tempcode: 0,
       MaterialInfo: [],
       currentNum: "0",
+      ckNum: "",
+      sycknum: "",
+      synums: "",
     };
   },
   methods: {
+    finds(row) {
+      this.$https({
+        method: "get",
+        url: "/api/apiModel/find",
+        params: {
+          table: "stock",
+          where: { MaterialNumber: row.MaterialNumber },
+        },
+      })
+        .then((res) => {
+          console.log(res);
+
+          this.ckNum = res[0].Number;
+          this.sycknum = res[0].SYNumber;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    Edityy(scope) {
+      scope._self.$refs[`popover-${scope.$index}`].doClose();
+      this.$https({
+        method: "post",
+        url: "/api/apiModel/update",
+        data: {
+          table: "YYB",
+          id: scope.row._id,
+          form: { Number: this.numsdd },
+        },
+      })
+        .then((res) => {
+          this.newview();
+          console.log(res);
+        })
+        .catch(function (err) {
+          console.log(err);
+        });
+    },
     searchs() {
       console.log(this.search);
       let ccs = {};
@@ -157,7 +264,7 @@ export default {
         return;
       }
       if (this.search != "" && this.search != null) {
-        ccs = { MaterialNumber: this.search };
+        ccs = { MaterialNumber: { $regex: this.search + "" } };
       }
       this.$https({
         method: "get",
@@ -176,26 +283,28 @@ export default {
     },
     //复制库存
     async ressdd() {
-      this.$myloading({
-        show: true,
-      });
-      this.$https({
-        method: "post",
-        url: "api/transaction/YYBREFTransaction",
-        data: {},
-      })
-        .then((res) => {
-          console.log(res);
-          if (res.status) {
-            this.newview();
-            this.$myloading({
-              show: false,
-            });
-          }
-        })
-        .catch((err) => {
-          console.log(err);
+      if (confirm("复制实际库存信息将覆盖之前记录，是否继续？")) {
+        this.$myloading({
+          show: true,
         });
+        this.$https({
+          method: "post",
+          url: "api/transaction/YYBREFTransaction",
+          data: {},
+        })
+          .then((res) => {
+            console.log(res);
+            if (res.status) {
+              this.newview();
+              this.$myloading({
+                show: false,
+              });
+            }
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      }
     },
     findsMateria() {
       this.$https({
@@ -330,29 +439,29 @@ export default {
 
     //提交按钮
     async onSubmit() {
-      if (this.operation === "add") {
-        ///////////
-        let fdr = [];
-        await this.$https({
-          method: "get",
-          url: "/api/apiModel/find",
-          params: {
-            table: "YYB",
-            where: { MaterialNumber: this.form.MaterialNumber },
-          },
-        })
-          .then((res) => {
-            console.log(res);
-            fdr = res;
-          })
-          .catch((err) => {
-            console.log(err);
-          });
-        if (fdr.length > 0) {
-          alert("物料已经存在！");
-          return;
-        }
-      }
+      // if (this.operation === "add") {
+      //   ///////////
+      //   let fdr = [];
+      //   await this.$https({
+      //     method: "get",
+      //     url: "/api/apiModel/find",
+      //     params: {
+      //       table: "YYB",
+      //       where: { MaterialNumber: this.form.MaterialNumber },
+      //     },
+      //   })
+      //     .then((res) => {
+      //       console.log(res);
+      //       fdr = res;
+      //     })
+      //     .catch((err) => {
+      //       console.log(err);
+      //     });
+      //   if (fdr.length > 0) {
+      //     alert("物料已经存在！");
+      //     return;
+      //   }
+      // }
       ////
 
       this.$myloading({
@@ -366,6 +475,7 @@ export default {
           currentNum: this.currentNum,
           operation: this.operation,
           ids: this.id,
+          synums: this.synums,
         },
       })
         .then((res) => {

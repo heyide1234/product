@@ -52,6 +52,7 @@
           label="规格型号"
         ></el-table-column>
         <el-table-column property="Number" label="数量"></el-table-column>
+        <el-table-column property="Purpose" label="用途"></el-table-column>
 
         <el-table-column label="关于" min-width="80">
           <template slot-scope="scope">
@@ -377,6 +378,7 @@ export default {
         url: "/api/apiModel/getpage",
         params: {
           table: "ManufacturingExecution",
+          pageWhere: { status: "0" },
         },
       })
         .then((res) => {
@@ -676,7 +678,6 @@ export default {
     },
     async findDetail1() {
       await this.$https({
-        //这里是你自己的请求方式、url和data参数
         method: "get",
         url: "/api/apiModel/find",
         params: {

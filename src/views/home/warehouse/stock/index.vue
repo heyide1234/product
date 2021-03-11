@@ -145,6 +145,7 @@
               plain
               circle
               size="mini"
+              title="同步物料基础信息"
               @click="tb"
             ></el-button>
           </template>

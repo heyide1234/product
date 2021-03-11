@@ -14,7 +14,13 @@
       :close-on-click-modal="false"
     >
       <div class="dialogBody" id="dialogBody">
-        <h2>四川凯迈新能源有限公司（产品销售单）</h2>
+        <h2>
+          四川凯迈新能源有限公司（产品销售单）<span
+            style="color: red"
+            v-show="Approval != '已审批'"
+            >【{{ Approval }}】</span
+          >
+        </h2>
 
         <div class="htbh">系统订单编号：XS{{ form1.OrderNumber }}</div>
         <div class="htbh te">客户订单编号：{{ ddbh }}</div>
@@ -298,7 +304,8 @@
           property="creatdate"
           label="申请时间"
         ></el-table-column>
-
+        <el-table-column property="Approval" label="审批状态"></el-table-column>
+        <el-table-column property="Approver" label="审批人"></el-table-column>
         <el-table-column label="操作" min-width="90" fixed="right">
           <template slot="header">
             <el-button
@@ -383,8 +390,8 @@
           label="产品价格"
         ></el-table-column>
 
-        <el-table-column property="PNum" label="计划数"></el-table-column>
-        <el-table-column property="Number" label="产品数量"></el-table-column>
+        <el-table-column property="PNum" label="产品数量"></el-table-column>
+        <el-table-column property="Number" label="计划数"></el-table-column>
 
         <el-table-column property="jine" label="金额"></el-table-column>
         <el-table-column property="tjine" label="总金额"></el-table-column>
@@ -478,6 +485,7 @@ import { DXZH } from "common/utils/content";
 export default {
   data() {
     return {
+      Approval: "",
       ddbh: "", //客户订单编号
       xf: "", //需方
       xfdz: "", //需方地址
@@ -497,12 +505,15 @@ export default {
       newclassDate: [],
       OrderNumbers: "",
       classvalue1: [],
-
+      Purpose: "",
       form: {
         OrderNumber: "", //订单编号
         processCode: "0", //流程码
         Purpose: "", //用途
         Remarks: "", //备注
+        Approval: "", //审批状态
+        Approver: "", //审批人
+
         creater: "", //申请人
         creatdate: "", //创建时间
       },
@@ -655,6 +666,10 @@ export default {
       //开启流程
       if (this.tableData1.length == 0 || this.tableData1[0].status == "1")
         return;
+      if (this.Approval != "已审批") {
+        alert("未审批！");
+        return;
+      }
       /////////////////////
       if (confirm("是否开启推单模式，下次将不可再次开启！")) {
         this.$myloading({
@@ -665,6 +680,7 @@ export default {
           url: "api/transaction/materialRequisitionTransaction",
           data: {
             datas: this.tableData1,
+            Purpose: this.Purpose,
             creater: sessionStorage.getItem("loginName"),
             creatdate: getTime(),
           },
@@ -968,7 +984,9 @@ export default {
       if (row.processCode != "1") {
         this.flagst = false;
       }
+      this.Approval = row.Approval;
       this.tableVisible = "block";
+      this.Purpose = row.Purpose;
       this.ddbh = row.CustomerOrderNumber; //客户订单编号
       this.xf = row.CustomerName; //需方
       this.xfdz = row.Address; //需方地址
@@ -1197,6 +1215,7 @@ export default {
 
       if (this.operation === "add") {
         this.form.processCode = "1";
+        this.form.Approval = "未审批";
         this.add();
       } else {
         this.update();

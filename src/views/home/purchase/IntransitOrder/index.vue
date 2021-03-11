@@ -40,7 +40,8 @@
           property="ContactsPhone"
           label="联系电话"
         ></el-table-column>
-
+        <el-table-column property="Approval" label="审批状态"></el-table-column>
+        <el-table-column property="Approver" label="审批人"></el-table-column>
         <el-table-column label="操作" min-width="90" fixed="right">
           <template slot-scope="scope">
             <!-- <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">编辑</el-button> -->
@@ -227,7 +228,7 @@
 
 <script>
 import { getTime } from "common/time/getTime";
-import { jsNums } from "common/utils/content";
+// import { jsNums } from "common/utils/content";
 export default {
   data() {
     return {
@@ -274,7 +275,7 @@ export default {
         url: "/api/apiModel/find",
         params: {
           table: "salesOrder",
-          where: { processCode: { $gte: "5" } },
+          where: { processCode: { $gt: "0" } },
         },
       })
         .then((res) => {
@@ -303,7 +304,10 @@ export default {
         url: "/api/apiModel/getpage",
         params: {
           table: "CGDhead",
-          pageWhere: { OrderNumber: { $in: OrderNumberArr } },
+          pageWhere: {
+            OrderNumber: { $in: OrderNumberArr },
+            Approval: "已审批",
+          },
         },
       })
         .then((res) => {
@@ -323,8 +327,11 @@ export default {
         params: {
           table: "CGDhead",
           PageNum: this.pagenums,
-          sortJson: { OrderNumber: -1 },
-          pageWhere: { OrderNumber: { $in: OrderNumberArr } },
+          sortJson: { PurchaseNumber: -1 },
+          pageWhere: {
+            OrderNumber: { $in: OrderNumberArr },
+            Approval: "已审批",
+          },
         },
       })
         .then((res) => {
@@ -456,7 +463,7 @@ export default {
         },
       })
         .then((res) => {
-          this.tableData1 = jsNums(res, "MaterialNumber", "ShouldNumber");
+          // this.tableData1 = jsNums(res, "MaterialNumber", "ShouldNumber");
           this.tableData1 = res;
           // console.log(this.tableData1);
         })
@@ -499,6 +506,7 @@ export default {
           row: scope.row,
           CheckNumber: CheckNumber,
           time: getTime(),
+          id: this.id,
         },
       })
         .then((res) => {

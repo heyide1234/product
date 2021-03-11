@@ -106,7 +106,7 @@
           :total="total"
         ></el-pagination> -->
       </div>
-      <el-collapse v-model="activeNames" class="t2">
+      <el-collapse>
         <el-collapse-item title="订单产品明细" name="2">
           <template slot="title">
             <span class="de"
@@ -133,11 +133,8 @@
               label="产品价格"
             ></el-table-column>
 
-            <el-table-column property="PNum" label="计划数"></el-table-column>
-            <el-table-column
-              property="Number"
-              label="产品数量"
-            ></el-table-column>
+            <el-table-column property="PNum" label="产品数量"></el-table-column>
+            <el-table-column property="Number" label="计划数"></el-table-column>
 
             <el-table-column
               property="CustomerMaterialNumber"
@@ -276,6 +273,7 @@ export default {
       tableData: [],
       tableData1: [],
       pyid: "",
+      Purpose: "",
     };
   },
   methods: {
@@ -307,6 +305,7 @@ export default {
       this.OrderNumbers = row.OrderNumber;
       this.tableData1 = [];
       this.tableDataT = [];
+      this.Purpose = row.Purpose;
       this.finddetail();
       this.findorderdetail();
     },
@@ -361,6 +360,7 @@ export default {
         data: {
           datas: this.tableData1,
           OrderNumber: this.OrderNumbers,
+          Purpose: this.Purpose,
         },
       })
         .then((res) => {
@@ -370,15 +370,11 @@ export default {
             this.OrderNumbers = "";
             this.newview();
           }
-          setTimeout(() => {
-            loading.close();
-          }, 8000);
+          loading.close();
         })
         .catch((err) => {
           console.log(err);
-          setTimeout(() => {
-            loading.close();
-          }, 8000);
+          loading.close();
         });
     },
     //算出盘盈数

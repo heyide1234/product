@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <el-steps :active="0" finish-status="success" simple style="margin: 5px">
-      <el-step title="供应商列表"></el-step>
+      <el-step title="客户列表"></el-step>
       <!--<el-step title="制程"></el-step>
       <el-step title="配料"></el-step>
       <el-step title="领料"></el-step>
@@ -18,7 +18,7 @@
             v-model="form.Contacts"
             placeholder="请选择"
             style="width: 100%"
-            @change="supplierNumberChange"
+            @change="CustomerNumberChange"
           >
             <el-option
               v-for="(item, key) in MaterialInfo"
@@ -144,24 +144,27 @@
         <el-table-column type="selection" width="50"></el-table-column>
 
         <el-table-column
-          property="supplierNumber"
-          label="供应商编号"
+          property="CustomerNumber"
+          label="客户编号"
         ></el-table-column>
-        <el-table-column property="supplierName" label="供应商名称">
+
+        <el-table-column property="CustomerName" label="客户名称">
           <template #header>
             <el-input
               size="mini"
               v-model="search"
               prefix-icon="el-icon-search"
-              placeholder="输入供应商名称"
+              placeholder="输入客户名称"
               @change="searchs"
-            />
-          </template>
-        </el-table-column>
-        <el-table-column property="Class" label="行业类别"></el-table-column>
+            /> </template
+        ></el-table-column>
         <el-table-column
-          property="supplierRemarks"
-          label="供应商备注"
+          property="CustomerClass"
+          label="行业类别"
+        ></el-table-column>
+        <el-table-column
+          property="CustomerRemarks"
+          label="客户备注"
         ></el-table-column>
         <el-table-column property="TIN" label="纳税人识别号"></el-table-column>
         <el-table-column property="Bank" label="开户行"></el-table-column>
@@ -188,10 +191,10 @@
           <template #header>
             <el-input
               size="mini"
-              v-model="searchGYS"
+              v-model="searchKH"
               prefix-icon="el-icon-search"
-              placeholder="物料查询供应商"
-              @change="wuliaogys"
+              placeholder="物料查询客户"
+              @change="wuliaokh"
             />
           </template>
           <template slot-scope="scope">
@@ -223,7 +226,7 @@
         style="margin: 40px 5px 5px 5px"
       >
         <el-step
-          :title="'材料明细[' + supplierNumber + '\t' + supplierName + ']'"
+          :title="'材料明细[' + CustomerNumber + '\t' + CustomerName + ']'"
         ></el-step>
       </el-steps>
 
@@ -242,12 +245,12 @@
         ></el-table-column>
 
         <el-table-column
-          property="supplierNumber"
-          label="供应商编号"
+          property="CustomerNumber"
+          label="客户编号"
         ></el-table-column>
         <el-table-column
-          property="supplierName"
-          label="供应商名称"
+          property="CustomerName"
+          label="客户名称"
         ></el-table-column>
 
         <el-table-column property="Contacts" label="联系人"></el-table-column>
@@ -431,7 +434,7 @@
                 type="success"
                 icon="el-icon-unlock"
                 style="margin-left: 10px"
-                @click="findsupplierNumber(scope)"
+                @click="findCustomerNumber(scope)"
                 circle
                 size="mini"
               ></el-button>
@@ -459,13 +462,13 @@ export default {
       classvalue1: [],
       pagenums: 0,
       OrderNumbers: "",
-      supplierNumber: "",
-      supplierName: "",
+      CustomerNumber: "",
+      CustomerName: "",
       dialogFormVisible: false,
       newclassDate: [],
       form: {
-        supplierNumber: "", //供应商编号
-        supplierName: "", //供应商名称
+        CustomerNumber: "", //客户编号
+        CustomerName: "", //客户名称
         Contacts: "", //联系人
         ContactsPhone: "", //联系人电话
         MaterialNumber: "", //物料编码
@@ -491,7 +494,7 @@ export default {
       datas1: [],
       temoData1: [],
       states: false,
-      searchGYS: "",
+      searchKH: "",
       temptables: [],
       search: "",
       search1: "",
@@ -508,13 +511,13 @@ export default {
         return;
       }
       if (this.search != "" && this.search != null) {
-        ccs = { supplierName: { $regex: this.search + "" } };
+        ccs = { CustomerName: { $regex: this.search + "" } };
       }
       this.$https({
         method: "get",
         url: "/api/apiModel/find",
         params: {
-          table: "__supplierManager",
+          table: "__customerManager",
           dataBase: "base",
           where: ccs,
         },
@@ -533,12 +536,12 @@ export default {
 
       if (this.search1 == "" || this.search1 == null) {
         ccs = {
-          supplierNumber: this.supplierNumber,
+          CustomerNumber: this.CustomerNumber,
         };
       }
       if (this.search1 != "" && this.search1 != null) {
         ccs = {
-          supplierNumber: this.supplierNumber,
+          CustomerNumber: this.CustomerNumber,
           MaterialNumber: { $regex: this.search1 + "" },
         };
       }
@@ -546,7 +549,7 @@ export default {
         method: "get",
         url: "/api/apiModel/find",
         params: {
-          table: "__supplierMaterial",
+          table: "__customerMaterial",
           dataBase: "base",
           where: ccs,
         },
@@ -565,12 +568,12 @@ export default {
 
       if (this.search2 == "" || this.search2 == null) {
         ccs = {
-          supplierNumber: this.supplierNumber,
+          CustomerNumber: this.CustomerNumber,
         };
       }
       if (this.search2 != "" && this.search2 != null) {
         ccs = {
-          supplierNumber: this.supplierNumber,
+          CustomerNumber: this.CustomerNumber,
           MaterialName: { $regex: this.search2 + "" },
         };
       }
@@ -578,7 +581,7 @@ export default {
         method: "get",
         url: "/api/apiModel/find",
         params: {
-          table: "__supplierMaterial",
+          table: "__customerMaterial",
           dataBase: "base",
           where: ccs,
         },
@@ -592,9 +595,9 @@ export default {
         });
     },
     ////////////////////////
-    wuliaogys() {
-      console.log("search===", this.searchGYS);
-      if (this.searchGYS == "" || this.searchGYS == null) {
+    wuliaokh() {
+      console.log("search===", this.searchKH);
+      if (this.searchKH == "" || this.searchKH == null) {
         this.tableData1 = this.temptables;
       } else {
         this.$https({
@@ -602,10 +605,10 @@ export default {
           method: "get",
           url: "/api/apiModel/find",
           params: {
-            table: "__supplierMaterial",
+            table: "__customerMaterial",
             dataBase: "base",
-            where: { MaterialNumber: this.searchGYS },
-            sortJson: { supplierNumber: 1 },
+            where: { MaterialNumber: this.searchKH },
+            sortJson: { CustomerNumber: 1 },
           },
         })
           .then((res) => {
@@ -613,8 +616,8 @@ export default {
             for (let k = 0; k < res.length; k++) {
               this.tableData1.push(
                 this.temptables.find((item) => {
-                  console.log(item.supplierNumber);
-                  return item.supplierNumber == res[k].supplierNumber;
+                  console.log(item.CustomerNumber);
+                  return item.CustomerNumber == res[k].CustomerNumber;
                 })
               );
             }
@@ -624,7 +627,7 @@ export default {
           });
       }
     },
-    async findsupplierNumber(scope) {
+    async findCustomerNumber(scope) {
       console.log(scope);
       this.N = new Date().getFullYear();
       this.Y = "";
@@ -654,7 +657,7 @@ export default {
         method: "post",
         url: "/api/apiModel/update",
         data: {
-          table: "__supplierMaterial",
+          table: "__customerMaterial",
           dataBase: "base",
           id: scope.row._id,
           form: sps,
@@ -675,9 +678,9 @@ export default {
         method: "post",
         url: "/api/apiModel/deleteByWhere",
         data: {
-          table: "__supplierMaterial",
+          table: "__customerMaterial",
           dataBase: "base",
-          where: { supplierNumber: this.supplierNumber },
+          where: { CustomerNumber: this.CustomerNumber },
         },
       })
         .then((res) => {
@@ -688,8 +691,8 @@ export default {
         });
       for (let i = 0; i < this.tableData.length; i++) {
         let t = i + 1;
-        this.form.supplierNumber = this.tableData[i].supplierNumber;
-        this.form.supplierName = this.tableData[i].supplierName;
+        this.form.CustomerNumber = this.tableData[i].CustomerNumber;
+        this.form.CustomerName = this.tableData[i].CustomerName;
         this.form.Contacts = this.tableData[i].Contacts;
         this.form.ContactsPhone = this.tableData[i].ContactsPhone;
         this.form.MaterialNumber = this.tableData[i].MaterialNumber;
@@ -717,7 +720,7 @@ export default {
       scope._self.$refs[`popover-${scope.$index}`].doClose();
       console.log(this.tableData);
     },
-    supplierNumberChange() {
+    CustomerNumberChange() {
       // console.log("change2...");
       let cds2 = this.MaterialInfo.filter((item) => {
         return item.Contacts == this.form.Contacts;
@@ -869,8 +872,8 @@ export default {
       this.disticts();
     },
     async zk(row) {
-      this.supplierNumber = row.supplierNumber;
-      this.supplierName = row.supplierName;
+      this.CustomerNumber = row.CustomerNumber;
+      this.CustomerName = row.CustomerName;
 
       this.finddContacts();
       this.findByPageNum();
@@ -882,9 +885,9 @@ export default {
         method: "get",
         url: "/api/apiModel/find",
         params: {
-          table: "__supplierContacts",
+          table: "__customerContacts",
           dataBase: "base",
-          where: { supplierNumber: this.supplierNumber },
+          where: { CustomerNumber: this.CustomerNumber },
         },
       })
         .then((res) => {
@@ -966,8 +969,8 @@ export default {
       this.form.Approver = ""; //"审批人
       this.form.prescription = ""; //时效
       if (this.operation === "add") {
-        this.form.supplierNumber = this.supplierNumber;
-        this.form.supplierName = this.supplierName;
+        this.form.CustomerNumber = this.CustomerNumber;
+        this.form.CustomerName = this.CustomerName;
         this.form.Grade = "999";
         await this.add();
       } else {
@@ -985,10 +988,10 @@ export default {
         method: "get",
         url: "/api/apiModel/find",
         params: {
-          table: "__supplierMaterial",
+          table: "__customerMaterial",
           dataBase: "base",
           where: {
-            supplierNumber: this.supplierNumber,
+            CustomerNumber: this.CustomerNumber,
             MaterialNumber: this.form.MaterialNumber,
           },
         },
@@ -1010,7 +1013,7 @@ export default {
         method: "post",
         url: "/api/apiModel/insert",
         data: {
-          table: "__supplierMaterial",
+          table: "__customerMaterial",
           dataBase: "base",
           form: this.form,
         },
@@ -1029,18 +1032,18 @@ export default {
         method: "post",
         url: "/api/apiModel/delete",
         data: {
-          table: "__supplierMaterial",
+          table: "__customerMaterial",
           dataBase: "base",
           id: this.id,
         },
       })
-        .then(function (res) {
+        .then((res) => {
           console.log(res);
+          this.findByPageNum();
         })
         .catch(function (err) {
           console.log(err);
         });
-      this.findByPageNum();
     },
     //数据修改
     update() {
@@ -1048,7 +1051,7 @@ export default {
         method: "post",
         url: "/api/apiModel/update",
         data: {
-          table: "__supplierMaterial",
+          table: "__customerMaterial",
           dataBase: "base",
           id: this.id,
           form: this.form,
@@ -1068,9 +1071,9 @@ export default {
         method: "get",
         url: "/api/apiModel/find",
         params: {
-          table: "__supplierMaterial",
+          table: "__customerMaterial",
           dataBase: "base",
-          where: { supplierNumber: this.supplierNumber },
+          where: { CustomerNumber: this.CustomerNumber },
         },
       })
         .then((res) => {
@@ -1088,7 +1091,7 @@ export default {
     //     method: "get",
     //     url: "/api/apiModel/findByPageNum",
     //     params: {
-    //       table: "__supplierMaterial",
+    //       table: "__customerMaterial",
     //       PageNum: this.pagenums,
     //       sortJson: { _id: 1 }
     //     }
@@ -1106,7 +1109,7 @@ export default {
         method: "get",
         url: "/api/apiModel/find",
         params: {
-          table: "__supplierManager",
+          table: "__customerManager",
           dataBase: "base",
           where: {},
           sortJson: { _id: 1 },
@@ -1124,12 +1127,12 @@ export default {
     getApproval() {
       this.Approvalstat = false;
       this.$https({
-        //这里是你自己的请求方式、url和data参数
+        //这里是你自己的请求方式、url和data参数SupplierMaterialApproval
         method: "get",
         url: "/api/apiModel/find",
         params: {
           table: "__comm",
-          where: { KeyName: "SupplierMaterialApproval" },
+          where: { KeyName: "CustomerMaterialApproval" },
           dataBase: "base",
         },
       })

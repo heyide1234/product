@@ -43,6 +43,8 @@
           property="MaterialSpec"
           label="规格型号"
         ></el-table-column>
+        <el-table-column property="Purpose" label="用途"></el-table-column>
+
         <el-table-column
           property="SYNumber"
           label="仓库可分配数"
@@ -324,6 +326,10 @@ export default {
         alert("不能大于剩余分配数！");
         return;
       }
+      if (parseInt(this.LLNumber) > scope.row.SYNumber) {
+        alert("不能大于仓库剩余分配数！");
+        return;
+      }
       console.log("-----", scope.row.SYNumber == undefined);
 
       //////////////////////////////////
@@ -335,8 +341,10 @@ export default {
         url: "api/transaction/ManufacturingPlanTransaction",
         data: {
           row: scope.row,
+          Purpose: scope.row.Purpose,
           saveNum: saveNum,
           LLNumber: this.LLNumber,
+          OrderNumber: scope.row.OrderNumber,
           creater: sessionStorage.getItem("loginName"),
           creatdate: getTime(),
         },

@@ -85,7 +85,7 @@ font {
   margin: 0 auto;
   font-size: 9px;
   font-family: SimSun;
-  line-height: 30px;
+  line-height: 20px;
 }
 .cont {
   width: 90%;
@@ -204,8 +204,15 @@ p {
       :close-on-click-modal="false"
     >
       <div class="dialogBody" id="dialogBody">
-        <h2>四川凯迈新能源有限公司（材料采购单）</h2>
+        <h2>
+          四川凯迈新能源有限公司（材料采购单）<span
+            style="color: red"
+            v-show="Approval != '已审批'"
+            >【{{ Approval }}】</span
+          >
+        </h2>
         <div class="htbh">合同编号：CG{{ htbh }}</div>
+        <div class="htbh">供应商合同号：{{ GYSHTH }}</div>
         <div class="title-content">
           <div>
             <div class="text">供方：{{ gf }}</div>
@@ -545,7 +552,8 @@ p {
           property="ContactsPhone"
           label="联系电话"
         ></el-table-column>
-
+        <el-table-column property="Approval" label="审批状态"></el-table-column>
+        <el-table-column property="Approver" label="审批人"></el-table-column>
         <el-table-column label="操作" min-width="90" fixed="right">
           <template slot-scope="scope">
             <!-- <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">编辑</el-button> -->
@@ -613,7 +621,10 @@ p {
           property="ContactsPhone"
           label="联系人电话"
         ></el-table-column>
-
+        <el-table-column
+          property="GYSHTH"
+          label="供应商合同号"
+        ></el-table-column>
         <el-table-column
           property="MaterialNumber"
           label="物料编号"
@@ -672,6 +683,7 @@ p {
           property="PlannedDeliveryDate"
           label="计划交期"
         ></el-table-column>
+        <el-table-column property="YYNUMS" label="盈余数"></el-table-column>
 
         <el-table-column label="关于" min-width="80">
           <template slot-scope="scope">
@@ -717,6 +729,18 @@ p {
               @click="ts()"
             ></el-button>
           </template>
+
+          <template slot-scope="scope">
+            <el-button
+              type="warning"
+              icon="el-icon-top-left"
+              circle
+              plain
+              title="采购撤回！"
+              size="mini"
+              @click="hg(scope.row)"
+            ></el-button>
+          </template>
         </el-table-column>
       </el-table>
     </div>
@@ -725,16 +749,15 @@ p {
 
 <script>
 import { getTime } from "common/time/getTime";
-import {
-  // jsNums,
-  DXZH,
-} from "common/utils/content";
+import { DXZH } from "common/utils/content";
 
 export default {
   data() {
     return {
+      Approval: "",
       freight: "", //运费
       htbh: "", //合同编号
+      GYSHTH: "", //供应商合同号
       gf: "", //供方
       xf: "", //需方
       gflxr: "", //供方联系人
@@ -784,10 +807,46 @@ export default {
         status: "", //状态
         creater: "", //创建人
         creatdate: "", //创建时间
+        stts: "",
       },
     };
   },
   methods: {
+    hg(row) {
+      if (this.stts != "已驳回") {
+        alert("只能撤销驳回的采购单！");
+        return;
+      }
+      if (confirm("是否撤销该采购单对应的物料？")) {
+        const loading = this.$loading({
+          lock: true,
+          text: "物料撤销中...",
+          spinner: "el-icon-loading",
+          background: "rgba(0, 0, 0, 0.7)",
+        });
+        this.$https({
+          method: "post",
+          url: "api/transaction/CGHGTransaction",
+          data: {
+            PurchaseNumberId: row._id,
+            OrderNumber: row.OrderNumber,
+            MaterialNumber: row.MaterialNumber,
+            Number: row.ShouldNumber,
+          },
+        })
+          .then((res) => {
+            console.log(res);
+            if (res.status) {
+              this.finddetail();
+              alert("完成！");
+            }
+            loading.close();
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      }
+    },
     freights() {
       this.freight = "";
       this.dialogFormVisible2 = true;
@@ -798,7 +857,7 @@ export default {
         url: "/api/apiModel/find",
         params: {
           table: "salesOrder",
-          where: { processCode: { $gte: "5" } },
+          where: { processCode: { $gt: "0" } },
         },
       })
         .then((res) => {
@@ -827,7 +886,10 @@ export default {
         url: "/api/apiModel/getpage",
         params: {
           table: "CGDhead",
-          pageWhere: { OrderNumber: { $in: OrderNumberArr } },
+          pageWhere: {
+            OrderNumber: { $in: OrderNumberArr },
+            // Approval: "已审批",
+          },
         },
       })
         .then((res) => {
@@ -847,8 +909,11 @@ export default {
         params: {
           table: "CGDhead",
           PageNum: this.pagenums,
-          sortJson: { OrderNumber: -1 },
-          pageWhere: { OrderNumber: { $in: OrderNumberArr } },
+          sortJson: { PurchaseNumber: -1 },
+          pageWhere: {
+            OrderNumber: { $in: OrderNumberArr },
+            // Approval: "已审批",
+          },
         },
       })
         .then((res) => {
@@ -909,6 +974,7 @@ export default {
       });
       this.querydata = dd;
       this.htbh = this.tableData1[0].PurchaseNumber; //合同编号
+      this.GYSHTH = this.tableData1[0].GYSHTH;
       this.gf = this.tableData1[0].supplierName; //供方
       this.xf = "四川凯迈新能源公司"; //需方
       // this.tableData1[0].Contacts = "12345";
@@ -1169,7 +1235,9 @@ export default {
     },
 
     zk(row) {
+      this.stts = row.Approval;
       this.PurchaseNumber = row.PurchaseNumber;
+      this.Approval = row.Approval;
       this.tableData1 = [];
       this.finddetail();
     },

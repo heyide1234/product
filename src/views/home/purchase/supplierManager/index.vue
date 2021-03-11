@@ -64,7 +64,10 @@
 
         <el-table-column property="supplierNumber" label="供应商编号">
         </el-table-column>
-        <el-table-column property="supplierName" label="供应商名称"
+        <el-table-column
+          property="supplierName"
+          label="供应商名称"
+          min-width="150"
           ><template #header>
             <el-input
               size="mini"
@@ -73,18 +76,39 @@
               placeholder="供应商名称"
             /> </template
         ></el-table-column>
-        <el-table-column property="Class" label="行业类别"></el-table-column>
+        <el-table-column
+          property="Class"
+          label="行业类别"
+          min-width="150"
+        ></el-table-column>
         <el-table-column
           property="supplierRemarks"
           label="供应商备注"
         ></el-table-column>
-        <el-table-column property="TIN" label="纳税人识别号"></el-table-column>
-        <el-table-column property="Bank" label="开户行"></el-table-column>
-        <el-table-column property="Account" label="账户"></el-table-column>
-        <el-table-column property="Address" label="地址"></el-table-column>
+        <el-table-column
+          property="TIN"
+          label="纳税人识别号"
+          min-width="150"
+        ></el-table-column>
+        <el-table-column
+          property="Bank"
+          label="开户行"
+          min-width="150"
+        ></el-table-column>
+        <el-table-column
+          property="Account"
+          label="账户"
+          min-width="150"
+        ></el-table-column>
+        <el-table-column
+          property="Address"
+          label="地址"
+          min-width="150"
+        ></el-table-column>
         <el-table-column
           property="CompanyPhone"
           label="公司电话"
+          min-width="150"
         ></el-table-column>
 
         <el-table-column label="关于" min-width="80">
@@ -96,6 +120,332 @@
               <div slot="reference" class="name-wrapper">
                 <el-tag size="medium">...</el-tag>
               </div>
+            </el-popover>
+          </template>
+        </el-table-column>
+        <el-table-column label="营业执照" min-width="60" fixed="right">
+          <template slot="header">
+            <span class="headercolor">营业执照</span>
+          </template>
+          <template slot-scope="scope">
+            <el-popover
+              placement="left"
+              width="300"
+              trigger="click"
+              :ref="`popover-${scope.$index}`"
+            >
+              <el-upload
+                class="upload-demo"
+                :action="`http://172.16.1.10:3001/upload?name=supplierYYZZ_${supplierNameT}`"
+                :on-success="YYZZsuccessHandlel"
+                :before-upload="beforeUpload"
+                :limit="1"
+                :file-list="supplierYYZZfileList"
+              >
+                <el-button
+                  type="primary"
+                  icon="el-icon-upload2"
+                  size="mini"
+                  plain
+                  >上传</el-button
+                >
+                <div slot="tip" class="el-upload__tip">
+                  <a
+                    target="_blank"
+                    :href="`http://172.16.1.10:3001/download?name=supplierYYZZ_${scope.row.supplierYYZZ}`"
+                    >下载模板</a
+                  >
+                </div>
+              </el-upload>
+              <el-button
+                v-if="scope.row.supplierYYZZ == undefined"
+                type="info"
+                icon="el-icon-paperclip"
+                circle
+                size="mini"
+                plain
+                slot="reference"
+                @click="scfjYYZZ(scope.row)"
+              ></el-button>
+              <el-button
+                v-if="scope.row.supplierYYZZ != undefined"
+                type="success"
+                icon="el-icon-paperclip"
+                circle
+                size="mini"
+                slot="reference"
+                @click="scfjYYZZ(scope.row)"
+              ></el-button>
+            </el-popover>
+          </template>
+        </el-table-column>
+        <el-table-column label="开户许可证" min-width="60" fixed="right">
+          <template slot="header">
+            <span class="headercolor">开户许可证</span>
+          </template>
+          <template slot-scope="scope">
+            <el-popover
+              placement="left"
+              width="300"
+              trigger="click"
+              :ref="`popover-${scope.$index}`"
+            >
+              <el-upload
+                class="upload-demo"
+                :action="`http://172.16.1.10:3001/upload?name=supplierKHXKZ_${supplierNameT}`"
+                :on-success="KHXKZsuccessHandlel"
+                :before-upload="beforeUpload"
+                :limit="1"
+                :file-list="supplierKHXKZfileList"
+              >
+                <el-button
+                  type="primary"
+                  icon="el-icon-upload2"
+                  size="mini"
+                  plain
+                  >上传</el-button
+                >
+                <div slot="tip" class="el-upload__tip">
+                  <a
+                    target="_blank"
+                    :href="`http://172.16.1.10:3001/download?name=supplierKHXKZ_${scope.row.supplierKHXKZ}`"
+                    >下载模板</a
+                  >
+                </div>
+              </el-upload>
+              <el-button
+                v-if="scope.row.supplierKHXKZ == undefined"
+                type="info"
+                icon="el-icon-paperclip"
+                circle
+                size="mini"
+                plain
+                slot="reference"
+                @click="scfjKHXKZ(scope.row)"
+              ></el-button>
+              <el-button
+                v-if="scope.row.supplierKHXKZ != undefined"
+                type="success"
+                icon="el-icon-paperclip"
+                circle
+                size="mini"
+                slot="reference"
+                @click="scfjKHXKZ(scope.row)"
+              ></el-button>
+            </el-popover>
+          </template>
+        </el-table-column>
+        <el-table-column label="ISO" min-width="60">
+          <template slot-scope="scope">
+            <el-popover
+              placement="left"
+              width="300"
+              trigger="click"
+              :ref="`popover-${scope.$index}`"
+            >
+              <el-upload
+                class="upload-demo"
+                :action="`http://172.16.1.10:3001/upload?name=supplierISO_${supplierNameT}`"
+                :on-success="ISOsuccessHandlel"
+                :before-upload="beforeUpload"
+                :limit="1"
+                :file-list="supplierISOfileList"
+              >
+                <el-button
+                  type="primary"
+                  icon="el-icon-upload2"
+                  size="mini"
+                  plain
+                  >上传</el-button
+                >
+                <div slot="tip" class="el-upload__tip">
+                  <a
+                    target="_blank"
+                    :href="`http://172.16.1.10:3001/download?name=supplierISO_${scope.row.supplierISO}`"
+                    >下载模板</a
+                  >
+                </div>
+              </el-upload>
+              <el-button
+                v-if="scope.row.supplierISO == undefined"
+                type="info"
+                icon="el-icon-paperclip"
+                circle
+                size="mini"
+                plain
+                slot="reference"
+                @click="scfjISO(scope.row)"
+              ></el-button>
+              <el-button
+                v-if="scope.row.supplierISO != undefined"
+                type="success"
+                icon="el-icon-paperclip"
+                circle
+                size="mini"
+                slot="reference"
+                @click="scfjISO(scope.row)"
+              ></el-button>
+            </el-popover>
+          </template>
+        </el-table-column>
+        <el-table-column label="环保" min-width="60">
+          <template slot-scope="scope">
+            <el-popover
+              placement="left"
+              width="300"
+              trigger="click"
+              :ref="`popover-${scope.$index}`"
+            >
+              <el-upload
+                class="upload-demo"
+                :action="`http://172.16.1.10:3001/upload?name=supplierHB_${supplierNameT}`"
+                :on-success="HBsuccessHandlel"
+                :before-upload="beforeUpload"
+                :limit="1"
+                :file-list="supplierHBfileList"
+              >
+                <el-button
+                  type="primary"
+                  icon="el-icon-upload2"
+                  size="mini"
+                  plain
+                  >上传</el-button
+                >
+                <div slot="tip" class="el-upload__tip">
+                  <a
+                    target="_blank"
+                    :href="`http://172.16.1.10:3001/download?name=supplierHB_${scope.row.supplierHB}`"
+                    >下载模板</a
+                  >
+                </div>
+              </el-upload>
+              <el-button
+                v-if="scope.row.supplierHB == undefined"
+                type="info"
+                icon="el-icon-paperclip"
+                circle
+                size="mini"
+                plain
+                slot="reference"
+                @click="scfjHB(scope.row)"
+              ></el-button>
+              <el-button
+                v-if="scope.row.supplierHB != undefined"
+                type="success"
+                icon="el-icon-paperclip"
+                circle
+                size="mini"
+                slot="reference"
+                @click="scfjHB(scope.row)"
+              ></el-button>
+            </el-popover>
+          </template>
+        </el-table-column>
+
+        <el-table-column label="代理授权证书" min-width="60">
+          <template slot-scope="scope">
+            <el-popover
+              placement="left"
+              width="300"
+              trigger="click"
+              :ref="`popover-${scope.$index}`"
+            >
+              <el-upload
+                class="upload-demo"
+                :action="`http://172.16.1.10:3001/upload?name=supplierDLSQZS_${supplierNameT}`"
+                :on-success="DLSQZSsuccessHandlel"
+                :before-upload="beforeUpload"
+                :limit="1"
+                :file-list="supplierDLSQZSfileList"
+              >
+                <el-button
+                  type="primary"
+                  icon="el-icon-upload2"
+                  size="mini"
+                  plain
+                  >上传</el-button
+                >
+                <div slot="tip" class="el-upload__tip">
+                  <a
+                    target="_blank"
+                    :href="`http://172.16.1.10:3001/download?name=supplierDLSQZS_${scope.row.supplierDLSQZS}`"
+                    >下载模板</a
+                  >
+                </div>
+              </el-upload>
+              <el-button
+                v-if="scope.row.supplierDLSQZS == undefined"
+                type="info"
+                icon="el-icon-paperclip"
+                circle
+                size="mini"
+                plain
+                slot="reference"
+                @click="scfjDLSQZS(scope.row)"
+              ></el-button>
+              <el-button
+                v-if="scope.row.supplierDLSQZS != undefined"
+                type="success"
+                icon="el-icon-paperclip"
+                circle
+                size="mini"
+                slot="reference"
+                @click="scfjDLSQZS(scope.row)"
+              ></el-button>
+            </el-popover>
+          </template>
+        </el-table-column>
+
+        <el-table-column label="其他资质" min-width="60">
+          <template slot-scope="scope">
+            <el-popover
+              placement="left"
+              width="300"
+              trigger="click"
+              :ref="`popover-${scope.$index}`"
+            >
+              <el-upload
+                class="upload-demo"
+                :action="`http://172.16.1.10:3001/upload?name=supplierQTZZ_${supplierNameT}`"
+                :on-success="QTZZsuccessHandlel"
+                :before-upload="beforeUpload"
+                :limit="1"
+                :file-list="supplierQTZZfileList"
+              >
+                <el-button
+                  type="primary"
+                  icon="el-icon-upload2"
+                  size="mini"
+                  plain
+                  >上传</el-button
+                >
+                <div slot="tip" class="el-upload__tip">
+                  <a
+                    target="_blank"
+                    :href="`http://172.16.1.10:3001/download?name=supplierQTZZ_${scope.row.supplierQTZZ}`"
+                    >下载模板</a
+                  >
+                </div>
+              </el-upload>
+              <el-button
+                v-if="scope.row.supplierQTZZ == undefined"
+                type="info"
+                icon="el-icon-paperclip"
+                circle
+                size="mini"
+                plain
+                slot="reference"
+                @click="scfjQTZZ(scope.row)"
+              ></el-button>
+              <el-button
+                v-if="scope.row.supplierQTZZ != undefined"
+                type="success"
+                icon="el-icon-paperclip"
+                circle
+                size="mini"
+                slot="reference"
+                @click="scfjQTZZ(scope.row)"
+              ></el-button>
             </el-popover>
           </template>
         </el-table-column>
@@ -127,6 +477,7 @@
               size="mini"
               @click="handleEdit(scope.row)"
             ></el-button>
+
             <el-button
               type="danger"
               icon="el-icon-delete"
@@ -154,6 +505,12 @@ import { getTime } from "common/time/getTime";
 export default {
   data() {
     return {
+      supplierYYZZfileList: [],
+      supplierKHXKZfileList: [],
+      supplierISOfileList: [],
+      supplierHBfileList: [],
+      supplierDLSQZSfileList: [],
+      supplierQTZZfileList: [],
       operation: "", //当前操作切换
       pagenums: 0,
       form: {
@@ -166,6 +523,13 @@ export default {
         Account: "", //账户
         Address: "", //地址
         CompanyPhone: "", //公司电话
+        supplierYYZZ: "", //营业执照
+        supplierKHXKZ: "", //开户许可证
+        supplierISO: "", //ISO
+        supplierHB: "", //环保
+        supplierDLSQZS: "", //代理授权证书
+        supplierQTZZ: "", //其他资质
+
         creater: "", //创建人
         creatdate: "", //创建时间
       },
@@ -177,9 +541,196 @@ export default {
       tableData: [],
       csd1: [],
       csd2: [],
+      supplierNameT: "",
     };
   },
   methods: {
+    //营业执照
+    scfjYYZZ(row) {
+      this.supplierNameT = row.supplierName;
+      if (row.supplierYYZZ) {
+        this.supplierYYZZfileList = [{ name: "" }];
+        this.supplierYYZZfileList[0].name = row.supplierYYZZ;
+      } else {
+        this.supplierYYZZfileList = [];
+      }
+    },
+    beforeUpload(file) {
+      return new Promise((resolve, reject) => {
+        console.log(file, resolve, reject);
+        return resolve(true);
+      });
+    },
+    YYZZsuccessHandlel(response, file, supplierYYZZfileList) {
+      console.log("上传成功！", response, file, supplierYYZZfileList);
+      this.$https({
+        method: "post",
+        url: "/api/apiModel/updateByWhere",
+        data: {
+          table: "__supplierManager",
+          dataBase: "base",
+          where: { supplierName: this.supplierNameT },
+          form: { supplierYYZZ: this.supplierNameT + ".pdf" },
+        },
+      })
+        .then((res) => {
+          console.log(res);
+          this.newview();
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    //开户许可证
+    scfjKHXKZ(row) {
+      this.supplierNameT = row.supplierName;
+      if (row.supplierKHXKZ) {
+        this.supplierKHXKZfileList = [{ name: "" }];
+        this.supplierKHXKZfileList[0].name = row.supplierKHXKZ;
+      } else {
+        this.supplierKHXKZfileList = [];
+      }
+    },
+    KHXKZsuccessHandlel(response, file, supplierKHXKZfileList) {
+      console.log("上传成功！", response, file, supplierKHXKZfileList);
+      this.$https({
+        method: "post",
+        url: "/api/apiModel/updateByWhere",
+        data: {
+          table: "__supplierManager",
+          dataBase: "base",
+          where: { supplierName: this.supplierNameT },
+          form: { supplierKHXKZ: this.supplierNameT + ".pdf" },
+        },
+      })
+        .then((res) => {
+          console.log(res);
+          this.newview();
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    //ISO
+    scfjISO(row) {
+      this.supplierNameT = row.supplierName;
+      if (row.supplierISO) {
+        this.supplierISOfileList = [{ name: "" }];
+        this.supplierISOfileList[0].name = row.supplierISO;
+      } else {
+        this.supplierISOfileList = [];
+      }
+    },
+    ISOsuccessHandlel(response, file, supplierISOfileList) {
+      console.log("上传成功！", response, file, supplierISOfileList);
+      this.$https({
+        method: "post",
+        url: "/api/apiModel/updateByWhere",
+        data: {
+          table: "__supplierManager",
+          dataBase: "base",
+          where: { supplierName: this.supplierNameT },
+          form: { supplierISO: this.supplierNameT + ".pdf" },
+        },
+      })
+        .then((res) => {
+          console.log(res);
+          this.newview();
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    //环保
+    scfjHB(row) {
+      this.supplierNameT = row.supplierName;
+      if (row.supplierHB) {
+        this.supplierHBfileList = [{ name: "" }];
+        this.supplierHBfileList[0].name = row.supplierHB;
+      } else {
+        this.supplierHBfileList = [];
+      }
+    },
+    HBsuccessHandlel(response, file, supplierHBfileList) {
+      console.log("上传成功！", response, file, supplierHBfileList);
+      this.$https({
+        method: "post",
+        url: "/api/apiModel/updateByWhere",
+        data: {
+          table: "__supplierManager",
+          dataBase: "base",
+          where: { supplierName: this.supplierNameT },
+          form: { supplierHB: this.supplierNameT + ".pdf" },
+        },
+      })
+        .then((res) => {
+          console.log(res);
+          this.newview();
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    //代理授权证书
+    scfjDLSQZS(row) {
+      this.supplierNameT = row.supplierName;
+      if (row.supplierDLSQZS) {
+        this.supplierDLSQZSfileList = [{ name: "" }];
+        this.supplierDLSQZSfileList[0].name = row.supplierDLSQZS;
+      } else {
+        this.supplierDLSQZSfileList = [];
+      }
+    },
+    DLSQZSsuccessHandlel(response, file, supplierDLSQZSfileList) {
+      console.log("上传成功！", response, file, supplierDLSQZSfileList);
+      this.$https({
+        method: "post",
+        url: "/api/apiModel/updateByWhere",
+        data: {
+          table: "__supplierManager",
+          dataBase: "base",
+          where: { supplierName: this.supplierNameT },
+          form: { supplierDLSQZS: this.supplierNameT + ".pdf" },
+        },
+      })
+        .then((res) => {
+          console.log(res);
+          this.newview();
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    //其他资质
+    scfjQTZZ(row) {
+      this.supplierNameT = row.supplierName;
+      if (row.supplierQTZZ) {
+        this.supplierQTZZfileList = [{ name: "" }];
+        this.supplierQTZZfileList[0].name = row.supplierQTZZ;
+      } else {
+        this.supplierQTZZfileList = [];
+      }
+    },
+    QTZZsuccessHandlel(response, file, supplierQTZZfileList) {
+      console.log("上传成功！", response, file, supplierQTZZfileList);
+      this.$https({
+        method: "post",
+        url: "/api/apiModel/updateByWhere",
+        data: {
+          table: "__supplierManager",
+          dataBase: "base",
+          where: { supplierName: this.supplierNameT },
+          form: { supplierQTZZ: this.supplierNameT + ".pdf" },
+        },
+      })
+        .then((res) => {
+          console.log(res);
+          this.newview();
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
     //获取页面数
     getpage() {
       this.$https({
@@ -199,6 +750,7 @@ export default {
           console.log(err);
         });
     },
+
     //添加事件
     handleAdd() {
       this.operation = "add";
@@ -439,5 +991,8 @@ export default {
 }
 .el-input {
   margin: 0;
+}
+.headercolor {
+  color: rgb(245, 110, 32);
 }
 </style>

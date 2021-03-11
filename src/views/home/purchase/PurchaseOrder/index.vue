@@ -17,7 +17,7 @@
       :visible.sync="gysDialog"
       :close-on-click-modal="false"
     >
-      <el-form ref="form" :model="form" label-width="80px">
+      <el-form ref="form" :model="form" label-width="100px">
         <el-form-item label="供应商号">
           <el-select
             v-model="supplierNumbercode"
@@ -31,17 +31,6 @@
               :value="item.supplierNumbercode"
             >
               {{ item.supplierNumbercode }}
-              <!-- <span style="float: left">{{ item.supplierNumbercode }}</span> -->
-
-              <!-- <span
-                        style="
-                          float: right;
-                          color: #8492a6;
-                          font-size: 13px;
-                          margin-right: 20px;
-                        "
-                        >{{ item.supplierName }}</span
-                      > -->
             </el-option>
           </el-select>
         </el-form-item>
@@ -69,6 +58,9 @@
               >
             </el-option>
           </el-select>
+        </el-form-item>
+        <el-form-item label="供应商合同号">
+          <el-input v-model="form.GYSHTH" style="width: 220px"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -298,12 +290,18 @@
                   <p>
                     <span class="tl">供应商编号:</span>{{ form.supplierNumber }}
                   </p>
+                  <p><span class="tl">供应商合同号:</span>{{ form.GYSHTH }}</p>
+
                   <p>
                     <span class="tl">供应商名称:</span>{{ form.supplierName }}
                   </p>
                   <p><span class="tl">联系人:</span>{{ form.Contacts }}</p>
                   <p>
                     <span class="tl">联系人电话:</span>{{ form.ContactsPhone }}
+                  </p>
+                  <p>
+                    <span class="tl">物料时效:</span
+                    ><span class="sx">{{ sx }}</span>
                   </p>
                 </div>
                 <el-form-item
@@ -316,7 +314,7 @@
                   label="采购单价"
                   :rules="[{ required: true, message: '不能为空' }]"
                 >
-                  <el-input v-model="form.ActualPrice"></el-input>
+                  <el-input v-model="form.ActualPrice" disabled></el-input>
                 </el-form-item>
                 <el-form-item
                   label="计划交期"
@@ -366,6 +364,7 @@ import { getTime } from "common/utils/index";
 export default {
   data() {
     return {
+      sx: "",
       gysDialog: false,
       N: "",
       Y: "",
@@ -387,6 +386,7 @@ export default {
         OrderNumber: "", //订单编号
         PurchaseNumber: "", //采购编号
         supplierNumber: "", //供应商编号
+        GYSHTH: "", //供应商合同号
         supplierName: "", //供应商名称
         Contacts: "", //联系人
         ContactsPhone: "", //联系人电话
@@ -570,18 +570,38 @@ export default {
     async findsupplierNumber(scope) {
       this.N = new Date().getFullYear();
       this.form.ShouldNumber = scope.row.SurplusDistribution;
-      // let csd1 = await this.findGYS();
-      // let csd = csd1.map((item) => {
-      //   item.supplierNumbercode = item.supplierNumber + "-" + item.supplierName;
-      //   return item;
-      // });
-      // this.$nextTick(() => {
-      //   this.options = csd;
-      // });
       this.form.PlanNumber = "";
-      this.form.ActualPrice = "";
       this.Y = "";
       this.R = "";
+      this.form.ActualPrice = "";
+      /////////////////
+      this.sx = "已过期或不存在";
+      this.$https({
+        //这里是你自己的请求方式、url和data参数
+        method: "get",
+        url: "/api/apiModel/find",
+        params: {
+          table: "__supplierMaterial",
+          dataBase: "base",
+          where: {
+            MaterialNumber: scope.row.MaterialNumber,
+            supplierName: this.form.supplierName,
+            Approval: "已审批",
+            prescription: { $gte: getTime() },
+          },
+        },
+      })
+        .then((res) => {
+          console.log("查询结果", res);
+
+          if (res.length > 0) {
+            this.form.ActualPrice = res[0].Price;
+            this.sx = res[0].prescription;
+          }
+        })
+        .catch(function (err) {
+          console.log(err);
+        });
     },
     async findgysf() {
       let csd1 = await this.findGYS();
@@ -666,10 +686,6 @@ export default {
     },
     //编辑事件
     async Edit(scope) {
-      this.$myloading({
-        show: true,
-      });
-      scope._self.$refs[`popover-${scope.$index}`].doClose();
       if (scope.row.SurplusDistribution == "0") return;
       if (
         !this.N ||
@@ -692,7 +708,10 @@ export default {
         alert("必填项不能为空！");
         return;
       }
-
+      this.$myloading({
+        show: true,
+      });
+      scope._self.$refs[`popover-${scope.$index}`].doClose();
       // this.form.PlanNumber = scope.row.PlanNumber;
       this.form.MaterialNumber = scope.row.MaterialNumber; //物料编号
       this.form.SurplusDistribution = scope.row.SurplusDistribution;
@@ -709,6 +728,7 @@ export default {
           form: this.form,
           row: scope.row,
           Purpose: this.Purpose,
+          creater: sessionStorage.getItem("loginName"),
           time: getTime(),
         },
       })
@@ -1143,6 +1163,9 @@ body {
 }
 .jq .el-input:nth-of-type(1) {
   width: 280px;
+}
+.sx {
+  color: rgb(241, 180, 47);
 }
 
 @keyframes xz {

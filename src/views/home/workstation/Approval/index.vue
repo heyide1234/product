@@ -1,39 +1,20 @@
 <template>
   <div class="container">
     <div id="bk"></div>
-    <!-- <form
-      method="post"
-      action=""
-      enctype="multipart/form-data"
-    >
-      <input type="file" name="inputFile" id="file" />
-      <input type="submit" value="上传" />
-    </form> -->
-
     <el-steps :active="0" finish-status="success" simple style="margin: 5px">
-      <el-step title="销售订单"></el-step>
-      <a @click="reload">
-        <i class="el-icon-refresh-right"></i>
-      </a>
+      <el-step title="审 批"></el-step>
       <!--<el-step title="制程"></el-step>
       <el-step title="配料"></el-step>
       <el-step title="领料"></el-step>
       <el-step title="检验"></el-step>-->
     </el-steps>
-
     <el-dialog
       title="表单"
       :visible.sync="dialogFormVisible2"
       :close-on-click-modal="false"
     >
       <div class="dialogBody" id="dialogBody">
-        <h2>
-          四川凯迈新能源有限公司（产品销售单）<span
-            style="color: red"
-            v-show="Approval != '已审批'"
-            >【{{ Approval }}】</span
-          >
-        </h2>
+        <h2>四川凯迈新能源有限公司（产品销售单）</h2>
 
         <div class="htbh">系统订单编号：XS{{ form1.OrderNumber }}</div>
         <div class="htbh te">客户订单编号：{{ ddbh }}</div>
@@ -48,12 +29,12 @@
         <div class="title-content">
           <div>
             <div class="text">
-              地址：<span class="t">{{ xfdz }}</span>
+              住所地：<span class="t">{{ xfdz }}</span>
             </div>
           </div>
           <div>
             <div class="text">
-              地址：<span class="t"
+              住所地：<span class="t"
                 >四川省成都市经济技术开发区成龙大道888号
               </span>
             </div>
@@ -70,7 +51,7 @@
         <div class="title-content">
           <div>
             <div class="text">
-              联系人地址：<span class="t">{{ xfxlxrdz }}</span>
+              联系人住址：<span class="t">{{ xfxlxrdz }}</span>
             </div>
           </div>
         </div>
@@ -88,7 +69,6 @@
               <th>单价</th>
               <th>金额</th>
               <th>单位</th>
-              <th>计划交期</th>
             </tr>
           </thead>
           <tbody>
@@ -100,7 +80,7 @@
           </tbody>
           <tfoot>
             <tr>
-              <td colspan="9" id="jhe">
+              <td colspan="8" id="jhe">
                 <span
                   >合计（小写）：<b class="zjs">{{ zj }}</b>
                 </span>
@@ -108,7 +88,7 @@
               </td>
             </tr>
             <tr>
-              <td colspan="9" id="jhe">
+              <td colspan="8" id="jhe">
                 <div class="fl">
                   （一）、供方开具1、增值税专用发票
                   <div class="xzY"></div>
@@ -126,7 +106,7 @@
               </td>
             </tr>
             <tr>
-              <td colspan="9" id="jhe">
+              <td colspan="8" id="jhe">
                 <div class="fl">
                   （二）、运费承担方
                   <div class="xzY"></div>
@@ -165,7 +145,6 @@
         >
       </div>
     </el-dialog>
-
     <el-dialog
       title="表单"
       :visible.sync="dialogFormVisible"
@@ -175,112 +154,22 @@
         <el-form-item label="订单编号">
           <el-input v-model="form.OrderNumber" disabled></el-input>
         </el-form-item>
+
         <el-form-item label="用途">
           <el-select
             v-model="form.Purpose"
-            style="width: 100%"
-            @change="$forceUpdate()"
-          >
-            <el-option value="生产制造"></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="客户订单编号">
-          <el-input v-model="form.CustomerOrderNumber"></el-input>
-        </el-form-item>
-
-        <el-form-item label="客户编号">
-          <el-select
-            v-model="form.CustomerNumber"
             placeholder="请选择"
             style="width: 100%"
-            @change="CustomerNumberChange"
           >
             <el-option
-              v-for="(item, key) in CustomerInfo"
+              v-for="(item, key) in orderPurpose"
               :key="key"
-              :value="item.CustomerNumber"
-            >
-              <span style="float: left">{{ item.CustomerNumber }}</span>
-              <span
-                style="
-                  float: right;
-                  color: #8492a6;
-                  font-size: 13px;
-                  margin-right: 20px;
-                "
-                >{{ item.CustomerName }}</span
-              >
-            </el-option>
+              :value="item.orderPurposeName"
+            />
           </el-select>
         </el-form-item>
-        <el-form-item label="联系人">
-          <el-select
-            v-model="form.Contacts"
-            placeholder="请选择"
-            style="width: 100%"
-            @change="CustomerNumberChange2"
-          >
-            <el-option
-              v-for="(item, key) in CustomerInfo2"
-              :key="key"
-              :value="item.Contacts"
-            >
-              <span style="float: left">{{ item.Contacts }}</span>
-              <span
-                style="
-                  float: right;
-                  color: #8492a6;
-                  font-size: 13px;
-                  margin-right: 20px;
-                "
-                >{{ item.ContactsPhone }}</span
-              >
-            </el-option>
-          </el-select>
-        </el-form-item>
-
-        <!-- <el-form-item label="附件">
-          <el-input v-model="form.enclosure"></el-input>
-        </el-form-item> -->
-        <el-form-item label="客户名称">
-          <el-input v-model="form.CustomerName" disabled></el-input>
-        </el-form-item>
-        <el-form-item label="行业类别">
-          <el-input v-model="form.CustomerClass" disabled></el-input>
-        </el-form-item>
-        <el-form-item label="客户备注">
-          <el-input v-model="form.CustomerRemarks" disabled></el-input>
-        </el-form-item>
-        <el-form-item label="纳税人识别号">
-          <el-input v-model="form.TIN" disabled></el-input>
-        </el-form-item>
-
-        <el-form-item label="开户行">
-          <el-input v-model="form.Bank" disabled></el-input>
-        </el-form-item>
-
-        <el-form-item label="账户">
-          <el-input v-model="form.Account" disabled></el-input>
-        </el-form-item>
-        <el-form-item label="地址">
-          <el-input v-model="form.Address" disabled></el-input>
-        </el-form-item>
-        <el-form-item label="公司电话">
-          <el-input v-model="form.CompanyPhone" disabled></el-input>
-        </el-form-item>
-
-        <el-form-item label="联系人电话">
-          <el-input v-model="form.ContactsPhone" disabled></el-input>
-        </el-form-item>
-
-        <el-form-item label="联系人地址">
-          <el-input v-model="form.ContactsAddress" disabled></el-input>
-        </el-form-item>
-        <el-form-item label="联系人邮箱">
-          <el-input v-model="form.ContactsEmail" disabled></el-input>
-        </el-form-item>
-        <el-form-item label="联系人备注">
-          <el-input v-model="form.ContactsRemarks" disabled></el-input>
+        <el-form-item label="备注">
+          <el-input type="textarea" v-model="form.Remarks"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -288,7 +177,11 @@
         <el-button type="primary" @click="onSubmit">确 定</el-button>
       </div>
     </el-dialog>
-    <el-dialog title="表单" :visible.sync="dialogFormVisible1">
+    <el-dialog
+      title="表单"
+      :visible.sync="dialogFormVisible1"
+      :close-on-click-modal="false"
+    >
       <el-form ref="form1" :model="form1">
         <el-form-item label="订单编号">
           <el-input v-model="form1.OrderNumber" disabled></el-input>
@@ -363,12 +256,11 @@
         >
           <el-input v-model="form1.MaterialName" disabled></el-input>
         </el-form-item>
-        <span style="color: red;font-size：10px">{{ sx }}</span>
         <el-form-item
           label="产品价格"
           :rules="[{ required: true, message: '不能为空' }]"
         >
-          <el-input v-model="form1.MaterialPrice" disabled></el-input>
+          <el-input v-model="form1.MaterialPrice"></el-input>
         </el-form-item>
         <el-form-item
           label="产品数量"
@@ -376,38 +268,27 @@
         >
           <el-input v-model="form1.Number"></el-input>
         </el-form-item>
-
-        <el-form-item
-          label="计划交期"
-          :rules="[{ required: true, message: '不能为空' }]"
-        >
-          <el-date-picker
-            v-model="form1.PlannedDeliveryDate"
-            style="width: 100%"
-            type="date"
-            placeholder="选择日期"
-          >
-          </el-date-picker>
-        </el-form-item>
-
-        <el-form-item label="客户物料编号">
-          <el-input v-model="form1.CustomerMaterialNumber"></el-input>
-        </el-form-item>
-        <el-form-item label="客户物料名称">
-          <el-input v-model="form1.CustomerMaterialName"></el-input>
-        </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible1 = false">取 消</el-button>
         <el-button type="primary" @click="onSubmit1">确 定</el-button>
       </div>
     </el-dialog>
-
+    <el-select
+      v-model="ApprovalClass"
+      placeholder="请选择审批类型"
+      size="small"
+      style="margin: 10px"
+      @change="findchangLX"
+    >
+      <el-option value="订单审批" />
+      <el-option value="采购审批" />
+    </el-select>
     <div class="tabels">
       <el-table
         ref="tableselectData"
         class="table"
-        height="300"
+        height="500"
         :data="tableData"
         highlight-current-row
       >
@@ -417,80 +298,29 @@
           property="OrderNumber"
           label="订单编号"
         ></el-table-column>
-        <el-table-column property="Purpose" label="用途"></el-table-column>
         <el-table-column
-          property="CustomerOrderNumber"
-          label="客户订单编号"
+          property="PurchaseNumber"
+          label="采购单号"
         ></el-table-column>
 
+        <el-table-column property="creater" label="申请人"></el-table-column>
         <el-table-column
-          property="CustomerNumber"
-          label="客户编号"
-        ></el-table-column>
-        <el-table-column
-          property="CustomerName"
-          label="客户名称"
-        ></el-table-column>
-        <el-table-column
-          property="CustomerClass"
-          label="行业类别"
-        ></el-table-column>
-        <el-table-column
-          property="CustomerRemarks"
-          label="客户备注"
-        ></el-table-column>
-        <el-table-column property="TIN" label="纳税人识别号"></el-table-column>
-
-        <el-table-column property="Bank" label="开户行"></el-table-column>
-        <el-table-column property="Account" label="账户"></el-table-column>
-        <el-table-column property="Address" label="地址"></el-table-column>
-        <el-table-column
-          property="CompanyPhone"
-          label="公司电话"
-        ></el-table-column>
-        <el-table-column property="Contacts" label="联系人"></el-table-column>
-        <el-table-column
-          property="ContactsPhone"
-          label="联系人电话"
-        ></el-table-column>
-        <el-table-column
-          property="ContactsAddress"
-          label="联系人地址"
-        ></el-table-column>
-        <el-table-column
-          property="ContactsEmail"
-          label="联系人邮箱"
-        ></el-table-column>
-
-        <el-table-column
-          property="ContactsRemarks"
-          label="联系人备注"
+          property="creatdate"
+          label="申请时间"
         ></el-table-column>
         <el-table-column property="Approval" label="审批状态"></el-table-column>
-        <el-table-column property="Approver" label="审批人"></el-table-column>
-        <el-table-column label="关于" min-width="80">
-          <template slot-scope="scope">
-            <el-popover trigger="hover" placement="top">
-              <p>创建人: {{ scope.row.creater }}</p>
-              <p>创建日期: {{ scope.row.creatdate }}</p>
-              <!-- <p>创建日期: {{ scope.row.enclosure }}</p> -->
+        <!-- <el-table-column property="Approver" label="审批人"></el-table-column> -->
 
-              <div slot="reference" class="name-wrapper">
-                <el-tag size="medium">...</el-tag>
-              </div>
-            </el-popover>
-          </template>
-        </el-table-column>
-        <el-table-column label="操作" min-width="130" fixed="right">
+        <el-table-column label="操作" min-width="90" fixed="right">
           <template slot="header">
-            <el-button
+            <!-- <el-button
               type="success"
               icon="el-icon-document-add"
               plain
               circle
               size="mini"
               @click="handleAdd"
-            ></el-button>
+            ></el-button> -->
             <!-- <el-button
               type="danger"
               icon="el-icon-delete-solid"
@@ -502,66 +332,31 @@
           </template>
           <template slot-scope="scope">
             <!-- <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">编辑</el-button> -->
-            <el-button
-              title="展开明细"
+            <!-- <el-button
               type="primary"
-              icon="el-icon-document-copy"
+              icon="el-icon-unlock"
               circle
               size="mini"
               plain
               @click="findDetail(scope.row)"
-            ></el-button>
-            <el-popover
-              placement="left"
-              width="300"
-              trigger="click"
-              :ref="`popover-${scope.$index}`"
-            >
-              <el-upload
-                class="upload-demo"
-                action="http://172.16.1.10:3001/upload"
-                :on-success="successHandlel"
-                :limit="1"
-                :file-list="fileList"
-              >
-                <el-button
-                  type="primary"
-                  icon="el-icon-upload2"
-                  size="mini"
-                  plain
-                  >上传</el-button
-                >
-                <div slot="tip" class="el-upload__tip">
-                  <a
-                    target="_blank"
-                    :href="`http://172.16.1.10:3001/download?name=${scope.row.enclosure}`"
-                    >下载模板</a
-                  >
-                  <!-- <el-button icon="el-icon-download" size="mini"
-                    ><a @click="dl">点击下载</a></el-button
-                  > -->
-                </div>
-              </el-upload>
-              <el-button
-                title="附件上传"
-                style="margin: 0 5px"
-                type="info"
-                icon="el-icon-paperclip"
-                circle
-                size="mini"
-                plain
-                slot="reference"
-                @click="scfj(scope.row)"
-              ></el-button>
-            </el-popover>
+            ></el-button> -->
             <el-button
-              :disabled="scope.row.processCode != '1' ? true : false"
-              type="danger"
-              icon="el-icon-delete"
+              type="success"
+              icon="el-icon-unlock"
               circle
               size="mini"
               plain
-              @click="handleDelete(scope.row)"
+              title="点击审批通过"
+              @click="handleunlock(scope.row)"
+            ></el-button>
+            <el-button
+              type="danger"
+              icon="el-icon-close"
+              circle
+              size="mini"
+              plain
+              title="点击审批驳回"
+              @click="handlelock(scope.row)"
             ></el-button>
           </template>
         </el-table-column>
@@ -574,159 +369,18 @@
           :total="total"
         ></el-pagination>
       </div>
-      <el-steps
-        :active="0"
-        finish-status="success"
-        simple
-        style="margin: 40px 5px 5px 5px"
-      >
-        <el-step title="销售订单明细"></el-step>&nbsp;&nbsp;&nbsp;<font>{{
-          form1.OrderNumber
-        }}</font>
-      </el-steps>
-      <el-table
-        class="table1"
-        height="300"
-        :data="tableData1"
-        :style="{ display: tableVisible }"
-      >
-        <el-table-column
-          property="OrderNumber"
-          label="订单编号"
-        ></el-table-column>
-
-        <el-table-column
-          property="MaterialNumber"
-          label="产品编号"
-        ></el-table-column>
-        <el-table-column
-          property="MaterialName"
-          label="产品名称"
-        ></el-table-column>
-        <el-table-column
-          property="MaterialSpec"
-          label="规格型号"
-        ></el-table-column>
-
-        <el-table-column
-          property="MaterialPrice"
-          label="产品价格"
-        ></el-table-column>
-        <el-table-column property="Number" label="计划数"></el-table-column>
-        <el-table-column property="PNum" label="产品数量"></el-table-column>
-
-        <el-table-column
-          property="CustomerMaterialNumber"
-          label="客户物料编号"
-        ></el-table-column>
-
-        <el-table-column
-          property="CustomerMaterialName"
-          label="客户物料名称"
-        ></el-table-column>
-        <el-table-column property="jine" label="金额"></el-table-column>
-        <el-table-column property="tjine" label="总金额"></el-table-column>
-        <el-table-column
-          property="PlannedDeliveryDate"
-          label="计划交期"
-        ></el-table-column>
-
-        <el-table-column label="关于" min-width="80">
-          <template slot-scope="scope">
-            <el-popover trigger="hover" placement="top">
-              <p>创建人: {{ scope.row.creater }}</p>
-              <p>创建日期: {{ scope.row.creatdate }}</p>
-
-              <div slot="reference" class="name-wrapper">
-                <el-tag size="medium">...</el-tag>
-              </div>
-            </el-popover>
-          </template>
-        </el-table-column>
-        <el-table-column label="操作" min-width="120" fixed="right">
-          <template slot="header">
-            <el-button
-              type="success"
-              icon="el-icon-document-add"
-              plain
-              circle
-              size="mini"
-              @click="handleAdd1"
-            ></el-button>
-            <el-button
-              title="流程开启"
-              type="success"
-              icon="el-icon-position"
-              circle
-              plain
-              size="mini"
-              @click="handleCirculationstate"
-            ></el-button>
-            <el-button
-              title="计算"
-              type="primary"
-              plain
-              circle
-              size="mini"
-              icon="el-icon-postcard"
-              @click="jsNum"
-            ></el-button>
-            <el-button
-              title="打印"
-              type="primary"
-              icon="el-icon-printer"
-              circle
-              size="mini"
-              plain
-              @click="print"
-            ></el-button>
-          </template>
-          <template slot-scope="scope">
-            <!-- <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">编辑</el-button> -->
-            <el-button
-              :disabled="scope.row.status != '0' ? true : false"
-              type="primary"
-              icon="el-icon-edit"
-              circle
-              size="mini"
-              @click="handleEdit1(scope.row)"
-            ></el-button>
-            <el-button
-              :disabled="scope.row.status != '0' ? true : false"
-              type="danger"
-              icon="el-icon-delete"
-              circle
-              size="mini"
-              @click="handleDelete1(scope.row)"
-            ></el-button>
-            <!-- <el-button
-  
-              type="success"
-              icon="el-icon-position"
-              circle
-              plain
-              size="mini"
-            
-            ></el-button> -->
-          </template>
-        </el-table-column>
-      </el-table>
     </div>
   </div>
 </template>
 
 <script>
-import { getTime } from "common/utils/index";
+import { getTime } from "common/time/getTime";
 import { getJL } from "business/MeterialClass";
 import { DXZH } from "common/utils/content";
 
 export default {
-  inject: ["reload"],
   data() {
     return {
-      CustomerNumber: "",
-      sx: "",
-      fileList: [], //上传
       ddbh: "", //客户订单编号
       xf: "", //需方
       xfdz: "", //需方地址
@@ -745,33 +399,14 @@ export default {
       pagenums: 0,
       newclassDate: [],
       OrderNumbers: "",
-      OrderNumbersT: "",
       classvalue1: [],
-      Approval: "",
+      Purpose: "",
       form: {
         OrderNumber: "", //订单编号
-        CustomerOrderNumber: "", //客户订单编号
-        CustomerNumber: "", //客户编号
-        CustomerName: "", //客户名称
-        CustomerClass: "", //客户分类
-        CustomerRemarks: "", //客户备注
-        TIN: "", //纳税人识别号(Taxpayer identification number)
-        Bank: "", //开户行
-        Account: "", //账户
-        Address: "", //地址
-        CompanyPhone: "", //公司电话
-        Contacts: "", //联系人
-        ContactsPhone: "", //联系人电话
-        ContactsAddress: "", //联系人地址
-        ContactsEmail: "", //联系人邮箱
-        ContactsRemarks: "", //联系人备注
-        Purpose: "生产制造", //用途
-        enclosure: "", //附件
         processCode: "0", //流程码
-        allowHG: "true", //是否允许订单回滚
-        Approval: "未审批", //审批状态
-        Approver: "", //审批人
-        creater: "", //创建人
+        Purpose: "", //用途
+        Remarks: "", //备注
+        creater: "", //申请人
         creatdate: "", //创建时间
       },
       form1: {
@@ -780,14 +415,11 @@ export default {
         MaterialName: "", //产品名称
         MaterialPrice: "", //产品价格
         Number: "", //产品数量
+        PNum: "", //计划数
         Thumbnail: "",
         MaterialSpec: "",
         jine: "", //金额
         tjine: "", //总金额
-        PNum: "", //计划数
-        PlannedDeliveryDate: "", //计划交期
-        CustomerMaterialNumber: "", //客户物料编号
-        CustomerMaterialName: "", //客户物料名称
         status: "", //状态
         creater: "", //创建人
         creatdate: "", //创建时间
@@ -795,7 +427,7 @@ export default {
       st: false,
       total: 0,
       id: {},
-      id1: "",
+      id1: {},
       name: "",
       name1: "",
       search: "",
@@ -808,53 +440,206 @@ export default {
       MaterialInfo: [],
       tableData2: [],
       flagst: false,
+      orderPurpose: [],
+      ApprovalClass: "",
     };
   },
   methods: {
-    dl() {
+    handlelock(row) {
+      if (this.ApprovalClass == "订单审批") {
+        this.$https({
+          method: "post",
+          url: "/api/apiModel/update",
+          data: {
+            table: "salesOrder",
+            id: row._id,
+            form: {
+              Approval: "已驳回",
+              Approver: sessionStorage.getItem("loginName"),
+            },
+          },
+        })
+          .then((res) => {
+            console.log(res);
+            this.findchangLX_salesOrder();
+            if (this.ApprovalClass == "采购审批") {
+              this.findchangLX_IntransitOrder();
+            }
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      }
+      if (this.ApprovalClass == "采购审批") {
+        this.$https({
+          method: "post",
+          url: "/api/apiModel/update",
+          data: {
+            table: "CGDhead",
+            id: row._id,
+            form: {
+              Approval: "已驳回",
+              Approver: sessionStorage.getItem("loginName"),
+            },
+          },
+        })
+          .then((res) => {
+            console.log(res);
+            this.findchangLX_IntransitOrder();
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      }
+    },
+    handleunlock(row) {
+      this.$https({
+        method: "post",
+        url: "api/transaction/ApprovalTransaction",
+        data: {
+          row: row,
+          ApprovalClass: this.ApprovalClass,
+          Approver: sessionStorage.getItem("loginName"),
+        },
+      })
+        .then((res) => {
+          if (res.status) {
+            this.findchangLX();
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+      ///////////////
+      // if (this.ApprovalClass == "订单审批") {
+      //   this.$https({
+      //     method: "post",
+      //     url: "/api/apiModel/update",
+      //     data: {
+      //       table: "salesOrder",
+      //       id: row._id,
+      //       form: {
+      //         Approval: "已审批",
+      //         Approver: sessionStorage.getItem("loginName"),
+      //       },
+      //     },
+      //   })
+      //     .then((res) => {
+      //       console.log(res);
+      //       this.findchangLX_salesOrder();
+      //     })
+      //     .catch((err) => {
+      //       console.log(err);
+      //     });
+      // }
+      // if (this.ApprovalClass == "采购审批") {
+      //   this.$https({
+      //     method: "post",
+      //     url: "/api/apiModel/update",
+      //     data: {
+      //       table: "CGDhead",
+      //       id: row._id,
+      //       form: {
+      //         Approval: "已审批",
+      //         Approver: sessionStorage.getItem("loginName"),
+      //       },
+      //     },
+      //   })
+      //     .then((res) => {
+      //       console.log(res);
+      //       this.InstransitOrders(row.PurchaseNumber);
+      //       this.findchangLX_IntransitOrder();
+      //     })
+      //     .catch((err) => {
+      //       console.log(err);
+      //     });
+      // }
+    },
+    InstransitOrders(PurchaseNumber) {
       this.$https({
         method: "get",
-        url: "http://localhost:3001/test",
+        url: "/api/apiModel/find",
         params: {
-          table: "",
+          table: "IntransitOrder",
+          where: { PurchaseNumber: PurchaseNumber },
+        },
+      })
+        .then((res) => {
+          console.log("res===", res);
+          for (let k = 0; k < res.length; k++) {
+            console.log(
+              "盈余数=",
+              res[k].MaterialNumber,
+              res[k].YYNUMS,
+              res[k].ActualPrice
+            ); //盈余数
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    findchangLX() {
+      console.log(this.ApprovalClass);
+      if (this.ApprovalClass == "订单审批") {
+        this.findchangLX_salesOrder();
+      }
+      if (this.ApprovalClass == "采购审批") {
+        this.findchangLX_IntransitOrder();
+      }
+    },
+    findchangLX_salesOrder() {
+      this.$https({
+        method: "get",
+        url: "/api/apiModel/find",
+        params: {
+          table: "salesOrder",
+          where: { Approval: "未审批" },
+        },
+      })
+        .then((res) => {
+          console.log("res===", res);
+          this.tableData = res;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    findchangLX_IntransitOrder() {
+      this.$https({
+        method: "get",
+        url: "/api/apiModel/find",
+        params: {
+          table: "CGDhead",
+          where: { Approval: "未审批" },
+        },
+      })
+        .then((res) => {
+          console.log("res===", res);
+          this.tableData = res;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+
+    getorderPurpose() {
+      this.$https({
+        method: "get",
+        url: "/api/apiModel/find",
+        params: {
+          table: "__orderPurpose",
+          dataBase: "base",
           where: {},
         },
       })
         .then((res) => {
-          console.log(res);
+          console.log("res===", res);
+          this.orderPurpose = res;
         })
         .catch((err) => {
           console.log(err);
         });
-    },
-    successHandlel(response, file, fileList) {
-      console.log(response, file, fileList);
-      console.log("上传成功！", file.name);
-      this.$https({
-        method: "post",
-        url: "/api/apiModel/updateByWhere",
-        data: {
-          table: "salesOrder",
-          where: { OrderNumber: this.OrderNumbersT },
-          form: { enclosure: file.name },
-        },
-      })
-        .then((res) => {
-          console.log(res);
-          this.newview();
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    },
-    scfj(row) {
-      this.OrderNumbersT = row.OrderNumber;
-      if (row.enclosure) {
-        this.fileList = [{ name: "" }];
-        this.fileList[0].name = row.enclosure;
-      } else {
-        this.fileList = [];
-      }
     },
     // 计算金额
     async jsNum() {
@@ -946,66 +731,53 @@ export default {
 
       //this.tableData1 = ds;
     },
+
     async handleCirculationstate() {
       if (!this.flagst) return;
       //开启流程
       if (this.tableData1.length == 0 || this.tableData1[0].status == "1")
         return;
-      if (this.Approval != "已审批") {
-        alert("未审批！");
-        return;
-      }
-      let datas = this.tableData1;
-      let OrderNumber = this.form1.OrderNumber;
-
-      //  if (this.st) return;
-      let firm = confirm("是否开启推单模式，下次将不可再次开启！");
-      if (firm) {
-        const loading = this.$loading({
-          lock: true,
-          text: "MRP计算...",
-          spinner: "el-icon-loading",
-          background: "rgba(0, 0, 0, 0.7)",
+      /////////////////////
+      if (confirm("是否开启推单模式，下次将不可再次开启！")) {
+        this.$myloading({
+          show: true,
         });
-        await this.$https({
+        this.$https({
           method: "post",
-          url: "api/transaction/salesOrderProcessTransaction",
+          url: "api/transaction/materialRequisitionTransaction",
           data: {
-            datas: datas,
-            OrderNumber: OrderNumber,
-            loginName: sessionStorage.getItem("loginName"),
-            times: getTime(),
+            datas: this.tableData1,
+            Purpose: this.Purpose,
+            creater: sessionStorage.getItem("loginName"),
+            creatdate: getTime(),
           },
         })
           .then((res) => {
-            console.log(res);
             if (res.status) {
-              this.id1 = res.data.id1;
+              this.$myloading({
+                show: false,
+              });
+              this.tableData1 = [];
+              this.OrderNumbers = "";
+              this.newview();
             }
-            setTimeout(() => {
-              loading.close();
-            }, 5000);
           })
           .catch((err) => {
             console.log(err);
-            setTimeout(() => {
-              loading.close();
-            }, 5000);
           });
-
-        this.tableData1 = [];
-        this.OrderNumbers = "";
       }
     },
 
     findByPageNums() {
       this.$https({
+        //这里是你自己的请求方式、url和data参数
         method: "get",
         url: "/api/apiModel/find",
         params: {
           table: "__customerManager",
           dataBase: "base",
           where: {},
+          sortJson: { _id: 1 },
         },
       })
         .then((res) => {
@@ -1022,8 +794,7 @@ export default {
         method: "get",
         url: "/api/apiModel/find",
         params: {
-          table: "__customerContacts",
-          dataBase: "base",
+          table: "__basicMaterialList",
           where: { CustomerNumber: this.form.CustomerNumber },
           sortJson: { _id: 1 },
         },
@@ -1077,35 +848,6 @@ export default {
       this.form1.MaterialName = cd[0].MaterialName;
       this.form1.Thumbnail = cd[0].Thumbnail;
       this.form1.MaterialSpec = cd[0].MaterialSpec;
-
-      this.sx = "已过期或不存在";
-      this.form1.MaterialPrice = "";
-      this.$https({
-        //这里是你自己的请求方式、url和data参数
-        method: "get",
-        url: "/api/apiModel/find",
-        params: {
-          table: "__customerMaterial",
-          dataBase: "base",
-          where: {
-            MaterialNumber: this.form1.MaterialNumber,
-            CustomerNumber: this.CustomerNumber,
-            Approval: "已审批",
-            prescription: { $gte: getTime() },
-          },
-        },
-      })
-        .then((res) => {
-          console.log("查询结果", res);
-
-          if (res.length > 0) {
-            this.form1.MaterialPrice = res[0].Price;
-            this.sx = res[0].prescription;
-          }
-        })
-        .catch(function (err) {
-          console.log(err);
-        });
     },
     //级联
     getMaterialList() {
@@ -1155,138 +897,109 @@ export default {
           console.log(err);
         });
     },
+
     //状态
-    // handleCirculation(row) {
-    //   console.log("row...", row);
-    //   this.id1 = row._id;
-    //   this.$delete(row, "_id");
-    //   row.status = "1";
-    //   row.creater = sessionStorage.getItem("loginName");
-    //   row.creatdate = getTime();
-    //   this.form1 = row;
-    //   this.update1(); //修改销售单明细状态为1（不可编辑）
+    handleCirculation(row) {
+      this.id1 = { id: row._id };
+      this.$delete(row, "_id");
+      row.status = "1";
+      row.creater = sessionStorage.getItem("loginName");
+      row.creatdate = getTime();
+      this.form1 = row;
+      ///////////////////////////
+      ///////////////////////////////
+      this.$myloading({
+        show: true,
+      });
+      this.$https({
+        method: "post",
+        url: "api/transaction/materialRequisitionTransaction",
+        data: {
+          row: row,
+          ids: this.id1.id,
+        },
+      })
+        .then((res) => {
+          if (res.status) {
+            this.$myloading({
+              show: false,
+            });
+            this.newview();
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
 
-    //   let dt = {
-    //     OrderNumber: row.OrderNumber, //订单编号
-    //     MaterialNumber: row.MaterialNumber, //产品编号
-    //     MaterialName: row.MaterialName, //产品名称
-    //     MaterialPrice: row.MaterialPrice, //产品价格
-    //     Number: row.PNum, //应出数量
-    //     CustomerMaterialNumber: row.CustomerMaterialNumber, //客户物料编号
-    //     CustomerMaterialName: row.CustomerMaterialName, //客户物料名称
-    //     DeliverGoodsTotal: "0", //实际出货总数
-    //     DeliverGoods: "0", //实际出货数
-    //     Inventory: "0", //库存数
-    //     status: "0", //状态
-    //     creater: sessionStorage.getItem("loginName"), //创建人
-    //     creatdate: getTime(), //创建时间
-    //   };
-    //   this.insertSalesInvoice(dt); //添加销售发货单
-    // },
+    async getProcessState(orderNumber, table, statusing, processCode) {
+      await this.$https({
+        method: "get",
+        url: "/api/apiModel/find",
+        params: {
+          table: table,
+          where: { OrderNumber: orderNumber },
+        },
+      })
+        .then((res) => {
+          console.log(res);
+          console.log(statusing);
+          let csd = true;
+          // for (let i = 0; i < res.length; i++) {
+          //   if (res[i].status == statusing) csd = false;
+          // }
+          if (csd) {
+            ///进入推单模式
+            this.$https({
+              method: "post",
+              url: "/api/apiModel/updateByWhere",
+              data: {
+                table: "salesOrder",
+                where: { OrderNumber: orderNumber },
+                form: { processCode: processCode },
+              },
+            })
+              .then((res) => {
+                console.log(res);
+                this.newview();
+                this.tableData1 = [];
+              })
+              .catch((err) => {
+                console.log(err);
+              });
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
 
-    // async getProcessState(orderNumber, table, statusing, processCode) {
-    //   await this.$https({
-    //     method: "get",
-    //     url: "/api/apiModel/find",
-    //     params: {
-    //       table: table,
-    //       where: { OrderNumber: orderNumber },
-    //     },
-    //   })
-    //     .then((res) => {
-    //       console.log(res);
-    //       console.log(statusing);
-
-    //       ///进入推单模式
-    //       this.$https({
-    //         method: "post",
-    //         url: "/api/apiModel/updateByWhere",
-    //         data: {
-    //           table: "salesOrder",
-    //           where: { OrderNumber: orderNumber },
-    //           form: { processCode: processCode },
-    //         },
-    //       })
-    //         .then((res) => {
-    //           console.log(res);
-    //           this.newview();
-    //           this.tableData1 = [];
-    //         })
-    //         .catch((err) => {
-    //           console.log(err);
-    //         });
-    //     })
-    //     .catch((err) => {
-    //       console.log(err);
-    //     });
-    // },
-    //退送制造计划单
-    // doManufacturingPlan(dt) {
-    //   if (parseInt(dt.Number) == 0) return;
-    //   let v = {
-    //     OrderNumber: dt.OrderNumber, //订单编号
-    //     MaterialNumber: dt.MaterialNumber, //产品编号
-    //     MaterialName: dt.MaterialName, //产品名称
-    //     Number: dt.Number, //产品数量
-    //     SurplusNumber: dt.Number, //剩余分配数量
-    //     Thumbnail: dt.Thumbnail,
-    //     MaterialSpec: dt.MaterialSpec,
-    //     status: "1", //状态1
-    //     creater: sessionStorage.getItem("loginName"), //创建人
-    //     creatdate: getTime(), //创建时间
-    //   };
-
-    //   this.$https({
-    //     method: "post",
-    //     url: "/api/apiModel/insert",
-    //     data: {
-    //       table: "ManufacturingPlan",
-    //       form: v,
-    //     },
-    //   })
-    //     .then((res) => console.log(res))
-    //     .catch((err) => console.log(err));
-    // },
-    // insertSalesInvoice(v) {
-    //   this.$https({
-    //     method: "post",
-    //     url: "/api/apiModel/insert",
-    //     data: {
-    //       table: "salesInvoice",
-    //       form: v,
-    //     },
-    //   })
-    //     .then((res) => console.log(res))
-    //     .catch((err) => console.log(err));
-    // },
     //明细添加
     handleAdd1() {
       // alert("this.st" + this.st);
       if (!this.flagst) return;
       this.operation1 = "add";
-      this.sx = "";
+
       this.form1.MaterialNumber = ""; //产品编号
       this.form1.MaterialName = ""; //产品名称
       this.form1.MaterialPrice = ""; //产品价格
       this.form1.Number = ""; //产品数量
       this.form1.CustomerMaterialNumber = ""; //客户物料编号
       this.form1.CustomerMaterialName = ""; //客户物料名称
-
       this.dialogFormVisible1 = true;
     },
     //明细编辑
     handleEdit1(row) {
       this.operation1 = "update";
-      this.sx = "";
       this.dialogFormVisible1 = true;
-      this.id1 = row._id;
+      this.id1 = { id: row._id };
       this.name1 = row.creater;
       this.$delete(row, "_id");
       this.form1 = row;
     },
     //明细删除
     handleDelete1(row) {
-      this.id1 = row._id;
+      this.id1 = { id: row._id };
       this.name1 = row.creater;
       this.del1();
       this.newview1();
@@ -1297,9 +1010,8 @@ export default {
       if (row.processCode != "1") {
         this.flagst = false;
       }
-      this.CustomerNumber = row.CustomerNumber;
       this.tableVisible = "block";
-      this.Approval = row.Approval;
+      this.Purpose = row.Purpose;
       this.ddbh = row.CustomerOrderNumber; //客户订单编号
       this.xf = row.CustomerName; //需方
       this.xfdz = row.Address; //需方地址
@@ -1314,8 +1026,8 @@ export default {
       this.find1();
     },
     //明细请求
-    async find1() {
-      await this.$https({
+    find1() {
+      this.$https({
         method: "get",
         url: "/api/apiModel/find",
         params: {
@@ -1342,10 +1054,9 @@ export default {
           MaterialName, //物料名称
           MaterialSpec, //规格型号
           Number, //数量
+
           MaterialPrice,
           jine,
-          Company,
-          PlannedDeliveryDate,
         } = item;
         let tds = {
           index: is,
@@ -1356,8 +1067,6 @@ export default {
 
           MaterialPrice,
           jine,
-          Company,
-          PlannedDeliveryDate,
         };
         tds.Company = "pcs";
         dd.push(tds);
@@ -1393,7 +1102,7 @@ export default {
         url: "/api/apiModel/getpage",
         params: {
           table: "salesOrder",
-          pageWhere: { Purpose: { $regex: "生产制造" } },
+          pageWhere: { Purpose: { $regex: "功能" } },
         },
       })
         .then((res) => {
@@ -1428,9 +1137,6 @@ export default {
     handleAdd() {
       this.operation = "add";
       this.form = {};
-      this.form.Purpose = "生产制造";
-      this.form.Approval = "未审批"; //审批状态
-      this.form.Approver = ""; //审批人
       this.dialogFormVisible = true;
     },
     //编辑事件
@@ -1448,7 +1154,6 @@ export default {
       this.id = { id: row._id };
       this.name = row.creater;
       this.del();
-      this.newview();
     },
     //选择展示页数据
     handleCurrentChange(val) {
@@ -1502,17 +1207,20 @@ export default {
     },
     //提交按钮
     async onSubmit() {
+      if (!this.form.Purpose) {
+        alert("用途必填！");
+        return;
+      }
       this.dialogFormVisible = false;
       let dt = new Date();
       let Y = dt.getFullYear() + "";
       let M = dt.getMonth() + 1 + "";
       let D = dt.getDate() + "";
-      M = M.padStart(2, "0");
-      D = D.padStart(2, "0");
-      let Onumber = "9" + Y + M + D + "000";
+      if (M.length < 2) M = "0" + M;
+      if (D.length < 2) D = "0" + D;
+      let Onumber = "8" + Y + M + D + "000";
 
-      let ds = await this.findorders("9" + Y + M + D);
-
+      let ds = await this.findorders("8" + Y + M + D);
       if (ds.length == 1) {
         Onumber = ds[0].OrderNumber;
       }
@@ -1522,54 +1230,46 @@ export default {
             Onumber = ds[i].OrderNumber;
         }
       }
-
-      this.form.OrderNumber = parseInt(Onumber) + 1 + "";
-      console.log(this.form.OrderNumber);
-
+      /////////////////?
+      this.form.OrderNumber = parseInt(Onumber) + 1 + ""; //计算出本次订单编号
       /////////////////////
 
-      this.form.enclosure = "";
       this.form.creater = sessionStorage.getItem("loginName");
       this.form.creatdate = getTime();
       this.form.status = "0";
-      this.form.allowHG = "true";
+
       if (this.operation === "add") {
         this.form.processCode = "1";
-        await this.add();
+        this.add();
       } else {
-        await this.update();
+        this.update();
       }
-      this.newview();
     },
     //提交按钮
     onSubmit1() {
+      // document.querySelector("#bk").style.display = "block";
+      // setTimeout(() => {
+      //   document.querySelector("#bk").style.display = "none";
+      // }, 3000);
+
       if (
         !this.form1.MaterialName ||
         !this.form1.MaterialPrice ||
-        !this.form1.Number ||
-        !this.form1.PlannedDeliveryDate
+        !this.form1.Number
       ) {
         alert("必填内容不能为空");
-        console.log(this.form1.PlannedDeliveryDate);
         return;
       }
       this.dialogFormVisible1 = false;
       this.form1.creater = sessionStorage.getItem("loginName");
+
       this.form1.creatdate = getTime();
-      if ((this.form1.PlannedDeliveryDate + "").includes("/")) {
-        alert("日期未填写！");
-        return;
-      }
-      this.form1.PlannedDeliveryDate = getTime(
-        this.form1.PlannedDeliveryDate
-      ).split(" ")[0];
       this.form1.tjine = "";
       this.form1.jine = "";
       this.form1.PNum = this.form1.Number;
 
       if (this.operation1 === "add") {
         this.form1.status = "0";
-
         this.add1();
       } else {
         this.update1();
@@ -1577,9 +1277,8 @@ export default {
     },
     /////crud
     // 数据添加
-    async add() {
-      //  if (this.auth()) return;
-      await this.$https({
+    add() {
+      this.$https({
         //这里是你自己的请求方式、url和data参数
         method: "post",
         url: "/api/apiModel/insert",
@@ -1588,14 +1287,14 @@ export default {
           form: this.form,
         },
       })
-        .then(function (res) {
+        .then((res) => {
           console.log(res);
+          this.newview();
         })
         .catch(function (err) {
           console.log(err);
         });
     },
-
     add1() {
       //  if (this.auth()) return;
       this.$https({
@@ -1617,7 +1316,6 @@ export default {
     },
     // 数据删除
     del() {
-      if (this.auth()) return;
       this.$https({
         method: "post",
         url: "/api/apiModel/delete",
@@ -1626,21 +1324,22 @@ export default {
           id: this.id.id,
         },
       })
-        .then(function (res) {
+        .then((res) => {
           console.log(res);
+          this.newview();
         })
         .catch(function (err) {
           console.log(err);
         });
     },
     del1() {
-      if (this.auth()) return;
+      //   if (this.auth()) return;
       this.$https({
         method: "post",
         url: "/api/apiModel/delete",
         data: {
           table: "salesOrderDetail",
-          id: this.id1,
+          id: this.id1.id,
         },
       })
         .then(function (res) {
@@ -1669,15 +1368,34 @@ export default {
         });
     },
     //数据修改
-    async update() {
-      // if (this.auth()) return;
-      await this.$https({
+    update() {
+      if (this.auth()) return;
+      this.$https({
         method: "post",
         url: "/api/apiModel/update",
         data: {
           table: "salesOrder",
           id: this.id.id,
           form: this.form,
+        },
+      })
+        .then((res) => {
+          console.log(res);
+          this.newview();
+        })
+        .catch(function (err) {
+          console.log(err);
+        });
+    },
+    updateTO(row, ids) {
+      // if (this.auth()) return;
+      this.$https({
+        method: "post",
+        url: "/api/apiModel/update",
+        data: {
+          table: "salesOrderDetail",
+          id: ids,
+          form: row,
         },
       })
         .then(function (res) {
@@ -1694,7 +1412,7 @@ export default {
         url: "/api/apiModel/update",
         data: {
           table: "salesOrderDetail",
-          id: this.id1,
+          id: this.id1.id,
           form: this.form1,
         },
       })
@@ -1731,7 +1449,7 @@ export default {
           table: "salesOrder",
           PageNum: this.pagenums,
           sortJson: { OrderNumber: -1 },
-          pageWhere: { Purpose: { $regex: "生产制造" } },
+          pageWhere: { Purpose: { $regex: "功能" } },
         },
       })
         .then((res) => {
@@ -1763,9 +1481,10 @@ export default {
     },
   },
   created() {
-    this.newview();
-    this.getMaterialList(); //级联
-    this.findByPageNums();
+    // this.newview();
+    //this.getMaterialList(); //级联
+    // this.findByPageNums();
+    // this.getorderPurpose();
   },
 };
 </script>

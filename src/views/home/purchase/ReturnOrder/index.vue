@@ -301,7 +301,7 @@ export default {
         url: "/api/apiModel/find",
         params: {
           table: "salesOrder",
-          where: { processCode: { $gte: "5" } },
+          where: { processCode: { $gt: "0" } },
         },
       })
         .then((res) => {
