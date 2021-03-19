@@ -9,142 +9,6 @@
     </el-steps>
     <el-dialog
       title="表单"
-      :visible.sync="dialogFormVisible2"
-      :close-on-click-modal="false"
-    >
-      <div class="dialogBody" id="dialogBody1">
-        <div class="d">
-          <vue-qr
-            :logoSrc="ewmLogo"
-            :logoScale="0.2"
-            :size="80"
-            :margin="0"
-            :auto-color="true"
-            :dot-scale="1"
-            :text="ewmText"
-          />
-        </div>
-        <h1>四川凯迈新能源有限公司（客户物料价格审批单）</h1>
-        <div class="bz">
-          <span>预审批号：{{ ewmText }}</span>
-
-          <span style="margin: 0 20px">ID：{{ IDS }}</span>
-          <span>申请人：{{ sqr }}</span>
-        </div>
-        <table id="printTable">
-          <thead>
-            <tr>
-              <th>序号</th>
-
-              <th>客户名称</th>
-              <th>物料编码</th>
-              <th>物料名称</th>
-              <th>规格型号</th>
-              <th>物料单价</th>
-              <th>单位</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="(item1, index) in querydata" :key="index">
-              <td>{{ index + 1 }}</td>
-              <td>{{ item1.CustomerName }}</td>
-              <td>{{ item1.MaterialNumber }}</td>
-              <td>{{ item1.MaterialName }}</td>
-              <td>{{ item1.MaterialSpec }}</td>
-              <td>{{ item1.Price }}</td>
-              <td>{{ item1.Company }}</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible2 = false">取 消</el-button>
-        <el-button type="primary" @click="dygxswldsp"> 开启审批流</el-button>
-        <el-button
-          type="primary"
-          v-print="printTable1"
-          :disabled="spdis"
-          @click="dys"
-        >
-          打 印</el-button
-        >
-      </div>
-    </el-dialog>
-    <el-dialog
-      title="表单"
-      :visible.sync="dialogFormVisible1"
-      :close-on-click-modal="false"
-    >
-      <el-input
-        size="mini"
-        v-model="searchGYS"
-        prefix-icon="el-icon-search"
-        placeholder="物料查询客户物料价格"
-        @change="wuliaogysjg"
-      />
-      <el-button
-        style="margin-top: 10px"
-        type="success"
-        plain
-        size="mini"
-        @click="queryIssp('物料')"
-        >生成审批单</el-button
-      >
-      <el-table
-        ref="tableselectData"
-        class="table"
-        height="580"
-        :data="tableData2"
-      >
-        <el-table-column type="selection" width="50"></el-table-column>
-
-        <el-table-column
-          property="CustomerNumber"
-          label="客户编号"
-        ></el-table-column>
-        <el-table-column
-          property="CustomerName"
-          label="客户名称"
-        ></el-table-column>
-
-        <el-table-column
-          property="MaterialNumber"
-          label="物料编码"
-          min-width="130"
-        >
-        </el-table-column>
-        <el-table-column
-          property="MaterialName"
-          label="物料名称"
-          min-width="130"
-        ></el-table-column>
-        <el-table-column
-          property="MaterialSpec"
-          label="规格型号"
-        ></el-table-column>
-
-        <el-table-column property="Price" label="物料单价"></el-table-column>
-        <el-table-column property="Approval" label="审批状态"></el-table-column>
-        <el-table-column property="Approver" label="审批人"></el-table-column>
-        <el-table-column property="prescription" label="时效"></el-table-column>
-        <el-table-column label="关于" min-width="80">
-          <template slot-scope="scope">
-            <el-popover trigger="hover" placement="top">
-              <p>创建人: {{ scope.row.creater }}</p>
-              <p>创建日期: {{ scope.row.creatdate }}</p>
-              <p>备注: {{ scope.row.Remarks }}</p>
-
-              <div slot="reference" class="name-wrapper">
-                <el-tag size="medium">...</el-tag>
-              </div>
-            </el-popover>
-          </template>
-        </el-table-column>
-      </el-table>
-    </el-dialog>
-
-    <el-dialog
-      title="表单"
       :visible.sync="dialogFormVisible"
       :close-on-click-modal="false"
     >
@@ -325,12 +189,13 @@
         </el-table-column>
         <el-table-column label="操作" min-width="90" fixed="right">
           <template #header>
-            <el-button
-              type="primary"
-              @click="dialogFormVisible1 = true"
+            <el-input
               size="mini"
-              >物料查客户物料</el-button
-            >
+              v-model="searchKH"
+              prefix-icon="el-icon-search"
+              placeholder="物料查询客户"
+              @change="wuliaokh"
+            />
           </template>
           <template slot-scope="scope">
             <!-- <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">编辑</el-button> -->
@@ -460,14 +325,23 @@
               size="mini"
               @click="handleAdd"
             ></el-button>
-            <el-button
-              v-if="!Approvalstat"
-              type="success"
+            <!-- <el-button
+              type="danger"
+              icon="el-icon-delete-solid"
+              plain
+              circle
+              size="mini"
+              @click="yc"
+            ></el-button> -->
+            <!-- <el-button
+              slot="reference"
+              type="primary"
+              icon="el-icon-sort"
+              circle
               plain
               size="mini"
-              @click="queryIssp('客户')"
-              >生成审批单</el-button
-            >
+              @click="sorts"
+            ></el-button> -->
           </template>
           <template slot-scope="scope">
             <!-- <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">编辑</el-button> -->
@@ -487,6 +361,84 @@
               size="mini"
               @click="handleDelete(scope.row)"
             ></el-button>
+            <!-- <el-popover
+              placement="left"
+              width="300"
+              trigger="click"
+              :ref="`popover-${scope.$index}`"
+            >
+              <el-form ref="form" :model="form" label-width="80px">
+                <el-form-item label="序列号">
+                  <el-input v-model="seq"></el-input>
+                </el-form-item>
+              </el-form>
+              <el-button
+                style="float: right"
+                type="primary"
+                @click="sort(scope)"
+                >确定</el-button
+              >
+              <el-button
+                style="float: right; margin: 0 10px"
+                @click="scope._self.$refs[`popover-${scope.$index}`].doClose()"
+                >取消</el-button
+              >
+
+              <el-button
+                v-if="!Approvalstat"
+                slot="reference"
+                type="primary"
+                icon="el-icon-sort"
+                style="margin-left: 10px"
+                circle
+                size="mini"
+              ></el-button>
+            </el-popover> -->
+            <el-popover
+              placement="left"
+              width="300"
+              trigger="click"
+              :ref="`popover-${scope.$index}`"
+            >
+              <el-form ref="form" :model="form" label-width="90px">
+                <el-form-item
+                  label="时效"
+                  :rules="[{ required: true, message: '不能为空' }]"
+                >
+                  <div class="jq">
+                    <el-input v-model="N" placeholder="年"></el-input>
+                    年
+                    <el-input v-model="Y" placeholder="月"></el-input>
+                    月
+                    <el-input v-model="R" placeholder="日"></el-input>
+                    日
+                  </div>
+                </el-form-item>
+              </el-form>
+              <el-button
+                style="float: right"
+                type="primary"
+                @click="Edit(scope)"
+                >审批</el-button
+              >
+              <el-button
+                style="float: right; margin: 0 10px"
+                @click="scope._self.$refs[`popover-${scope.$index}`].doClose()"
+                >取消</el-button
+              >
+
+              <el-button
+                v-if="scope.row.Approval != '已审批'"
+                :disabled="!Approvalstat"
+                slot="reference"
+                type="success"
+                icon="el-icon-unlock"
+                style="margin-left: 10px"
+                @click="findCustomerNumber(scope)"
+                circle
+                size="mini"
+              ></el-button>
+            </el-popover>
           </template>
         </el-table-column>
       </el-table>
@@ -497,18 +449,9 @@
 <script>
 import { getTime } from "common/time/getTime";
 import { getJL } from "business/MeterialClass";
-import VueQr from "vue-qr";
 export default {
   data() {
     return {
-      ewmLogo: require("assets/title.png"),
-      querydata: [],
-      printTable1: {
-        id: "dialogBody1",
-      },
-      ewmText: "",
-      sqr: "",
-      spdis: true,
       Approvalstat: "", //是否审批人
       N: "",
       Y: "",
@@ -522,8 +465,6 @@ export default {
       CustomerNumber: "",
       CustomerName: "",
       dialogFormVisible: false,
-      dialogFormVisible1: false,
-      dialogFormVisible2: false,
       newclassDate: [],
       form: {
         CustomerNumber: "", //客户编号
@@ -549,134 +490,18 @@ export default {
       total: 0,
       tableData: [],
       tableData1: [],
-      tableData2: [],
       datas: [],
       datas1: [],
       temoData1: [],
       states: false,
-      searchGYS: "",
+      searchKH: "",
       temptables: [],
       search: "",
       search1: "",
       search2: "",
-      IDS: "",
     };
   },
-  components: {
-    VueQr,
-  },
   methods: {
-    dys() {
-      for (let k = 0; k < this.querydata.length; k++) {
-        this.$https({
-          method: "post",
-          url: "/api/apiModel/insert",
-          data: {
-            table: "MaterialPriceSP",
-            form: {
-              MaterialPriceSPNumber: this.ewmText,
-              ApprovalClass: "客户物料",
-              CustomerNumber: this.querydata[k].CustomerNumber,
-              MaterialNumber: this.querydata[k].MaterialNumber,
-              Price: this.querydata[k].Price,
-              enclosure: `wljgspm_${this.ewmText}.png`,
-              creater: sessionStorage.getItem("loginName"),
-              createdate: getTime(),
-            },
-          },
-        })
-          .then((res) => {
-            console.log(res);
-          })
-          .catch(function (err) {
-            console.log(err);
-          });
-      }
-      this.dialogFormVisible2 = false;
-      alert("提交成功！");
-    },
-    dygxswldsp() {
-      if (confirm("是否开启审批流？")) {
-        this.spdis = false;
-      }
-    },
-    async findorders(c) {
-      console.log("当前数据1112==>", c);
-      let cos = c;
-      let cdss = { MaterialPriceSPNumber: { $regex: cos } };
-      let codesq = [];
-      await this.$https({
-        //这里是你自己的请求方式、url和data参数
-        method: "get",
-        url: "/api/apiModel/find",
-        params: {
-          table: "MaterialPriceSP",
-          where: cdss,
-        },
-      })
-        .then((res) => {
-          console.log("当前数据11==>", res);
-          codesq = res;
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-      return codesq;
-    },
-    async queryIssp(ttt) {
-      this.spdis = true;
-
-      let dt = new Date();
-      let Y = dt.getFullYear() + "";
-      let M = dt.getMonth() + 1 + "";
-      let D = dt.getDate() + "";
-      M = M.padStart(2, "0");
-      D = D.padStart(2, "0");
-      this.ewmText = Y + M + D + "000";
-
-      let ds = await this.findorders(Y + M + D);
-
-      if (ds.length == 1) {
-        this.ewmText = ds[0].MaterialPriceSPNumber;
-      }
-      if (ds.length > 1) {
-        for (let i = 0; i < ds.length; i++) {
-          if (parseInt(ds[i].MaterialPriceSPNumber) > parseInt(this.ewmText))
-            this.ewmText = ds[i].MaterialPriceSPNumber;
-        }
-      }
-
-      this.ewmText = parseInt(this.ewmText) + 1 + "";
-
-      this.sqr = sessionStorage.getItem("loginName");
-      let tempcoco = {}; //动态条件
-      if (ttt == "客户") {
-        tempcoco = { CustomerNumber: this.CustomerNumber, Approval: "未审批" };
-        this.IDS = this.CustomerName;
-      } else {
-        tempcoco = { MaterialNumber: this.searchGYS, Approval: "未审批" };
-        this.IDS = this.searchGYS;
-      }
-      this.$https({
-        method: "get",
-        url: "/api/apiModel/find",
-        params: {
-          table: "__customerMaterial",
-          dataBase: "base",
-          where: tempcoco,
-        },
-      })
-        .then((res) => {
-          console.log("当前数据1", res);
-          this.querydata = res;
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-
-      this.dialogFormVisible2 = true;
-    },
-
     searchs() {
       console.log(this.search);
       let ccs = {};
@@ -770,9 +595,9 @@ export default {
         });
     },
     ////////////////////////
-    wuliaogysjg() {
-      console.log("search===", this.searchGYS);
-      if (this.searchGYS == "" || this.searchGYS == null) {
+    wuliaokh() {
+      console.log("search===", this.searchKH);
+      if (this.searchKH == "" || this.searchKH == null) {
         this.tableData1 = this.temptables;
       } else {
         this.$https({
@@ -782,11 +607,20 @@ export default {
           params: {
             table: "__customerMaterial",
             dataBase: "base",
-            where: { MaterialNumber: this.searchGYS },
+            where: { MaterialNumber: this.searchKH },
+            sortJson: { CustomerNumber: 1 },
           },
         })
           .then((res) => {
-            this.tableData2 = res;
+            this.tableData1 = [];
+            for (let k = 0; k < res.length; k++) {
+              this.tableData1.push(
+                this.temptables.find((item) => {
+                  console.log(item.CustomerNumber);
+                  return item.CustomerNumber == res[k].CustomerNumber;
+                })
+              );
+            }
           })
           .catch((err) => {
             console.log(err);
@@ -894,26 +728,26 @@ export default {
       this.form.ContactsPhone = cds2[0].ContactsPhone;
     },
 
-    // async findOrderds(OrderNumber) {
-    //   let temps = [];
-    //   await this.$https({
-    //     //这里是你自己的请求方式、url和data参数
-    //     method: "get",
-    //     url: "/api/apiModel/find",
-    //     params: {
-    //       table: "MaterialDemand",
-    //       where: { OrderNumber: OrderNumber },
-    //     },
-    //   })
-    //     .then((res) => {
-    //       console.log(res);
-    //       temps = res;
-    //     })
-    //     .catch(function (err) {
-    //       console.log(err);
-    //     });
-    //   return temps;
-    // },
+    async findOrderds(OrderNumber) {
+      let temps = [];
+      await this.$https({
+        //这里是你自己的请求方式、url和data参数
+        method: "get",
+        url: "/api/apiModel/find",
+        params: {
+          table: "MaterialDemand",
+          where: { OrderNumber: OrderNumber },
+        },
+      })
+        .then((res) => {
+          console.log(res);
+          temps = res;
+        })
+        .catch(function (err) {
+          console.log(err);
+        });
+      return temps;
+    },
     handleChange(value) {
       this.$https({
         method: "get",
@@ -925,8 +759,6 @@ export default {
             Class1Num: value[0],
             Class2Num: value[1],
             Class3Num: value[2],
-            Approval: "已审批",
-            prescription: { $gte: getTime() },
           },
         },
       })
@@ -1167,7 +999,7 @@ export default {
         .then((res) => {
           console.log("当前数据", res);
           if (res.length > 0) {
-            alert("该客户物料已存在！");
+            alert("该供应商物料已存在！");
             stat = true;
           }
         })
@@ -1205,13 +1037,13 @@ export default {
           id: this.id,
         },
       })
-        .then(function (res) {
+        .then((res) => {
           console.log(res);
+          this.findByPageNum();
         })
         .catch(function (err) {
           console.log(err);
         });
-      this.findByPageNum();
     },
     //数据修改
     update() {
@@ -1280,6 +1112,7 @@ export default {
           table: "__customerManager",
           dataBase: "base",
           where: {},
+          sortJson: { _id: 1 },
         },
       })
         .then((res) => {
@@ -1291,30 +1124,30 @@ export default {
           console.log(err);
         });
     },
-    // getApproval() {
-    //   this.Approvalstat = false;
-    //   this.$https({
-    //     //这里是你自己的请求方式、url和data参数
-    //     method: "get",
-    //     url: "/api/apiModel/find",
-    //     params: {
-    //       table: "__comm",
-    //       where: { KeyName: "SupplierMaterialApproval" },
-    //       dataBase: "base",
-    //     },
-    //   })
-    //     .then((res) => {
-    //       let values = res[0].values.split(",");
-    //       if (values.indexOf(sessionStorage.getItem("loginName")) > -1)
-    //         this.Approvalstat = true;
-    //     })
-    //     .catch((err) => {
-    //       console.log(err);
-    //     });
-    // },
+    getApproval() {
+      this.Approvalstat = false;
+      this.$https({
+        //这里是你自己的请求方式、url和data参数SupplierMaterialApproval
+        method: "get",
+        url: "/api/apiModel/find",
+        params: {
+          table: "__comm",
+          where: { KeyName: "CustomerMaterialApproval" },
+          dataBase: "base",
+        },
+      })
+        .then((res) => {
+          let values = res[0].values.split(",");
+          if (values.indexOf(sessionStorage.getItem("loginName")) > -1)
+            this.Approvalstat = true;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
   },
   created() {
-    // this.getApproval();
+    this.getApproval();
     this.newview();
     this.getMaterialList();
   },
@@ -1328,25 +1161,6 @@ export default {
 .tabels {
   width: 100%;
   background-color: white;
-}
-#printTable {
-  text-align: center;
-  border-collapse: collapse;
-
-  min-width: 100%;
-  max-height: 400px;
-  border: #000 1px solid;
-}
-#printTable th,
-#printTable td {
-  border: #000 1px solid;
-  line-height: 30px;
-}
-.d {
-  float: right;
-}
-.bz {
-  font-size: 13px;
 }
 .table {
   width: 100%;

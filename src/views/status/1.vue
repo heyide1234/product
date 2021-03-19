@@ -1,85 +1,31 @@
 <template>
-  <div ref="main" id="mainS"></div>
+  <div id="mainfs">
+    <div ref="main" id="mainS"></div>
+  </div>
 </template>
 
 <script>
 var echarts = require("echarts");
 var myChart = "";
+// var datass = [70, 34, 60, 70, 34, 70, 34, 60, 70, 34];
+
 export default {
   props: {
-    data: {
+    datas: {
       type: Object,
       default: () => ({
-        title: "0",
-        gx: ["一", "二", "三", "四", "五"],
-        lb: ["待出", "配料", "领料", "完成"],
-        dc: [
-          {
-            value: 3,
-          },
-          {
-            value: 6,
-          },
-          {
-            value: 10,
-          },
-          {
-            value: 6,
-          },
-          {
-            value: 8,
-          },
-        ],
-        pl: [
-          {
-            value: 13,
-          },
-          {
-            value: 6,
-          },
-          {
-            value: 10,
-          },
-          {
-            value: 6,
-          },
-          {
-            value: 8,
-          },
-        ],
-        ll: [
-          {
-            value: 23,
-          },
-          {
-            value: 6,
-          },
-          {
-            value: 10,
-          },
-          {
-            value: 6,
-          },
-          {
-            value: 8,
-          },
-        ],
-        wc: [
-          {
-            value: 33,
-          },
-          {
-            value: 6,
-          },
-          {
-            value: 10,
-          },
-          {
-            value: 6,
-          },
-          {
-            value: 8,
-          },
+        values: [70, 34, 60, 70, 34, 70, 34, 60, 70, 34],
+        orderNumber: [
+          "920210310002",
+          "920210310002",
+          "920210310002",
+          "920210310002",
+          "920210310002",
+          "920210310002",
+          "920210310002",
+          "920210310002",
+          "920210310002",
+          "920210310002",
         ],
       }),
     },
@@ -87,150 +33,95 @@ export default {
   data() {
     return {
       option: {
-        title: {
-          // left: "center",
-          // text: "SCNT1234-JFDS345", //标题
-          // backgroundColor: "#000", //背景
-          //subtext: "同比百分比(%)", //子标题
-
-          textStyle: {
-            fontWeight: "normal", //标题颜色
-            color: "#fff",
-            fontSize: 12,
-          },
-        },
-        backgroundColor: "RGB(2,22,76)",
-        color: ["#f56803", "#f9d000", "#00ffff", "#00ff54"],
-        //animation: false,
-        tooltip: {
-          trigger: "axis",
-          axisPointer: {
-            type: "line", // 默认为直线，可选为：'line' | 'shadow'
-            lineStyle: {
-              width: 1,
-              type: "solid",
-            },
-          },
-        },
+        backgroundColor: "#02164c",
+        // title: {
+        //   text: "电耗排名TOP10",
+        //   // x: 'left',
+        //   textStyle: {
+        //     fontSize: 15,
+        //     color: "#333",
+        //   },
+        //   // left: '6%',
+        //   // top: '10%'
+        // },
+        //图标位置
         grid: {
-          top: "5%",
-          left: "5%",
-          right: "5%",
-          bottom: "5%",
-          containLabel: true,
+          top: "0%",
+          left: "40%",
         },
-        legend: {
-          itemWidth: 12,
-          itemHeight: 12,
-          show: true,
-          top: 15,
-          right: 26,
-          data: this.data.lb, //["待出", "配料", "领料", "完成"], //类别
-          textStyle: {
-            color: "RGB(193,223,255)",
-          },
+        xAxis: {
+          show: false,
         },
-
-        xAxis: [
-          {
-            // name: "工序",
-            type: "category",
-            data: this.data.gx, //["工序一", "工序二", "工序三", "工序四", "工序五"],
-            axisTick: {
-              alignWithLabel: true,
-            },
-            nameTextStyle: {
-              color: "#fff",
-            },
-            axisLine: {
-              lineStyle: {
-                color: "RGB(47,68,114)",
-              },
-            },
-            axisLabel: {
-              textStyle: {
-                color: "white",
-              },
-              margin: 20,
-            },
-          },
-        ],
         yAxis: [
           {
-            // name: "数量（*）",
-            nameTextStyle: {
-              color: "#fff",
-              fontSize: 12,
+            show: true,
+            data: this.datas.orderNumber,
+            inverse: true,
+            axisLine: {
+              show: false,
             },
-            type: "value",
-            axisLabel: {
-              textStyle: {
-                color: "white",
-              },
-              formatter: "{value}",
+            splitLine: {
+              show: false,
             },
-
             axisTick: {
               show: false,
             },
-            axisLine: {
-              show: true,
-              lineStyle: {
-                color: "RGB(47,68,114)",
+            axisLabel: {
+              color: "#ffe",
+              backgroundColor: "#0f0d40",
+              fontSize: 9.5,
+              formatter: (value, index) => {
+                return [index + 1 + ".{title|" + value + "} "].join("\n");
               },
-            },
-            splitNumber: 6,
-            splitLine: {
-              show: true,
-              lineStyle: {
-                color: "#0a3256",
+              rich: {
+                title: {
+                  // backgroundColor: "#000",
+                  color: "#fff",
+                  fontSize: 9.5,
+                  width: 85,
+                  align: "left",
+                  borderRadius: 5,
+                  padding: 2,
+                },
               },
             },
           },
         ],
         series: [
           {
-            name: "待出",
+            name: "条",
             type: "bar",
-            //silent: true,
-            barWidth: "4",
-            //barGap: '-100%', // Make series be overlap
-            data: this.data.dc,
-            tooltip: {
-              show: true,
+            yAxisIndex: 0,
+            data: this.datas.values,
+            barWidth: 5,
+            label: {
+              normal: {
+                show: true,
+                position: "right",
+                textStyle: {
+                  color: "#ccc",
+                  fontSize: "10",
+                },
+              },
             },
-          },
-          {
-            name: "配料",
-            type: "bar",
-            //silent: true,
-            barWidth: "4",
-            //barGap: '-100%', // Make series be overlap
-            data: this.data.pl,
-            tooltip: {
-              show: true,
-            },
-          },
-          {
-            name: "领料",
-            type: "bar",
-            //silent: true,
-            barWidth: "4",
-            //barGap: '-100%', // Make series be overlap
-            data: this.data.ll,
-            tooltip: {
-              show: true,
-            },
-          },
-          {
-            name: "完成",
-            type: "bar",
-            //silent: true,
-            barWidth: "4",
-            //barGap: '-100%', // Make series be overlap
-            data: this.data.wc,
-            tooltip: {
-              show: true,
+            itemStyle: {
+              normal: {
+                barBorderRadius: 30,
+                color: function (params) {
+                  var num = ["#909399", "#e6a23c", "#67c23a"].length;
+                  return ["#909399", "#e6a23c", "#67c23a"][
+                    params.dataIndex % num
+                  ];
+                },
+                // 渐变色
+                // color: new echarts.graphic.LinearGradient(0, 0, 1, 0, [{
+                // offset: 0,
+                // color: 'rgba(0,255,0)'
+                // }, {
+                // offset: 1,
+                // color: 'rgb(215 ,255,0)'
+                // }]),
+              },
             },
           },
         ],
@@ -257,13 +148,112 @@ export default {
     // }
   },
   watch: {
-    //观察option的变化
-    data(newVal, oldVal) {
-      if (newVal) {
-        myChart.setOption(newVal);
-      } else {
-        myChart.setOption(oldVal);
-      }
+    datas: {
+      //观察option的变化
+      handler(newVal, oldVal) {
+        console.log(newVal, oldVal);
+        // if (newVal) {
+        // } else {
+        //   myChart.setOption(oldVal);
+        // }
+        this.option = {
+          backgroundColor: "#02164c",
+          // title: {
+          //   text: "电耗排名TOP10",
+          //   // x: 'left',
+          //   textStyle: {
+          //     fontSize: 15,
+          //     color: "#333",
+          //   },
+          //   // left: '6%',
+          //   // top: '10%'
+          // },
+          //图标位置
+          grid: {
+            top: "0%",
+            left: "40%",
+          },
+          xAxis: {
+            show: false,
+          },
+          yAxis: [
+            {
+              show: true,
+              data: this.data.orderNumber,
+              inverse: true,
+              axisLine: {
+                show: false,
+              },
+              splitLine: {
+                show: false,
+              },
+              axisTick: {
+                show: false,
+              },
+              axisLabel: {
+                color: "#ffe",
+                backgroundColor: "#0f0d40",
+                fontSize: 9.5,
+                formatter: (value, index) => {
+                  return [index + 1 + ".{title|" + value + "} "].join("\n");
+                },
+                rich: {
+                  title: {
+                    // backgroundColor: "#000",
+                    color: "#fff",
+                    fontSize: 9.5,
+                    width: 85,
+                    align: "left",
+                    borderRadius: 5,
+                    padding: 2,
+                  },
+                },
+              },
+            },
+          ],
+          series: [
+            {
+              name: "条",
+              type: "bar",
+              yAxisIndex: 0,
+              data: this.data.values,
+              barWidth: 5,
+              label: {
+                normal: {
+                  show: true,
+                  position: "right",
+                  textStyle: {
+                    color: "#ccc",
+                    fontSize: "10",
+                  },
+                },
+              },
+              itemStyle: {
+                normal: {
+                  barBorderRadius: 30,
+                  color: function (params) {
+                    var num = ["#909399", "#e6a23c", "#67c23a"].length;
+                    return ["#909399", "#e6a23c", "#67c23a"][
+                      params.dataIndex % num
+                    ];
+                  },
+                  // 渐变色
+                  // color: new echarts.graphic.LinearGradient(0, 0, 1, 0, [{
+                  // offset: 0,
+                  // color: 'rgba(0,255,0)'
+                  // }, {
+                  // offset: 1,
+                  // color: 'rgb(215 ,255,0)'
+                  // }]),
+                },
+              },
+            },
+          ],
+        };
+        myChart.setOption(this.option);
+      },
+      //immediate: true; //刷新加载 立马触发一次handler
+      //deep: true; // 可以深度检测到 person 对象的属性值的变化
     },
   },
   created() {
@@ -277,7 +267,13 @@ export default {
 <style scoped>
 #mainS {
   background-color: "#05224d";
-  height: 80%;
+  /* height: 100%; */
+  min-height: 240px;
+  width: 100%;
+}
+#mainfs {
+  overflow: hidden;
+  height: 100%;
   width: 100%;
 }
 </style>

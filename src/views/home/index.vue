@@ -36,10 +36,19 @@
                 <template slot="title">主 页</template>
                 <el-menu-item index="status">控制中心</el-menu-item>
                 <el-menu-item index="message">订单状态</el-menu-item>
-                <el-menu-item index="Approval">审 批</el-menu-item>
+
+                <el-submenu index="12-11">
+                  <template slot="title">审批</template>
+                  <el-menu-item index="Approval">业务流程审批</el-menu-item>
+                  <el-menu-item index="MaterialPriceSP"
+                    >物料价格审批</el-menu-item
+                  >
+                  <el-menu-item index="supplierSP">供应商准入审核</el-menu-item>
+                  <el-menu-item index="materialSP">物料准入审核</el-menu-item>
+                </el-submenu>
 
                 <el-submenu index="12-1">
-                  <template slot="title">通 用</template>
+                  <template slot="title">内部订单</template>
                   <el-menu-item index="materialRequisition"
                     >内部需求单</el-menu-item
                   >

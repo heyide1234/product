@@ -519,7 +519,7 @@
             >
               <el-upload
                 class="upload-demo"
-                action="http://172.16.1.10:3001/upload"
+                :action="`http://172.16.1.10:3001/upload?name=salefj_${salesOrder}.pdf`"
                 :on-success="successHandlel"
                 :limit="1"
                 :file-list="fileList"
@@ -534,17 +534,12 @@
                 <div slot="tip" class="el-upload__tip">
                   <a
                     target="_blank"
-                    :href="`http://172.16.1.10:3001/download?name=${scope.row.enclosure}`"
+                    :href="`http://172.16.1.10:3001/download?name=salefj_${scope.row.enclosure}`"
                     >下载模板</a
                   >
-                  <!-- <el-button icon="el-icon-download" size="mini"
-                    ><a @click="dl">点击下载</a></el-button
-                  > -->
                 </div>
               </el-upload>
               <el-button
-                title="附件上传"
-                style="margin: 0 5px"
                 type="info"
                 icon="el-icon-paperclip"
                 circle
@@ -554,6 +549,7 @@
                 @click="scfj(scope.row)"
               ></el-button>
             </el-popover>
+
             <el-button
               :disabled="scope.row.processCode != '1' ? true : false"
               type="danger"
@@ -724,6 +720,7 @@ export default {
   inject: ["reload"],
   data() {
     return {
+      salesOrder: "",
       CustomerNumber: "",
       sx: "",
       fileList: [], //上传
@@ -835,8 +832,8 @@ export default {
         url: "/api/apiModel/updateByWhere",
         data: {
           table: "salesOrder",
-          where: { OrderNumber: this.OrderNumbersT },
-          form: { enclosure: file.name },
+          where: { OrderNumber: this.salesOrder },
+          form: { enclosure: this.salesOrder + ".pdf" },
         },
       })
         .then((res) => {
@@ -848,7 +845,7 @@ export default {
         });
     },
     scfj(row) {
-      this.OrderNumbersT = row.OrderNumber;
+      this.salesOrder = row.OrderNumber;
       if (row.enclosure) {
         this.fileList = [{ name: "" }];
         this.fileList[0].name = row.enclosure;
@@ -1144,6 +1141,8 @@ export default {
             Class1Num: value[0],
             Class2Num: value[1],
             Class3Num: value[2],
+            Approval: "已审批",
+            prescription: { $gte: getTime() },
           },
         },
       })

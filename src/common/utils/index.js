@@ -46,35 +46,40 @@ const delay = (function () {
 
 /**
  * @function 防抖函数 
- * @param func 回调函数
- * @param wait 间隔时间
+ * @param fn 回调函数
+ * @param ms 间隔时间
  */
-const debounce = (func, wait) => {
-  let timeout = null;
+
+const debounce = (fn, ms) => {
+  let timerId;// 创建一个标记用来存放定时器的返回值
   return function () {
-    if (timeout) clearTimeout(timeout);
-    timeout = setTimeout(() => {
-      func.apply(this, arguments)
-    }, wait)
+    timerId && clearTimeout(timerId) // 每当用户输入的时候把前一个 setTimeout clear 掉
+    // 然后又创建一个新的 setTimeout, 这样就能保证输入字符后的 interval 间隔内如果还有字符输入的话，就不会执行 fn 函数
+    timerId = setTimeout(() => {
+      fn.apply(this, arguments)
+    }, ms)
+  }
+}
+/**
+ * @function 节流函数 
+ * @param fn 回调函数
+ * @param ms 间隔时间
+ */
+const throttle = (fn, ms) => {
+  let timerId // 创建一个标记用来存放定时器的id
+  return function () {
+    // 没有定时器等待执行，则表示可以创建新的定时器来执行函数
+    if (!timerId) {
+      timerId = setTimeout(() => {
+        // 定时器id清空，表示可以执行下一次调用了
+        timerId = null
+        fn.apply(this, arguments)
+      }, ms)
+    }
   }
 }
 
-/**
- * @function 节流函数 
- * @param func 回调函数
- * @param wait 间隔时间
- */
-const throttle = (fu, time) => {
-  let flag = true;
-  return function () {
-    if (!flag) return;
-    flag = false;
-    setTimeout(() => {
-      fu.apply(this, arguments);
-      flag = true;
-    }, time)
-  }
-}
+
 
 /**
 * @function AJAX 

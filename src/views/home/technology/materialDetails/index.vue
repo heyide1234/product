@@ -420,6 +420,8 @@ export default {
             Class1Num: value[0],
             Class2Num: value[1],
             Class3Num: value[2],
+            Approval: "已审批",
+            prescription: { $gte: getTime() },
           },
         },
       })
@@ -447,6 +449,8 @@ export default {
             Class1Num: value[0],
             Class2Num: value[1],
             Class3Num: value[2],
+            Approval: "已审批",
+            prescription: { $gte: getTime() },
           },
         },
       })

@@ -136,7 +136,7 @@
             >
               <el-upload
                 class="upload-demo"
-                :action="`http://172.16.1.10:3001/upload?name=supplierYYZZ_${supplierNameT}`"
+                :action="`http://172.16.1.10:3001/upload?name=${supplierNameT}`"
                 :on-success="YYZZsuccessHandlel"
                 :before-upload="beforeUpload"
                 :limit="1"
@@ -152,7 +152,7 @@
                 <div slot="tip" class="el-upload__tip">
                   <a
                     target="_blank"
-                    :href="`http://172.16.1.10:3001/download?name=supplierYYZZ_${scope.row.supplierYYZZ}`"
+                    :href="`http://172.16.1.10:3001/download?name=${scope.row.supplierYYZZ}`"
                     >下载模板</a
                   >
                 </div>
@@ -192,7 +192,7 @@
             >
               <el-upload
                 class="upload-demo"
-                :action="`http://172.16.1.10:3001/upload?name=supplierKHXKZ_${supplierNameT}`"
+                :action="`http://172.16.1.10:3001/upload?name=${supplierNameT}`"
                 :on-success="KHXKZsuccessHandlel"
                 :before-upload="beforeUpload"
                 :limit="1"
@@ -208,7 +208,7 @@
                 <div slot="tip" class="el-upload__tip">
                   <a
                     target="_blank"
-                    :href="`http://172.16.1.10:3001/download?name=supplierKHXKZ_${scope.row.supplierKHXKZ}`"
+                    :href="`http://172.16.1.10:3001/download?name=${scope.row.supplierKHXKZ}`"
                     >下载模板</a
                   >
                 </div>
@@ -221,7 +221,7 @@
                 size="mini"
                 plain
                 slot="reference"
-                @click="scfjKHXKZ(scope.row)"
+                @click="scfjKHXKZ(scope.row, 'supplierKHXKZ_')"
               ></el-button>
               <el-button
                 v-if="scope.row.supplierKHXKZ != undefined"
@@ -230,7 +230,7 @@
                 circle
                 size="mini"
                 slot="reference"
-                @click="scfjKHXKZ(scope.row)"
+                @click="scfjKHXKZ(scope.row, 'supplierKHXKZ_')"
               ></el-button>
             </el-popover>
           </template>
@@ -245,7 +245,7 @@
             >
               <el-upload
                 class="upload-demo"
-                :action="`http://172.16.1.10:3001/upload?name=supplierISO_${supplierNameT}`"
+                :action="`http://172.16.1.10:3001/upload?name=${supplierNameT}`"
                 :on-success="ISOsuccessHandlel"
                 :before-upload="beforeUpload"
                 :limit="1"
@@ -261,7 +261,7 @@
                 <div slot="tip" class="el-upload__tip">
                   <a
                     target="_blank"
-                    :href="`http://172.16.1.10:3001/download?name=supplierISO_${scope.row.supplierISO}`"
+                    :href="`http://172.16.1.10:3001/download?name=${scope.row.supplierISO}`"
                     >下载模板</a
                   >
                 </div>
@@ -274,7 +274,7 @@
                 size="mini"
                 plain
                 slot="reference"
-                @click="scfjISO(scope.row)"
+                @click="scfjISO(scope.row, 'supplierISO_')"
               ></el-button>
               <el-button
                 v-if="scope.row.supplierISO != undefined"
@@ -283,7 +283,7 @@
                 circle
                 size="mini"
                 slot="reference"
-                @click="scfjISO(scope.row)"
+                @click="scfjISO(scope.row, 'supplierISO_')"
               ></el-button>
             </el-popover>
           </template>
@@ -298,7 +298,7 @@
             >
               <el-upload
                 class="upload-demo"
-                :action="`http://172.16.1.10:3001/upload?name=supplierHB_${supplierNameT}`"
+                :action="`http://172.16.1.10:3001/upload?name=${supplierNameT}`"
                 :on-success="HBsuccessHandlel"
                 :before-upload="beforeUpload"
                 :limit="1"
@@ -314,7 +314,7 @@
                 <div slot="tip" class="el-upload__tip">
                   <a
                     target="_blank"
-                    :href="`http://172.16.1.10:3001/download?name=supplierHB_${scope.row.supplierHB}`"
+                    :href="`http://172.16.1.10:3001/download?name=${scope.row.supplierHB}`"
                     >下载模板</a
                   >
                 </div>
@@ -327,7 +327,7 @@
                 size="mini"
                 plain
                 slot="reference"
-                @click="scfjHB(scope.row)"
+                @click="scfjHB(scope.row, 'supplierHB_')"
               ></el-button>
               <el-button
                 v-if="scope.row.supplierHB != undefined"
@@ -336,7 +336,7 @@
                 circle
                 size="mini"
                 slot="reference"
-                @click="scfjHB(scope.row)"
+                @click="scfjHB(scope.row, 'supplierHB_')"
               ></el-button>
             </el-popover>
           </template>
@@ -352,7 +352,7 @@
             >
               <el-upload
                 class="upload-demo"
-                :action="`http://172.16.1.10:3001/upload?name=supplierDLSQZS_${supplierNameT}`"
+                :action="`http://172.16.1.10:3001/upload?name=${supplierNameT}`"
                 :on-success="DLSQZSsuccessHandlel"
                 :before-upload="beforeUpload"
                 :limit="1"
@@ -368,7 +368,7 @@
                 <div slot="tip" class="el-upload__tip">
                   <a
                     target="_blank"
-                    :href="`http://172.16.1.10:3001/download?name=supplierDLSQZS_${scope.row.supplierDLSQZS}`"
+                    :href="`http://172.16.1.10:3001/download?name=${scope.row.supplierDLSQZS}`"
                     >下载模板</a
                   >
                 </div>
@@ -381,7 +381,7 @@
                 size="mini"
                 plain
                 slot="reference"
-                @click="scfjDLSQZS(scope.row)"
+                @click="scfjDLSQZS(scope.row, 'supplierDLSQZS_')"
               ></el-button>
               <el-button
                 v-if="scope.row.supplierDLSQZS != undefined"
@@ -390,7 +390,7 @@
                 circle
                 size="mini"
                 slot="reference"
-                @click="scfjDLSQZS(scope.row)"
+                @click="scfjDLSQZS(scope.row, 'supplierDLSQZS_')"
               ></el-button>
             </el-popover>
           </template>
@@ -406,7 +406,7 @@
             >
               <el-upload
                 class="upload-demo"
-                :action="`http://172.16.1.10:3001/upload?name=supplierQTZZ_${supplierNameT}`"
+                :action="`http://172.16.1.10:3001/upload?name=${supplierNameT}`"
                 :on-success="QTZZsuccessHandlel"
                 :before-upload="beforeUpload"
                 :limit="1"
@@ -422,7 +422,7 @@
                 <div slot="tip" class="el-upload__tip">
                   <a
                     target="_blank"
-                    :href="`http://172.16.1.10:3001/download?name=supplierQTZZ_${scope.row.supplierQTZZ}`"
+                    :href="`http://172.16.1.10:3001/download?name=${scope.row.supplierQTZZ}`"
                     >下载模板</a
                   >
                 </div>
@@ -435,7 +435,7 @@
                 size="mini"
                 plain
                 slot="reference"
-                @click="scfjQTZZ(scope.row)"
+                @click="scfjQTZZ(scope.row, 'supplierQTZZ_')"
               ></el-button>
               <el-button
                 v-if="scope.row.supplierQTZZ != undefined"
@@ -444,7 +444,7 @@
                 circle
                 size="mini"
                 slot="reference"
-                @click="scfjQTZZ(scope.row)"
+                @click="scfjQTZZ(scope.row, 'supplierQTZZ_')"
               ></el-button>
             </el-popover>
           </template>
@@ -529,6 +529,9 @@ export default {
         supplierHB: "", //环保
         supplierDLSQZS: "", //代理授权证书
         supplierQTZZ: "", //其他资质
+        Approval: "",
+        Approver: "",
+        prescription: "",
 
         creater: "", //创建人
         creatdate: "", //创建时间
@@ -542,12 +545,14 @@ export default {
       csd1: [],
       csd2: [],
       supplierNameT: "",
+      supplierName: "",
     };
   },
   methods: {
     //营业执照
     scfjYYZZ(row) {
-      this.supplierNameT = row.supplierName;
+      this.supplierName = row.supplierName;
+      this.supplierNameT = "supplierYYZZ_" + row.supplierName + ".pdf";
       if (row.supplierYYZZ) {
         this.supplierYYZZfileList = [{ name: "" }];
         this.supplierYYZZfileList[0].name = row.supplierYYZZ;
@@ -569,8 +574,13 @@ export default {
         data: {
           table: "__supplierManager",
           dataBase: "base",
-          where: { supplierName: this.supplierNameT },
-          form: { supplierYYZZ: this.supplierNameT + ".pdf" },
+          where: { supplierName: this.supplierName },
+          form: {
+            supplierYYZZ: this.supplierNameT,
+            Approval: "未审批",
+            Approver: "",
+            prescription: "",
+          },
         },
       })
         .then((res) => {
@@ -583,7 +593,8 @@ export default {
     },
     //开户许可证
     scfjKHXKZ(row) {
-      this.supplierNameT = row.supplierName;
+      this.supplierName = row.supplierName;
+      this.supplierNameT = "supplierKHXKZ_" + row.supplierName + ".pdf";
       if (row.supplierKHXKZ) {
         this.supplierKHXKZfileList = [{ name: "" }];
         this.supplierKHXKZfileList[0].name = row.supplierKHXKZ;
@@ -599,8 +610,13 @@ export default {
         data: {
           table: "__supplierManager",
           dataBase: "base",
-          where: { supplierName: this.supplierNameT },
-          form: { supplierKHXKZ: this.supplierNameT + ".pdf" },
+          where: { supplierName: this.supplierName },
+          form: {
+            supplierKHXKZ: this.supplierNameT,
+            Approval: "未审批",
+            Approver: "",
+            prescription: "",
+          },
         },
       })
         .then((res) => {
@@ -613,7 +629,8 @@ export default {
     },
     //ISO
     scfjISO(row) {
-      this.supplierNameT = row.supplierName;
+      this.supplierName = row.supplierName;
+      this.supplierNameT = "supplierISO_" + row.supplierName + ".pdf";
       if (row.supplierISO) {
         this.supplierISOfileList = [{ name: "" }];
         this.supplierISOfileList[0].name = row.supplierISO;
@@ -629,8 +646,13 @@ export default {
         data: {
           table: "__supplierManager",
           dataBase: "base",
-          where: { supplierName: this.supplierNameT },
-          form: { supplierISO: this.supplierNameT + ".pdf" },
+          where: { supplierName: this.supplierName },
+          form: {
+            supplierISO: this.supplierNameT,
+            Approval: "未审批",
+            Approver: "",
+            prescription: "",
+          },
         },
       })
         .then((res) => {
@@ -643,7 +665,8 @@ export default {
     },
     //环保
     scfjHB(row) {
-      this.supplierNameT = row.supplierName;
+      this.supplierName = row.supplierName;
+      this.supplierNameT = "supplierHB_" + row.supplierName + ".pdf";
       if (row.supplierHB) {
         this.supplierHBfileList = [{ name: "" }];
         this.supplierHBfileList[0].name = row.supplierHB;
@@ -659,8 +682,13 @@ export default {
         data: {
           table: "__supplierManager",
           dataBase: "base",
-          where: { supplierName: this.supplierNameT },
-          form: { supplierHB: this.supplierNameT + ".pdf" },
+          where: { supplierName: this.supplierName },
+          form: {
+            supplierHB: this.supplierNameT,
+            Approval: "未审批",
+            Approver: "",
+            prescription: "",
+          },
         },
       })
         .then((res) => {
@@ -673,7 +701,8 @@ export default {
     },
     //代理授权证书
     scfjDLSQZS(row) {
-      this.supplierNameT = row.supplierName;
+      this.supplierName = row.supplierName;
+      this.supplierNameT = "supplierDLSQZS_" + row.supplierName + ".pdf";
       if (row.supplierDLSQZS) {
         this.supplierDLSQZSfileList = [{ name: "" }];
         this.supplierDLSQZSfileList[0].name = row.supplierDLSQZS;
@@ -689,8 +718,13 @@ export default {
         data: {
           table: "__supplierManager",
           dataBase: "base",
-          where: { supplierName: this.supplierNameT },
-          form: { supplierDLSQZS: this.supplierNameT + ".pdf" },
+          where: { supplierName: this.supplierName },
+          form: {
+            supplierDLSQZS: this.supplierNameT,
+            Approval: "未审批",
+            Approver: "",
+            prescription: "",
+          },
         },
       })
         .then((res) => {
@@ -703,7 +737,8 @@ export default {
     },
     //其他资质
     scfjQTZZ(row) {
-      this.supplierNameT = row.supplierName;
+      this.supplierName = row.supplierName;
+      this.supplierNameT = "supplierQTZZ_" + row.supplierName + ".pdf";
       if (row.supplierQTZZ) {
         this.supplierQTZZfileList = [{ name: "" }];
         this.supplierQTZZfileList[0].name = row.supplierQTZZ;
@@ -719,8 +754,13 @@ export default {
         data: {
           table: "__supplierManager",
           dataBase: "base",
-          where: { supplierName: this.supplierNameT },
-          form: { supplierQTZZ: this.supplierNameT + ".pdf" },
+          where: { supplierName: this.supplierName },
+          form: {
+            supplierQTZZ: this.supplierNameT,
+            Approval: "未审批",
+            Approver: "",
+            prescription: "",
+          },
         },
       })
         .then((res) => {
@@ -800,7 +840,9 @@ export default {
     //提交按钮
     async onSubmit() {
       this.dialogFormVisible = false;
-
+      this.form.Approval = "未审批";
+      this.form.Approver = "";
+      this.form.prescription = "";
       this.form.creater = sessionStorage.getItem("loginName");
       this.form.creatdate = getTime();
       if (this.operation === "add") {

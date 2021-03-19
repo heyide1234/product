@@ -622,7 +622,10 @@ export default {
         params: {
           table: "__supplierManager",
           dataBase: "base",
-          where: {},
+
+          // Approver: "heyi",
+          // prescription: "2021/09/09",
+          where: { Approval: "已审批", prescription: { $gte: getTime() } },
         },
       })
         .then((res) => {

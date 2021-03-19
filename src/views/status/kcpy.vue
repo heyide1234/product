@@ -22,6 +22,7 @@
           <col />
           <col />
           <col />
+          <col />
         </colgroup>
         <tbody>
           <tr v-for="(items, key) in dataB" :key="key">
@@ -63,13 +64,16 @@ th {
   height: 25px;
 }
 colgroup > col:nth-child(1) {
-  width: 15%;
+  width: 12%;
 }
 colgroup > col:nth-child(2) {
-  width: 42.5%;
+  width: 25%;
 }
 colgroup > col:nth-child(3) {
-  width: 42.5%;
+  width: 38%;
+}
+colgroup > col:nth-child(4) {
+  width: 25%;
 }
 .container {
   height: 80%;

@@ -2,348 +2,143 @@
   <div class="container">
     <div id="bk"></div>
     <el-steps :active="0" finish-status="success" simple style="margin: 5px">
-      <el-step title="订单"></el-step>
+      <el-step title="物料价格审批"></el-step>
       <!--<el-step title="制程"></el-step>
       <el-step title="配料"></el-step>
       <el-step title="领料"></el-step>
       <el-step title="检验"></el-step>-->
     </el-steps>
-    <el-dialog
-      title="表单"
-      :visible.sync="dialogFormVisible2"
-      :close-on-click-modal="false"
+
+    <el-input
+      style="margin: 10px"
+      size="small"
+      v-model="search"
+      prefix-icon="el-icon-search"
+      placeholder="输入预审批号"
+      @change="searchs"
+    />
+
+    <el-table
+      ref="tableselectData"
+      class="table"
+      height="150"
+      :data="dsSP"
+      highlight-current-row
     >
-      <div class="dialogBody" id="dialogBody">
-        <h2>
-          四川凯迈新能源有限公司（产品销售单）<span
-            style="color: red"
-            v-show="Approval != '已审批'"
-            >【{{ Approval }}】</span
+      <el-table-column type="selection" width="50"></el-table-column>
+
+      <el-table-column type="index" width="50" label="序号"></el-table-column>
+
+      <el-table-column property="ApprovalClass" label="钉钉审批码">
+        <template slot-scope="scope">
+          <el-upload
+            class="upload-demo"
+            :action="`http://172.16.1.10:3001/upload?name=wljgspm_${scope.row.MaterialPriceSPNumber}.png`"
+            :on-success="successHandlel"
+            :limit="1"
+            :file-list="fileList"
           >
-        </h2>
-
-        <div class="htbh">系统订单编号：XS{{ form1.OrderNumber }}</div>
-        <div class="htbh te">客户订单编号：{{ ddbh }}</div>
-        <div class="title-content">
-          <div>
-            <div class="text">需方：{{ xf }}</div>
-          </div>
-          <div>
-            <div class="text">供方：<span>四川凯迈新能源有限公司</span></div>
-          </div>
-        </div>
-        <div class="title-content">
-          <div>
-            <div class="text">
-              住所地：<span class="t">{{ xfdz }}</span>
-            </div>
-          </div>
-          <div>
-            <div class="text">
-              住所地：<span class="t"
-                >四川省成都市经济技术开发区成龙大道888号
-              </span>
-            </div>
-          </div>
-        </div>
-        <div class="title-content">
-          <div>
-            <div class="text">联系人：{{ xflxr }}</div>
-          </div>
-          <div>
-            <div class="text">联系人：{{ gflxr }}</div>
-          </div>
-        </div>
-        <div class="title-content">
-          <div>
-            <div class="text">
-              联系人住址：<span class="t">{{ xfxlxrdz }}</span>
-            </div>
-          </div>
-        </div>
-
-        <p class="cont">一.货物信息</p>
-        <table id="printTable">
-          <thead>
-            <tr>
-              <th>序号</th>
-              <th>物料编码</th>
-              <th>物料名称</th>
-              <th>规格</th>
-              <th>数量</th>
-
-              <th>单价</th>
-              <th>金额</th>
-              <th>单位</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="(item1, index) in querydata" :key="index">
-              <td v-for="(item2, key) in item1" :key="key">
-                {{ item2 }}
-              </td>
-            </tr>
-          </tbody>
-          <tfoot>
-            <tr>
-              <td colspan="8" id="jhe">
-                <span
-                  >合计（小写）：<b class="zjs">{{ zj }}</b>
-                </span>
-                <span>合计（大写）：{{ zj | DX }}</span>
-              </td>
-            </tr>
-            <tr>
-              <td colspan="8" id="jhe">
-                <div class="fl">
-                  （一）、供方开具1、增值税专用发票
-                  <div class="xzY"></div>
-                  13%
-
-                  <div class="xzN"></div>
-                  3% 2、
-                  <div class="xzN"></div>
-                  增值税普通发票 3、
-                  <div class="xzN"></div>
-                  定额发票 4、
-                  <div class="xzN"></div>
-                  电子发票
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <td colspan="8" id="jhe">
-                <div class="fl">
-                  （二）、运费承担方
-                  <div class="xzY"></div>
-                  供方
-                  <div class="xzN"></div>
-                  需方
-                </div>
-              </td>
-            </tr>
-          </tfoot>
-        </table>
-        <p class="cont">二、收款计划</p>
-        <table id="printTable">
-          <thead>
-            <tr>
-              <th>期号</th>
-              <th>计划付款金额</th>
-              <th>计划付款日期</th>
-              <th>备注</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="(ite, index) in tableData2" :key="index">
-              <td>{{ ite.IssueNumber }}</td>
-              <td>{{ ite.PlannedAmount }}</td>
-              <td>{{ ite.AppointedTime }}</td>
-              <td>{{ ite.Remarks }}</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible2 = false">取 消</el-button>
-        <el-button type="primary" v-print="printTable" @click="prints"
-          >打 印</el-button
-        >
-      </div>
-    </el-dialog>
-    <el-dialog
-      title="表单"
-      :visible.sync="dialogFormVisible"
-      :close-on-click-modal="false"
-    >
-      <el-form ref="form" :model="form">
-        <el-form-item label="订单编号">
-          <el-input v-model="form.OrderNumber" disabled></el-input>
-        </el-form-item>
-
-        <el-form-item label="用途">
-          <el-select
-            v-model="form.Purpose"
-            placeholder="请选择"
-            style="width: 100%"
-          >
-            <el-option
-              v-for="(item, key) in orderPurpose"
-              :key="key"
-              :value="item.orderPurposeName"
-            />
-          </el-select>
-        </el-form-item>
-        <el-form-item label="备注">
-          <el-input type="textarea" v-model="form.Remarks"></el-input>
-        </el-form-item>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="onSubmit">确 定</el-button>
-      </div>
-    </el-dialog>
-    <el-dialog
-      title="表单"
-      :visible.sync="dialogFormVisible1"
-      :close-on-click-modal="false"
-    >
-      <el-form ref="form1" :model="form1">
-        <el-form-item label="订单编号">
-          <el-input v-model="form1.OrderNumber" disabled></el-input>
-        </el-form-item>
-
-        <el-form-item
-          label="分类选择"
-          :rules="[{ required: true, message: '不能为空' }]"
-        >
-          <el-cascader
-            style="width: 100%"
-            v-model="classvalue1"
-            :options="newclassDate"
-            :props="{ expandTrigger: 'hover' }"
-            @change="handleChange"
-          ></el-cascader>
-        </el-form-item>
-
-        <el-form-item
-          label="产品编号"
-          :rules="[{ required: true, message: '不能为空' }]"
-        >
-          <!-- <el-input v-model="form.MaterialNumber"></el-input> -->
-          <el-select
-            v-model="form1.MaterialNumber"
-            placeholder="请选择"
-            style="width: 100%"
-            @change="MaterialNumberChange"
-          >
-            <el-option
-              v-for="(item, key) in MaterialInfo"
-              :key="key"
-              :value="item.MaterialNumber"
+            <el-button type="primary" icon="el-icon-upload2" size="mini" plain
+              >上传</el-button
             >
-              <span style="float: left">{{ item.MaterialNumber }}</span>
-
-              <span
-                style="
-                  float: right;
-                  color: #8492a6;
-                  font-size: 13px;
-                  margin-right: 20px;
-                "
-                >{{ item.Company }}</span
+            <div slot="tip" class="el-upload__tip">
+              <a
+                target="_blank"
+                :href="`http://172.16.1.10:3001/download?name=wljgspm_${scope.row.MaterialPriceSPNumber}.png`"
+                >下载模板</a
               >
-
-              <span
-                style="
-                  float: right;
-                  color: #8492a6;
-                  font-size: 13px;
-                  margin-right: 20px;
-                "
-                >{{ item.MaterialSpec }}</span
-              >
-              <span
-                style="
-                  float: right;
-                  color: #8492a6;
-                  font-size: 13px;
-                  margin-right: 20px;
-                "
-                >{{ item.MaterialName }}</span
-              >
-            </el-option>
-          </el-select>
-        </el-form-item>
-
-        <el-form-item
-          label="产品名称"
-          :rules="[{ required: true, message: '不能为空' }]"
-        >
-          <el-input v-model="form1.MaterialName" disabled></el-input>
-        </el-form-item>
-        <el-form-item
-          label="产品价格"
-          :rules="[{ required: true, message: '不能为空' }]"
-        >
-          <el-input v-model="form1.MaterialPrice"></el-input>
-        </el-form-item>
-        <el-form-item
-          label="产品数量"
-          :rules="[{ required: true, message: '不能为空' }]"
-        >
-          <el-input v-model="form1.Number"></el-input>
-        </el-form-item>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible1 = false">取 消</el-button>
-        <el-button type="primary" @click="onSubmit1">确 定</el-button>
-      </div>
-    </el-dialog>
-
+            </div>
+          </el-upload>
+        </template>
+      </el-table-column>
+    </el-table>
     <div class="tabels">
       <el-table
         ref="tableselectData"
         class="table"
-        height="300"
+        height="500"
         :data="tableData"
         highlight-current-row
       >
         <el-table-column type="selection" width="50"></el-table-column>
 
+        <el-table-column type="index" width="50" label="序号"></el-table-column>
+        <el-table-column property="ApprovalClass" label="物料类别">
+        </el-table-column>
         <el-table-column
-          property="OrderNumber"
-          label="订单编号"
+          property="supplierName"
+          label="供应商名称"
+          v-if="currentstatus == '供应商物料'"
+        >
+        </el-table-column>
+        <el-table-column
+          property="CustomerName"
+          label="客户名称"
+          v-if="currentstatus == '客户物料'"
+        >
+        </el-table-column>
+
+        <el-table-column property="MaterialNumber" label="物料编码">
+        </el-table-column>
+        <el-table-column property="MaterialName" label="物料名称">
+        </el-table-column>
+        <el-table-column
+          property="MaterialSpec"
+          label="规格型号"
         ></el-table-column>
 
-        <el-table-column property="Purpose" label="用途"></el-table-column>
-
-        <el-table-column property="Remarks" label="备注"></el-table-column>
-        <el-table-column property="creater" label="申请人"></el-table-column>
-        <el-table-column
-          property="creatdate"
-          label="申请时间"
-        ></el-table-column>
+        <el-table-column property="Company" label="单位"></el-table-column>
+        <el-table-column property="Price" label="物料单价"></el-table-column>
         <el-table-column property="Approval" label="审批状态"></el-table-column>
         <el-table-column property="Approver" label="审批人"></el-table-column>
+        <el-table-column property="prescription" label="时效"></el-table-column>
+
         <el-table-column label="操作" min-width="90" fixed="right">
-          <template slot="header">
-            <el-button
-              type="success"
-              icon="el-icon-document-add"
-              plain
-              circle
-              size="mini"
-              @click="handleAdd"
-            ></el-button>
-            <!-- <el-button
-              type="danger"
-              icon="el-icon-delete-solid"
-              plain
-              circle
-              size="mini"
-              @click="yc"
-            ></el-button> -->
-          </template>
+          <template slot="header"> </template>
           <template slot-scope="scope">
-            <!-- <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">编辑</el-button> -->
-            <el-button
-              type="primary"
-              icon="el-icon-document-copy"
-              circle
-              size="mini"
-              plain
-              @click="findDetail(scope.row)"
-            ></el-button>
-            <el-button
-              :disabled="scope.row.processCode != '1' ? true : false"
-              type="danger"
-              icon="el-icon-delete"
-              circle
-              size="mini"
-              plain
-              @click="handleDelete(scope.row)"
-            ></el-button>
+            <el-popover
+              placement="left"
+              width="300"
+              trigger="click"
+              :ref="`popover-${scope.$index}`"
+            >
+              <el-form ref="form" :model="form" label-width="90px">
+                <el-form-item
+                  label="时效"
+                  :rules="[{ required: true, message: '不能为空' }]"
+                >
+                  <div class="jq">
+                    <el-input v-model="N" placeholder="年"></el-input>
+                    年
+                    <el-input v-model="Y" placeholder="月"></el-input>
+                    月
+                    <el-input v-model="R" placeholder="日"></el-input>
+                    日
+                  </div>
+                </el-form-item>
+              </el-form>
+              <el-button
+                style="float: right"
+                type="primary"
+                @click="Edit(scope)"
+                >审批</el-button
+              >
+              <el-button
+                style="float: right; margin: 0 10px"
+                @click="scope._self.$refs[`popover-${scope.$index}`].doClose()"
+                >取消</el-button
+              >
+
+              <el-button
+                slot="reference"
+                type="success"
+                icon="el-icon-unlock"
+                style="margin-left: 10px"
+                @click="findsupplierNumber(scope)"
+                circle
+                size="mini"
+              ></el-button>
+            </el-popover>
           </template>
         </el-table-column>
       </el-table>
@@ -355,124 +150,6 @@
           :total="total"
         ></el-pagination>
       </div>
-      <el-steps
-        :active="0"
-        finish-status="success"
-        simple
-        style="margin: 40px 5px 5px 5px"
-      >
-        <el-step title="内部需求明细"></el-step>&nbsp;&nbsp;&nbsp;<font>{{
-          form1.OrderNumber
-        }}</font>
-      </el-steps>
-      <el-table
-        class="table1"
-        height="300"
-        :data="tableData1"
-        :style="{ display: tableVisible }"
-      >
-        <el-table-column
-          property="OrderNumber"
-          label="订单编号"
-        ></el-table-column>
-
-        <el-table-column
-          property="MaterialNumber"
-          label="产品编号"
-        ></el-table-column>
-        <el-table-column
-          property="MaterialName"
-          label="产品名称"
-        ></el-table-column>
-
-        <el-table-column
-          property="MaterialPrice"
-          label="产品价格"
-        ></el-table-column>
-
-        <el-table-column property="PNum" label="产品数量"></el-table-column>
-        <el-table-column property="Number" label="计划数"></el-table-column>
-
-        <el-table-column property="jine" label="金额"></el-table-column>
-        <el-table-column property="tjine" label="总金额"></el-table-column>
-
-        <el-table-column label="关于" min-width="80">
-          <template slot-scope="scope">
-            <el-popover trigger="hover" placement="top">
-              <p>创建人: {{ scope.row.creater }}</p>
-              <p>创建日期: {{ scope.row.creatdate }}</p>
-
-              <div slot="reference" class="name-wrapper">
-                <el-tag size="medium">...</el-tag>
-              </div>
-            </el-popover>
-          </template>
-        </el-table-column>
-        <el-table-column label="操作" min-width="100" fixed="right">
-          <template slot="header">
-            <el-button
-              type="success"
-              icon="el-icon-document-add"
-              plain
-              circle
-              size="mini"
-              @click="handleAdd1"
-            ></el-button>
-            <el-button
-              type="success"
-              icon="el-icon-position"
-              circle
-              plain
-              size="mini"
-              @click="handleCirculationstate"
-            ></el-button>
-            <el-button
-              type="primary"
-              plain
-              circle
-              size="mini"
-              icon="el-icon-postcard"
-              @click="jsNum"
-            ></el-button>
-            <el-button
-              type="primary"
-              icon="el-icon-printer"
-              circle
-              size="mini"
-              plain
-              @click="print"
-            ></el-button>
-          </template>
-          <template slot-scope="scope">
-            <!-- <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">编辑</el-button> -->
-            <el-button
-              :disabled="scope.row.status != '0' ? true : false"
-              type="primary"
-              icon="el-icon-edit"
-              circle
-              size="mini"
-              @click="handleEdit1(scope.row)"
-            ></el-button>
-            <el-button
-              :disabled="scope.row.status != '0' ? true : false"
-              type="danger"
-              icon="el-icon-delete"
-              circle
-              size="mini"
-              @click="handleDelete1(scope.row)"
-            ></el-button>
-            <!-- <el-button
-  
-              type="success"
-              icon="el-icon-position"
-              circle
-              plain
-              size="mini"
-            
-            ></el-button> -->
-          </template>
-        </el-table-column>
-      </el-table>
     </div>
   </div>
 </template>
@@ -485,7 +162,10 @@ import { DXZH } from "common/utils/content";
 export default {
   data() {
     return {
-      Approval: "",
+      fileList: [],
+      N: "",
+      Y: "",
+      R: "",
       ddbh: "", //客户订单编号
       xf: "", //需方
       xfdz: "", //需方地址
@@ -511,9 +191,6 @@ export default {
         processCode: "0", //流程码
         Purpose: "", //用途
         Remarks: "", //备注
-        Approval: "", //审批状态
-        Approver: "", //审批人
-
         creater: "", //申请人
         creatdate: "", //创建时间
       },
@@ -549,27 +226,185 @@ export default {
       tableData2: [],
       flagst: false,
       orderPurpose: [],
+      ApprovalClass: "",
+      dsSP: [],
+      currentstatus: "",
     };
   },
   methods: {
-    getorderPurpose() {
-      this.$https({
+    successHandlel(response, file, fileList) {
+      console.log(response, file, fileList);
+      console.log("上传成功！", file.name);
+      this.searchs();
+      // this.$https({
+      //   method: "post",
+      //   url: "/api/apiModel/updateByWhere",
+      //   data: {
+      //     table: "salesOrder",
+      //     where: { OrderNumber: this.salesOrder },
+      //     form: { enclosure: this.salesOrder + ".png" },
+      //   },
+      // })
+      //   .then((res) => {
+      //     console.log(res);
+      //     this.newview();
+      //   })
+      //   .catch((err) => {
+      //     console.log(err);
+      //   });
+    },
+    async searchs() {
+      let ds = [];
+      await this.$https({
         method: "get",
-        url: "/api/apiModel/find",
+        url: "api/apiModel/find",
         params: {
-          table: "__orderPurpose",
-          dataBase: "base",
-          where: {},
+          table: "MaterialPriceSP",
+          where: { MaterialPriceSPNumber: this.search },
         },
       })
         .then((res) => {
-          console.log("res===", res);
-          this.orderPurpose = res;
+          ds = res;
         })
         .catch((err) => {
           console.log(err);
         });
+      if (ds.length == 0) return;
+      this.tableData = [];
+      this.enclosure = ds[0].enclosure;
+      this.currentstatus = ds[0].ApprovalClass;
+      this.dsSP = [ds[0]];
+
+      if (ds[0].ApprovalClass == "供应商物料") {
+        for (let i = 0; i < ds.length; i++) {
+          this.$https({
+            method: "get",
+            url: "/api/apiModel/find",
+            params: {
+              table: "__supplierMaterial",
+              dataBase: "base",
+              where: {
+                supplierNumber: ds[i].supplierNumber,
+                MaterialNumber: ds[i].MaterialNumber,
+                Approval: "未审批",
+              },
+            },
+          })
+            .then((res) => {
+              console.log("当前数据", res);
+              res[0].ApprovalClass = ds[0].ApprovalClass;
+              this.tableData.push(res[0]);
+            })
+            .catch((err) => {
+              console.log(err);
+            });
+        }
+      }
+      if (ds[0].ApprovalClass == "客户物料") {
+        for (let i = 0; i < ds.length; i++) {
+          this.$https({
+            method: "get",
+            url: "/api/apiModel/find",
+            params: {
+              table: "__customerMaterial",
+              dataBase: "base",
+              where: {
+                CustomerNumber: ds[i].CustomerNumber,
+                MaterialNumber: ds[i].MaterialNumber,
+                Approval: "未审批",
+              },
+            },
+          })
+            .then((res) => {
+              console.log("当前数据", res);
+              res[0].ApprovalClass = ds[0].ApprovalClass;
+              this.tableData.push(res[0]);
+            })
+            .catch((err) => {
+              console.log(err);
+            });
+        }
+      }
+
+      if (this.enclosure) {
+        this.fileList = [{ name: "" }];
+        this.fileList[0].name = this.enclosure;
+      } else {
+        this.fileList = [];
+      }
     },
+    async findsupplierNumber(scope) {
+      console.log(scope);
+      this.N = new Date().getFullYear();
+      this.Y = "";
+      this.R = "";
+    },
+    //编辑事件
+    async Edit(scope) {
+      if (!this.N || !this.Y || !this.R) {
+        alert("必填项不能为空！");
+        return;
+      }
+
+      console.log(scope, this.N + "/" + this.Y + "/" + this.R);
+      let sps = {
+        Approval: "已审批", //审批状态
+        Approver: sessionStorage.getItem("loginName"), //"审批人
+        ////时效
+        prescription:
+          String(this.N).padStart(4, "0") +
+          "/" +
+          String(this.Y).padStart(2, "0") +
+          "/" +
+          String(this.R).padStart(2, "0"),
+        // status: "1", //表单状态
+      };
+      /////
+      if (scope.row.ApprovalClass == "供应商物料") {
+        this.$https({
+          method: "post",
+          url: "/api/apiModel/update",
+          data: {
+            table: "__supplierMaterial",
+            dataBase: "base",
+            id: scope.row._id,
+            form: sps,
+          },
+        })
+          .then((res) => {
+            console.log(res);
+            alert("审批完成！");
+            scope._self.$refs[`popover-${scope.$index}`].doClose();
+            this.searchs();
+          })
+          .catch(function (err) {
+            console.log(err);
+          });
+      }
+      if (scope.row.ApprovalClass == "客户物料") {
+        this.$https({
+          method: "post",
+          url: "/api/apiModel/update",
+          data: {
+            table: "__customerMaterial",
+            dataBase: "base",
+            id: scope.row._id,
+            form: sps,
+          },
+        })
+          .then((res) => {
+            console.log(res);
+            alert("审批完成！");
+            scope._self.$refs[`popover-${scope.$index}`].doClose();
+            this.searchs();
+          })
+          .catch(function (err) {
+            console.log(err);
+          });
+      }
+      ////////////
+    },
+
     // 计算金额
     async jsNum() {
       let temp = 0;
@@ -666,10 +501,6 @@ export default {
       //开启流程
       if (this.tableData1.length == 0 || this.tableData1[0].status == "1")
         return;
-      if (this.Approval != "已审批") {
-        alert("未审批！");
-        return;
-      }
       /////////////////////
       if (confirm("是否开启推单模式，下次将不可再次开启！")) {
         this.$myloading({
@@ -819,8 +650,6 @@ export default {
             Class1Num: value[0],
             Class2Num: value[1],
             Class3Num: value[2],
-            Approval: "已审批",
-            prescription: { $gte: getTime() },
           },
         },
       })
@@ -908,48 +737,7 @@ export default {
           console.log(err);
         });
     },
-    //退送制造计划单
-    // async doManufacturingPlan() {
-    //   for (let j = 0; j < this.tableData1.length; j++) {
-    //     let v = {
-    //       OrderNumber: this.tableData1[j].OrderNumber, //订单编号
-    //       MaterialNumber: this.tableData1[j].MaterialNumber, //产品编号
-    //       MaterialName: this.tableData1[j].MaterialName, //产品名称
-    //       Number: this.tableData1[j].Number, //产品数量
-    //       SurplusNumber: this.tableData1[j].Number, //剩余分配数量
-    //       Thumbnail: this.form1.Thumbnail,
-    //       MaterialSpec: this.form1.MaterialSpec,
-    //       status: "0", //状态
-    //       creater: sessionStorage.getItem("loginName"), //创建人
-    //       creatdate: getTime(), //创建时间
-    //     };
 
-    //     await this.$https({
-    //       method: "post",
-    //       url: "/api/apiModel/insert",
-    //       data: {
-    //         table: "ManufacturingPlan",
-    //         form: v,
-    //       },
-    //     })
-    //       .then((res) => console.log(res))
-    //       .catch((err) => console.log(err));
-    //   }
-    //   this.tableData1 = [];
-    //   this.OrderNumbers = "";
-    // },
-    // insertSalesInvoice(v) {
-    //   this.$https({
-    //     method: "post",
-    //     url: "/api/apiModel/insert",
-    //     data: {
-    //       table: "salesInvoice",
-    //       form: v,
-    //     },
-    //   })
-    //     .then((res) => console.log(res))
-    //     .catch((err) => console.log(err));
-    // },
     //明细添加
     handleAdd1() {
       // alert("this.st" + this.st);
@@ -986,7 +774,6 @@ export default {
       if (row.processCode != "1") {
         this.flagst = false;
       }
-      this.Approval = row.Approval;
       this.tableVisible = "block";
       this.Purpose = row.Purpose;
       this.ddbh = row.CustomerOrderNumber; //客户订单编号
@@ -1217,7 +1004,6 @@ export default {
 
       if (this.operation === "add") {
         this.form.processCode = "1";
-        this.form.Approval = "未审批";
         this.add();
       } else {
         this.update();
@@ -1459,10 +1245,10 @@ export default {
     },
   },
   created() {
-    this.newview();
-    this.getMaterialList(); //级联
-    this.findByPageNums();
-    this.getorderPurpose();
+    // this.newview();
+    //this.getMaterialList(); //级联
+    // this.findByPageNums();
+    // this.getorderPurpose();
   },
 };
 </script>
@@ -1643,5 +1429,14 @@ p {
 }
 .te {
   margin-top: -10px;
+}
+.jq {
+  display: flex;
+}
+.jq .el-input {
+  margin: 0 2px;
+}
+.jq .el-input:nth-of-type(1) {
+  width: 280px;
 }
 </style>

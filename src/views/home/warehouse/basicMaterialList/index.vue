@@ -179,7 +179,9 @@
 
         <el-table-column property="Remarks" label="备注"></el-table-column>
 
-        <el-table-column property="Enclosure" label="附件"></el-table-column>
+        <el-table-column property="Approval" label="审批状态"></el-table-column>
+        <el-table-column property="Approver" label="审批人"></el-table-column>
+        <el-table-column property="prescription" label="时效"></el-table-column>
 
         <el-table-column label="关于" min-width="80">
           <template slot-scope="scope">
@@ -274,7 +276,9 @@ export default {
         MaterialTexture: "", //材质
         Company: "", //单位
         Remarks: "", //备注
-        Enclosure: "", //附件
+        Approval: "未审批", //审批状态
+        Approver: "", //"审批人
+        prescription: "", ////时效
         creater: "", //创建人
         creatdate: "", //创建时间
       },
@@ -629,6 +633,9 @@ export default {
     // 数据添加
     add() {
       this.form.MaterialNumber += "";
+      this.form.Approval = "未审批";
+      this.form.Approver == "";
+      this.form.prescription = "";
       //  if (this.auth()) return;
       this.$https({
         //这里是你自己的请求方式、url和data参数
@@ -668,7 +675,7 @@ export default {
     },
     //数据修改
     update() {
-      if (this.auth()) return;
+      this.form.Approval = "未审批";
       this.$https({
         method: "post",
         url: "/api/apiModel/update",

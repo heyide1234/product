@@ -38,6 +38,22 @@ const routes = [
         name: "Approval",
         component: () => import("views/home/workstation/Approval/index"),
       },
+      {
+        path: "/MaterialPriceSP",
+        name: "MaterialPriceSP",
+        component: () => import("views/home/workstation/MaterialPriceSP/index"),
+      },
+      {
+        path: "/supplierSP",
+        name: "supplierSP",
+        component: () => import("views/home/workstation/supplierSP/index"),
+      },
+      {
+        path: "/materialSP",
+        name: "materialSP",
+        component: () => import("views/home/workstation/materialSP/index"),
+      },
+
 
 
       {

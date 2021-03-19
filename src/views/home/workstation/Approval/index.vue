@@ -2,7 +2,7 @@
   <div class="container">
     <div id="bk"></div>
     <el-steps :active="0" finish-status="success" simple style="margin: 5px">
-      <el-step title="审 批"></el-step>
+      <el-step title="流程审批"></el-step>
       <!--<el-step title="制程"></el-step>
       <el-step title="配料"></el-step>
       <el-step title="领料"></el-step>

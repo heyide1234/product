@@ -2,7 +2,12 @@ import { https } from "network/request";
 
 const pathCode = {
     "订单状态": "message",
-    "审批": "Approval",
+    "业务流程审批": "Approval",
+    "物料价格审批": "MaterialPriceSP",
+    "供应商准入审核": "supplierSP",
+    "物料准入审核": "materialSP",
+
+
 
     "内部需求单": "materialRequisition",
     "功能领料": "functionPicking",

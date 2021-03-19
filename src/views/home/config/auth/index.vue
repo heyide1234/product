@@ -218,7 +218,7 @@ export default {
     },
     //刷新界面
     async newview() {
-      await this.getpage(); //刷新分页
+      this.getpage(); //刷新分页
       this.findByPageNum(); //找寻对应页面的数据
     },
     //提交按钮
@@ -237,8 +237,28 @@ export default {
     },
     /////crud
     // 数据添加
-    add() {
-      //  if (this.auth()) return;
+    async add() {
+      let ds = [];
+      await this.$https({
+        method: "get",
+        url: "api/apiModel/find",
+        params: {
+          table: "__auth",
+          dataBase: "base",
+          where: { AuthName: this.form.AuthName },
+        },
+      })
+        .then((res) => {
+          ds = res;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+
+      if (ds.length > 0) {
+        alert("权限名已存在！");
+        return;
+      }
       this.$https({
         //这里是你自己的请求方式、url和data参数
         method: "post",
@@ -303,7 +323,7 @@ export default {
         params: {
           table: "__auth",
           PageNum: this.pagenums,
-          sortJson: { _id: 1 },
+          sortJson: { GroupName: 1, AuthName: 1 },
           dataBase: "base",
         },
       })

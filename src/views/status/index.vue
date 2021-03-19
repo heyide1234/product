@@ -305,12 +305,12 @@ h4 {
       <div class="content-right">
         <div class="divBox">
           <div class="divBox_border"></div>
-          <h4>材料明细表</h4>
-          <myv :data="zdt"></myv>
+          <h4>制造状态</h4>
+          <myv :datas="zdt"></myv>
         </div>
         <div class="divBox">
           <div class="divBox_border"></div>
-          <h4>材料明细表</h4>
+          <h4>售后状态</h4>
           <myv :data="zdt"></myv>
         </div>
         <div class="divBox">
@@ -335,53 +335,7 @@ export default {
       sssks: [], //销售收款明细
       cgfks: [], //采购付款明细
       xswce: 0, //销售完成额
-      zdt: {
-        gx: ["一", "二", "三"],
-        dc: [
-          {
-            value: 0,
-          },
-          {
-            value: 16,
-          },
-          {
-            value: 5,
-          },
-        ],
-        pl: [
-          {
-            value: 0,
-          },
-          {
-            value: 26,
-          },
-          {
-            value: 10,
-          },
-        ],
-        ll: [
-          {
-            value: 1,
-          },
-          {
-            value: 36,
-          },
-          {
-            value: 10,
-          },
-        ],
-        wc: [
-          {
-            value: 100,
-          },
-          {
-            value: 46,
-          },
-          {
-            value: 10,
-          },
-        ],
-      },
+      zdt: {},
     };
   },
   methods: {
@@ -406,11 +360,15 @@ export default {
               this.yyb.push({
                 index: c + "",
                 MaterialNumber: item.MaterialNumber,
+                MaterialName:
+                  item.MaterialName.length > 7
+                    ? item.MaterialName.substring(0, 7) + "..."
+                    : item.MaterialName,
                 Number: item.Number,
               });
             }
           });
-          this.yybh = ["序号", "物料编码", "数量"];
+          this.yybh = ["序号", "物料编码", "物料名称", "数量"];
         })
         .catch((err) => {
           console.log(err);
@@ -603,6 +561,41 @@ export default {
 
   mounted() {
     document.documentElement.style.backgroundColor = "#15135c";
+    //制造在制
+
+    this.$https({
+      //这里是你自己的请求方式、url和data参数
+      method: "get",
+      url: "/api/apiModel/find",
+      params: {
+        table: "ManufacturingExecution",
+        where: {
+          IsDeliverGoods: {
+            $in: ["制造领料", "制造执行", "制造品检", "制造待入库"],
+          },
+        },
+      },
+    })
+      .then((res) => {
+        console.log("当前数据", res);
+        this.zdt.values = [];
+        this.zdt.orderNumber = [];
+        for (let i = 0; i < res.length; i++) {
+          if (this.zdt.orderNumber.indexOf(res[i].OrderNumber) == -1) {
+            this.zdt.orderNumber.push(res[i].OrderNumber);
+          }
+        }
+        for (let j = 0; j < this.zdt.orderNumber.length; j++) {
+          this.zdt.values.push(
+            res.filter((item) => {
+              return item.OrderNumber == this.zdt.orderNumber[j];
+            }).length
+          );
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
 
     // window.onresize = function () {
     //   document.documentElement.style.backgroundColor = "#15135c";
