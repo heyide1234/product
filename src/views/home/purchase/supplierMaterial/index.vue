@@ -57,12 +57,17 @@
         </table>
       </div>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible2 = false">取 消</el-button>
-        <el-button type="primary" @click="dygxswldsp"> 开启审批流</el-button>
+        <el-button v-preventReClick @click="dialogFormVisible2 = false"
+          >取 消</el-button
+        >
+        <el-button type="primary" v-preventReClick @click="dygxswldsp">
+          开启审批流</el-button
+        >
         <el-button
           type="primary"
           v-print="printTable1"
           :disabled="spdis"
+          v-preventReClick
           @click="dys"
         >
           打 印</el-button
@@ -86,6 +91,7 @@
         type="success"
         plain
         size="mini"
+        v-preventReClick
         @click="queryIssp('物料')"
         >生成审批单</el-button
       >
@@ -265,8 +271,12 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="onSubmit">确 定</el-button>
+        <el-button v-preventReClick @click="dialogFormVisible = false"
+          >取 消</el-button
+        >
+        <el-button type="primary" v-preventReClick @click="onSubmit"
+          >确 定</el-button
+        >
       </div>
     </el-dialog>
     <div class="tabels">
@@ -323,13 +333,14 @@
           <template #header>
             <el-button
               type="primary"
+              v-preventReClick
               @click="dialogFormVisible1 = true"
               size="mini"
               >物料供应商物料</el-button
             >
           </template>
           <template slot-scope="scope">
-            <!-- <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">编辑</el-button> -->
+            <!-- <el-button size="mini" v-preventReClick  @click="handleEdit(scope.$index, scope.row)">编辑</el-button> -->
 
             <el-button
               type="primary"
@@ -337,6 +348,7 @@
               circle
               size="mini"
               plain
+              v-preventReClick
               @click="zk(scope.row)"
             ></el-button>
           </template>
@@ -453,12 +465,14 @@
               plain
               circle
               size="mini"
+              v-preventReClick
               @click="handleAdd"
             ></el-button>
             <el-button
               type="success"
               plain
               size="mini"
+              v-preventReClick
               @click="queryIssp('供应商')"
               >生成审批单</el-button
             >
@@ -468,7 +482,7 @@
               plain
               circle
               size="mini"
-              @click="yc"
+              v-preventReClick  @click="yc"
             ></el-button> -->
             <!-- <el-button
               slot="reference"
@@ -477,16 +491,17 @@
               circle
               plain
               size="mini"
-              @click="sorts"
+              v-preventReClick  @click="sorts"
             ></el-button> -->
           </template>
           <template slot-scope="scope">
-            <!-- <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">编辑</el-button> -->
+            <!-- <el-button size="mini" v-preventReClick  @click="handleEdit(scope.$index, scope.row)">编辑</el-button> -->
             <el-button
               type="primary"
               icon="el-icon-edit"
               circle
               size="mini"
+              v-preventReClick
               @click="handleEdit(scope.row)"
             ></el-button>
             <el-button
@@ -494,6 +509,7 @@
               icon="el-icon-delete"
               circle
               size="mini"
+              v-preventReClick
               @click="handleDelete(scope.row)"
             ></el-button>
             <!-- <el-popover
@@ -510,12 +526,12 @@
               <el-button
                 style="float: right"
                 type="primary"
-                @click="sort(scope)"
+                v-preventReClick  @click="sort(scope)"
                 >确定</el-button
               >
               <el-button
                 style="float: right; margin: 0 10px"
-                @click="scope._self.$refs[`popover-${scope.$index}`].doClose()"
+                v-preventReClick  @click="scope._self.$refs[`popover-${scope.$index}`].doClose()"
                 >取消</el-button
               >
 
@@ -553,12 +569,12 @@
               <el-button
                 style="float: right"
                 type="primary"
-                @click="Edit(scope)"
+                v-preventReClick  @click="Edit(scope)"
                 >审批</el-button
               >
               <el-button
                 style="float: right; margin: 0 10px"
-                @click="scope._self.$refs[`popover-${scope.$index}`].doClose()"
+                v-preventReClick  @click="scope._self.$refs[`popover-${scope.$index}`].doClose()"
                 >取消</el-button
               >
 
@@ -569,7 +585,7 @@
                 type="success"
                 icon="el-icon-unlock"
                 style="margin-left: 10px"
-                @click="findsupplierNumber(scope)"
+                v-preventReClick  @click="findsupplierNumber(scope)"
                 circle
                 size="mini"
               ></el-button>

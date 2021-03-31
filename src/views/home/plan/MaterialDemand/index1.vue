@@ -79,6 +79,7 @@
               circle
               plain
               size="mini"
+              v-preventReClick
               @click="handleJS"
             ></el-button>
           </template>

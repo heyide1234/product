@@ -14,7 +14,7 @@
     >
       <div class="swe">
         <el-input v-model="wuliaohao"></el-input
-        ><el-button @click="findwuliaohao">查询</el-button>
+        ><el-button v-preventReClick @click="findwuliaohao">查询</el-button>
       </div>
       <table id="dialogBody">
         <thead>
@@ -70,7 +70,7 @@
       </table>
 
       <div slot="footer" class="dialog-footer">
-        <el-button @click="hbs">去 重</el-button>
+        <el-button v-preventReClick @click="hbs">去 重</el-button>
         <el-button type="primary" v-print="printTable">打 印</el-button>
       </div>
     </el-dialog>
@@ -152,7 +152,7 @@
         </el-table-column>
         <el-table-column label="操作" min-width="90" fixed="right">
           <template slot-scope="scope">
-            <!-- <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">编辑</el-button> -->
+            <!-- <el-button size="mini" v-preventReClick  @click="handleEdit(scope.$index, scope.row)">编辑</el-button> -->
 
             <el-button
               type="primary"
@@ -160,6 +160,7 @@
               circle
               size="mini"
               plain
+              v-preventReClick
               @click="zk(scope.row)"
             ></el-button>
           </template>
@@ -239,6 +240,7 @@
                   circle
                   plain
                   size="mini"
+                  v-preventReClick
                   @click="zkmif(scope.row)"
                 ></el-button>
               </template>
@@ -310,7 +312,7 @@
               plain
               circle
               size="mini"
-              @click="hb"
+              v-preventReClick  @click="hb"
             ></el-button> -->
             <el-button
               type="success"
@@ -318,6 +320,7 @@
               circle
               plain
               size="mini"
+              v-preventReClick
               @click="ts"
             ></el-button>
           </template>
@@ -327,7 +330,7 @@
               icon="el-icon-delete"
               circle
               size="mini"
-              @click="handleDelete(scope.row,scope.$index)"
+              v-preventReClick  @click="handleDelete(scope.row,scope.$index)"
             ></el-button>
           </template> -->
         </el-table-column>

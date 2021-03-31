@@ -22,7 +22,7 @@
         <el-table-column property="ZZJH" label="执造计划数"></el-table-column>
         <el-table-column label="制造领料">
           <template slot-scope="scope">
-            <el-button @click="finddts('制造领料')">{{
+            <el-button v-preventReClick @click="finddts('制造领料')">{{
               scope.row.ZZLL
             }}</el-button>
           </template>
@@ -30,28 +30,28 @@
 
         <el-table-column label="制造执行"
           ><template slot-scope="scope">
-            <el-button @click="finddts('制造执行')">{{
+            <el-button v-preventReClick @click="finddts('制造执行')">{{
               scope.row.ZZZX
             }}</el-button>
           </template></el-table-column
         >
         <el-table-column label="制造品检"
           ><template slot-scope="scope">
-            <el-button @click="finddts('制造品检')">{{
+            <el-button v-preventReClick @click="finddts('制造品检')">{{
               scope.row.ZZPJ
             }}</el-button>
           </template></el-table-column
         >
         <el-table-column label="制造待入库"
           ><template slot-scope="scope">
-            <el-button @click="finddts('制造待入库')">{{
+            <el-button v-preventReClick @click="finddts('制造待入库')">{{
               scope.row.ZZDRK
             }}</el-button>
           </template></el-table-column
         >
         <el-table-column label="制造已入库"
           ><template slot-scope="scope">
-            <el-button @click="finddts('制造已入库')">{{
+            <el-button v-preventReClick @click="finddts('制造已入库')">{{
               scope.row.ZZYRK
             }}</el-button>
           </template></el-table-column

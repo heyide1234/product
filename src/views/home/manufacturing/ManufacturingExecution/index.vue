@@ -76,6 +76,7 @@
               circle
               size="mini"
               plain
+              v-preventReClick
               @click="zks(scope.row)"
             ></el-button>
           </template>
@@ -142,6 +143,7 @@
                 circle
                 size="mini"
                 plain
+                v-preventReClick
                 @click="zk(scope.row)"
               ></el-button>
               <el-button
@@ -152,6 +154,7 @@
                 circle
                 size="mini"
                 plain
+                v-preventReClick
                 @click="zk(scope.row)"
               ></el-button>
             </template>
@@ -248,11 +251,13 @@
               <el-button
                 style="float: right"
                 type="primary"
+                v-preventReClick
                 @click="Edits(scope)"
                 >确定</el-button
               >
               <el-button
                 style="float: right; margin: 0 10px"
+                v-preventReClick
                 @click="scope._self.$refs[`popover-${scope.$index}`].doClose()"
                 >取消</el-button
               >
@@ -262,6 +267,7 @@
                 slot="reference"
                 type="primary"
                 icon="el-icon-edit"
+                v-preventReClick
                 @click="findsupplierNumber(scope)"
                 circle
                 size="mini"
@@ -285,11 +291,13 @@
               <el-button
                 style="float: right"
                 type="primary"
+                v-preventReClick
                 @click="Editss(scope)"
                 >确定</el-button
               >
               <el-button
                 style="float: right; margin: 0 10px"
+                v-preventReClick
                 @click="scope._self.$refs[`popover-${scope.$index}`].doClose()"
                 >取消</el-button
               >
@@ -300,6 +308,7 @@
                 type="primary"
                 icon="el-icon-news"
                 plain
+                v-preventReClick
                 @click="findsupplierNumber(scope)"
                 circle
                 size="mini"

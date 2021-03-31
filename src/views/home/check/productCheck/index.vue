@@ -35,8 +35,12 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="onSubmit">确 定</el-button>
+        <el-button v-preventReClick @click="dialogFormVisible = false"
+          >取 消</el-button
+        >
+        <el-button type="primary" v-preventReClick @click="onSubmit"
+          >确 定</el-button
+        >
       </div>
     </el-dialog>
     <el-steps :active="0" finish-status="success" simple style="margin: 5px">
@@ -103,6 +107,7 @@
               circle
               size="mini"
               plain
+              v-preventReClick
               @click="zk(scope.row)"
             ></el-button>
             <el-button
@@ -111,6 +116,7 @@
               circle
               plain
               size="mini"
+              v-preventReClick
               @click="ts(scope.row)"
             ></el-button>
           </template>
@@ -205,6 +211,7 @@
               plain
               circle
               size="mini"
+              v-preventReClick
               @click="handleAdd"
             ></el-button>
           </template>

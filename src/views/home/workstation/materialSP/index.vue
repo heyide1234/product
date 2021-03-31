@@ -33,7 +33,7 @@
         <template slot-scope="scope">
           <el-upload
             class="upload-demo"
-            :action="`http://172.16.1.10:3001/upload?name=wlzrsh_${scope.row.MaterialNumber}.png`"
+            :action="`${uploadURLs}/upload?name=wlzrsh_${scope.row.MaterialNumber}.png`"
             :on-success="successHandlel"
             :limit="1"
             :file-list="fileList"
@@ -44,7 +44,7 @@
             <div slot="tip" class="el-upload__tip">
               <a
                 target="_blank"
-                :href="`http://172.16.1.10:3001/download?name=wlzrsh_${scope.row.MaterialNumber}.png`"
+                :href="`${uploadURLs}/download?name=wlzrsh_${scope.row.MaterialNumber}.png`"
                 >下载模板</a
               >
             </div>
@@ -125,11 +125,13 @@
               <el-button
                 style="float: right"
                 type="primary"
+                v-preventReClick
                 @click="Edit(scope)"
                 >审批</el-button
               >
               <el-button
                 style="float: right; margin: 0 10px"
+                v-preventReClick
                 @click="scope._self.$refs[`popover-${scope.$index}`].doClose()"
                 >取消</el-button
               >
@@ -139,6 +141,7 @@
                 type="success"
                 icon="el-icon-unlock"
                 style="margin-left: 10px"
+                v-preventReClick
                 @click="findsupplierNumber(scope)"
                 circle
                 size="mini"
@@ -153,9 +156,11 @@
 </template>
 
 <script>
+import { uploadURL } from "../../../../network/urlConfig";
 export default {
   data() {
     return {
+      uploadURLs: "",
       fileList: [],
       N: "",
       Y: "",
@@ -233,7 +238,7 @@ export default {
     },
     async searchs() {
       //////////////////////
-
+      let tt = 13345;
       this.dsSP = [];
       await this.$https({
         method: "get",
@@ -316,6 +321,7 @@ export default {
     //this.getMaterialList(); //级联
     // this.findByPageNums();
     // this.getorderPurpose();
+    this.uploadURLs = uploadURL;
   },
 };
 </script>

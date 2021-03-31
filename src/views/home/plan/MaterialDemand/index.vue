@@ -85,7 +85,7 @@
         </el-table-column>
         <el-table-column label="操作" min-width="90" fixed="right">
           <template slot-scope="scope">
-            <!-- <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">编辑</el-button> -->
+            <!-- <el-button size="mini" v-preventReClick  @click="handleEdit(scope.$index, scope.row)">编辑</el-button> -->
 
             <el-button
               type="primary"
@@ -93,6 +93,7 @@
               circle
               size="mini"
               plain
+              v-preventReClick
               @click="zk(scope.row)"
             ></el-button>
           </template>
@@ -172,7 +173,7 @@
                   circle
                   plain
                   size="mini"
-                  @click="zkmif(scope.row)"
+                  v-preventReClick  @click="zkmif(scope.row)"
                 ></el-button>
               </template>
             </el-table-column> -->
@@ -254,6 +255,7 @@
               circle
               plain
               size="mini"
+              v-preventReClick
               @click="handleJS"
             ></el-button>
           </template>

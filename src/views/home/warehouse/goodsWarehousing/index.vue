@@ -67,7 +67,7 @@
         </el-table-column>
         <el-table-column label="入库" min-width="90" fixed="right">
           <template slot-scope="scope">
-            <!-- <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">编辑</el-button> -->
+            <!-- <el-button size="mini" v-preventReClick  @click="handleEdit(scope.$index, scope.row)">编辑</el-button> -->
             <el-popover
               placement="left"
               width="300"
@@ -82,15 +82,18 @@
               <el-button
                 style="float: right"
                 type="primary"
+                v-preventReClick
                 @click="handleEdits(scope)"
                 >确定</el-button
               >
               <el-button
                 style="float: right; margin: 0 10px"
+                v-preventReClick
                 @click="scope._self.$refs[`popover-${scope.$index}`].doClose()"
                 >取消</el-button
               >
               <el-button
+                v-preventReClick
                 @click="firbtn"
                 slot="reference"
                 type="primary"
@@ -106,6 +109,7 @@
               circle
               size="mini"
               plain
+              v-preventReClick
               @click="zk(scope.row)"
             ></el-button>
           </template>

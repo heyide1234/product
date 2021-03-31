@@ -35,6 +35,19 @@ Vue.config.productionTip = false;
 // Vue.config.keyCodes = {
 //   enter: 114
 // };
+Vue.directive('preventReClick', {
+  inserted(el, binding) {
+    el.addEventListener('click', () => {
+      if (!el.disabled) {
+        el.disabled = true;
+        setTimeout(() => {
+          el.disabled = false
+        }, binding.value || 3000)
+      }
+    })
+  }
+})
+
 
 
 
@@ -43,3 +56,7 @@ const _vue = new Vue({
   render: (h) => h(App),
 }).$mount("#app");
 export default _vue;
+
+
+
+

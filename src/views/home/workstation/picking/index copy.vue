@@ -28,8 +28,13 @@
       </el-form>
 
       <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="dialogFormVisiblefirm"
+        <el-button v-preventReClick @click="dialogFormVisible = false"
+          >取 消</el-button
+        >
+        <el-button
+          type="primary"
+          v-preventReClick
+          @click="dialogFormVisiblefirm"
           >确 定</el-button
         >
       </div>
@@ -102,7 +107,12 @@
             label="物料编号"
           ></el-table-column>
         </el-table>
-        <el-button type="primary" size="small" class="yc" @click="yc"
+        <el-button
+          type="primary"
+          size="small"
+          class="yc"
+          v-preventReClick
+          @click="yc"
           >移除</el-button
         >
       </el-card>

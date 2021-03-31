@@ -29,7 +29,7 @@
             />
             <label>密码</label>
           </div>
-          <a href="javascript:void(0);" @click.prevent="login">
+          <a href="javascript:void(0);" v-preventReClick @click.prevent="login">
             <span></span>
             <span></span>
             <span></span>

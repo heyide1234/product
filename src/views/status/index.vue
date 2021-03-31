@@ -250,7 +250,7 @@ h4 {
   <div class="container">
     <div class="top">
       <big>控制面板</big>
-      <a @click="goHome"><i class="el-icon-s-home"></i></a>
+      <a v-preventReClick @click="goHome"><i class="el-icon-s-home"></i></a>
     </div>
     <div class="content">
       <div class="content-left">

@@ -159,8 +159,12 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="onSubmit">确 定</el-button>
+        <el-button v-preventReClick @click="dialogFormVisible = false"
+          >取 消</el-button
+        >
+        <el-button type="primary" v-preventReClick @click="onSubmit"
+          >确 定</el-button
+        >
       </div>
     </el-dialog>
 
@@ -224,6 +228,7 @@
               plain
               circle
               size="mini"
+              v-preventReClick
               @click="handleAdd"
             ></el-button>
             <el-button
@@ -232,16 +237,18 @@
               plain
               circle
               size="mini"
+              v-preventReClick
               @click="yc"
             ></el-button>
           </template>
           <template slot-scope="scope">
-            <!-- <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">编辑</el-button> -->
+            <!-- <el-button size="mini" v-preventReClick  @click="handleEdit(scope.$index, scope.row)">编辑</el-button> -->
             <el-button
               type="primary"
               icon="el-icon-edit"
               circle
               size="mini"
+              v-preventReClick
               @click="handleEdit(scope.row)"
             ></el-button>
             <el-button
@@ -249,6 +256,7 @@
               icon="el-icon-delete"
               circle
               size="mini"
+              v-preventReClick
               @click="handleDelete(scope.row)"
             ></el-button>
           </template>

@@ -12,6 +12,7 @@
         type="primary"
         icon="el-icon-search"
         size="small"
+        v-preventReClick
         @click="dialogFormVisible1 = true"
         >产品选择</el-button
       >
@@ -96,8 +97,12 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible1 = false">取 消</el-button>
-        <el-button type="primary" @click="onSubmit1">确 定</el-button>
+        <el-button v-preventReClick @click="dialogFormVisible1 = false"
+          >取 消</el-button
+        >
+        <el-button type="primary" v-preventReClick @click="onSubmit1"
+          >确 定</el-button
+        >
       </div>
     </el-dialog>
     <el-dialog
@@ -200,8 +205,12 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="onSubmit">确 定</el-button>
+        <el-button v-preventReClick @click="dialogFormVisible = false"
+          >取 消</el-button
+        >
+        <el-button type="primary" v-preventReClick @click="onSubmit"
+          >确 定</el-button
+        >
       </div>
     </el-dialog>
 
@@ -267,6 +276,7 @@
               plain
               circle
               size="mini"
+              v-preventReClick
               @click="handleAdd"
             ></el-button>
             <el-button
@@ -275,6 +285,7 @@
               plain
               circle
               size="mini"
+              v-preventReClick
               @click="yc"
             ></el-button>
             <el-button
@@ -283,16 +294,18 @@
               plain
               circle
               size="mini"
+              v-preventReClick
               @click="tb"
             ></el-button>
           </template>
           <template slot-scope="scope">
-            <!-- <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">编辑</el-button> -->
+            <!-- <el-button size="mini" v-preventReClick  @click="handleEdit(scope.$index, scope.row)">编辑</el-button> -->
             <el-button
               type="primary"
               icon="el-icon-edit"
               circle
               size="mini"
+              v-preventReClick
               @click="handleEdit(scope.row)"
             ></el-button>
             <el-button
@@ -300,6 +313,7 @@
               icon="el-icon-delete"
               circle
               size="mini"
+              v-preventReClick
               @click="handleDelete(scope.row)"
             ></el-button>
           </template>

@@ -27,8 +27,12 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="onSubmit">确 定</el-button>
+        <el-button v-preventReClick @click="dialogFormVisible = false"
+          >取 消</el-button
+        >
+        <el-button type="primary" v-preventReClick @click="onSubmit"
+          >确 定</el-button
+        >
       </div>
     </el-dialog>
 
@@ -103,7 +107,7 @@
         </el-table-column>
         <el-table-column label="入库" min-width="90" fixed="right">
           <template slot-scope="scope">
-            <!-- <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">编辑</el-button> -->
+            <!-- <el-button size="mini" v-preventReClick  @click="handleEdit(scope.$index, scope.row)">编辑</el-button> -->
             <el-popover
               placement="left"
               width="300"
@@ -125,11 +129,13 @@
               <el-button
                 style="float: right"
                 type="primary"
+                v-preventReClick
                 @click="handleEdit(scope)"
                 >确定</el-button
               >
               <el-button
                 style="float: right; margin: 0 10px"
+                v-preventReClick
                 @click="scope._self.$refs[`popover-${scope.$index}`].doClose()"
                 >取消</el-button
               >

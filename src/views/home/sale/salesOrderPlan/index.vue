@@ -11,8 +11,8 @@
     </form> -->
 
     <el-steps :active="0" finish-status="success" simple style="margin: 5px">
-      <el-step title="销售订单"></el-step>
-      <a @click="reload">
+      <el-step title="销售计划"></el-step>
+      <a v-preventReClick @click="reload">
         <i class="el-icon-refresh-right"></i>
       </a>
       <!--<el-step title="制程"></el-step>
@@ -27,7 +27,13 @@
       :close-on-click-modal="false"
     >
       <div class="dialogBody" id="dialogBody">
-        <h2>四川凯迈新能源有限公司（产品销售单）</h2>
+        <h2>
+          四川凯迈新能源有限公司（产品销售单）<span
+            style="color: red"
+            v-show="Approval != '已审批'"
+            >【{{ Approval }}】</span
+          >
+        </h2>
 
         <div class="htbh">系统订单编号：XS{{ form1.OrderNumber }}</div>
         <div class="htbh te">客户订单编号：{{ ddbh }}</div>
@@ -153,8 +159,14 @@
         </table>
       </div>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible2 = false">取 消</el-button>
-        <el-button type="primary" v-print="printTable" @click="prints"
+        <el-button v-preventReClick @click="dialogFormVisible2 = false"
+          >取 消</el-button
+        >
+        <el-button
+          type="primary"
+          v-print="printTable"
+          v-preventReClick
+          @click="prints"
           >打 印</el-button
         >
       </div>
@@ -168,6 +180,15 @@
       <el-form ref="form" :model="form">
         <el-form-item label="订单编号">
           <el-input v-model="form.OrderNumber" disabled></el-input>
+        </el-form-item>
+        <el-form-item label="用途">
+          <el-select
+            v-model="form.Purpose"
+            style="width: 100%"
+            @change="$forceUpdate()"
+          >
+            <el-option value="生产制造"></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="客户订单编号">
           <el-input v-model="form.CustomerOrderNumber"></el-input>
@@ -269,8 +290,12 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="onSubmit">确 定</el-button>
+        <el-button v-preventReClick @click="dialogFormVisible = false"
+          >取 消</el-button
+        >
+        <el-button type="primary" v-preventReClick @click="onSubmit"
+          >确 定</el-button
+        >
       </div>
     </el-dialog>
     <el-dialog title="表单" :visible.sync="dialogFormVisible1">
@@ -348,11 +373,12 @@
         >
           <el-input v-model="form1.MaterialName" disabled></el-input>
         </el-form-item>
+        <span style="color: red;font-size：10px">{{ sx }}</span>
         <el-form-item
           label="产品价格"
           :rules="[{ required: true, message: '不能为空' }]"
         >
-          <el-input v-model="form1.MaterialPrice"></el-input>
+          <el-input v-model="form1.MaterialPrice" disabled></el-input>
         </el-form-item>
         <el-form-item
           label="产品数量"
@@ -382,8 +408,12 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible1 = false">取 消</el-button>
-        <el-button type="primary" @click="onSubmit1">确 定</el-button>
+        <el-button v-preventReClick @click="dialogFormVisible1 = false"
+          >取 消</el-button
+        >
+        <el-button type="primary" v-preventReClick @click="onSubmit1"
+          >确 定</el-button
+        >
       </div>
     </el-dialog>
 
@@ -450,6 +480,31 @@
           property="ContactsRemarks"
           label="联系人备注"
         ></el-table-column>
+        <el-table-column label="发票状态">
+          <template slot-scope="scope">
+            <el-button
+              v-if="scope.row.fpenclosure == undefined"
+              type="info"
+              icon="el-icon-paperclip"
+              circle
+              size="mini"
+              plain
+              slot="reference"
+              v-preventReClick
+            ></el-button>
+            <el-button
+              v-if="scope.row.fpenclosure != undefined"
+              type="success"
+              icon="el-icon-paperclip"
+              circle
+              size="mini"
+              slot="reference"
+              v-preventReClick
+            ></el-button>
+          </template>
+        </el-table-column>
+        <el-table-column property="Approval" label="审批状态"></el-table-column>
+        <el-table-column property="Approver" label="审批人"></el-table-column>
         <el-table-column label="关于" min-width="80">
           <template slot-scope="scope">
             <el-popover trigger="hover" placement="top">
@@ -471,6 +526,7 @@
               plain
               circle
               size="mini"
+              v-preventReClick
               @click="handleAdd"
             ></el-button>
             <!-- <el-button
@@ -479,17 +535,19 @@
               plain
               circle
               size="mini"
-              @click="yc"
+              v-preventReClick  @click="yc"
             ></el-button> -->
           </template>
           <template slot-scope="scope">
-            <!-- <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">编辑</el-button> -->
+            <!-- <el-button size="mini" v-preventReClick  @click="handleEdit(scope.$index, scope.row)">编辑</el-button> -->
             <el-button
+              title="展开明细"
               type="primary"
               icon="el-icon-document-copy"
               circle
               size="mini"
               plain
+              v-preventReClick
               @click="findDetail(scope.row)"
             ></el-button>
             <el-popover
@@ -500,7 +558,7 @@
             >
               <el-upload
                 class="upload-demo"
-                action="http://172.16.1.10:3001/upload"
+                :action="`${uploadURLs}/upload?name=salefj_${salesOrder}.pdf`"
                 :on-success="successHandlel"
                 :limit="1"
                 :file-list="fileList"
@@ -515,22 +573,19 @@
                 <div slot="tip" class="el-upload__tip">
                   <a
                     target="_blank"
-                    :href="`http://172.16.1.10:3001/download?name=${scope.row.enclosure}`"
+                    :href="`${uploadURLs}/download?name=salefj_${scope.row.enclosure}`"
                     >下载模板</a
                   >
-                  <!-- <el-button icon="el-icon-download" size="mini"
-                    ><a @click="dl">点击下载</a></el-button
-                  > -->
                 </div>
               </el-upload>
               <el-button
-                style="margin: 0 5px"
                 type="info"
                 icon="el-icon-paperclip"
                 circle
                 size="mini"
                 plain
                 slot="reference"
+                v-preventReClick
                 @click="scfj(scope.row)"
               ></el-button>
             </el-popover>
@@ -542,6 +597,7 @@
               circle
               size="mini"
               plain
+              v-preventReClick
               @click="handleDelete(scope.row)"
             ></el-button>
           </template>
@@ -561,7 +617,7 @@
         simple
         style="margin: 40px 5px 5px 5px"
       >
-        <el-step title="销售订单明细"></el-step>&nbsp;&nbsp;&nbsp;<font>{{
+        <el-step title="销售计划明细"></el-step>&nbsp;&nbsp;&nbsp;<font>{{
           form1.OrderNumber
         }}</font>
       </el-steps>
@@ -583,6 +639,10 @@
         <el-table-column
           property="MaterialName"
           label="产品名称"
+        ></el-table-column>
+        <el-table-column
+          property="MaterialSpec"
+          label="规格型号"
         ></el-table-column>
 
         <el-table-column
@@ -628,41 +688,49 @@
               plain
               circle
               size="mini"
+              v-preventReClick
               @click="handleAdd1"
             ></el-button>
             <el-button
+              title="推入销售订单"
               type="success"
               icon="el-icon-position"
               circle
               plain
               size="mini"
+              v-preventReClick
               @click="handleCirculationstate"
             ></el-button>
             <el-button
+              title="计算"
               type="primary"
               plain
               circle
               size="mini"
               icon="el-icon-postcard"
+              v-preventReClick
               @click="jsNum"
             ></el-button>
             <el-button
+              title="打印"
               type="primary"
               icon="el-icon-printer"
               circle
               size="mini"
               plain
+              v-preventReClick
               @click="print"
             ></el-button>
           </template>
           <template slot-scope="scope">
-            <!-- <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">编辑</el-button> -->
+            <!-- <el-button size="mini" v-preventReClick  @click="handleEdit(scope.$index, scope.row)">编辑</el-button> -->
             <el-button
               :disabled="scope.row.status != '0' ? true : false"
               type="primary"
               icon="el-icon-edit"
               circle
               size="mini"
+              v-preventReClick
               @click="handleEdit1(scope.row)"
             ></el-button>
             <el-button
@@ -671,7 +739,16 @@
               icon="el-icon-delete"
               circle
               size="mini"
+              v-preventReClick
               @click="handleDelete1(scope.row)"
+            ></el-button>
+            <el-button
+              type="success"
+              icon="el-icon-share"
+              circle
+              size="mini"
+              v-preventReClick
+              @click="findBOM(scope.row)"
             ></el-button>
             <!-- <el-button
   
@@ -685,6 +762,61 @@
           </template>
         </el-table-column>
       </el-table>
+      <el-steps
+        :active="0"
+        finish-status="success"
+        simple
+        style="margin: 5px 5px 5px"
+      >
+        <el-step title="订单材料明细"></el-step>&nbsp;&nbsp;&nbsp;<font>{{
+          OrderNumbers
+        }}</font>
+      </el-steps>
+      <el-table
+        ref="tableselectData"
+        class="table"
+        height="500"
+        :data="tableData3"
+      >
+        <el-table-column type="selection" width="50"></el-table-column>
+        <el-table-column type="index" width="50"> </el-table-column>
+        <el-table-column
+          property="OrderNumber"
+          label="订单编号"
+        ></el-table-column>
+        <el-table-column
+          property="MaterialNumber"
+          label="物料编号"
+        ></el-table-column>
+
+        <el-table-column
+          property="MaterialName"
+          label="物料名称"
+        ></el-table-column>
+
+        <el-table-column property="Thumbnail" label="缩略图">
+          <template slot-scope="scope">
+            <img class="bigImg" :src="scope.row.Thumbnail" alt="" />
+          </template>
+        </el-table-column>
+
+        <el-table-column
+          property="MaterialSpec"
+          label="规格型号"
+        ></el-table-column>
+
+        <el-table-column
+          property="MaterialTexture"
+          label="材质"
+        ></el-table-column>
+
+        <el-table-column property="Number" label="数量"></el-table-column>
+
+        <el-table-column property="Company" label="单位"></el-table-column>
+
+        <el-table-column property="Enclosure" label="附件"></el-table-column>
+        <el-table-column property="Remarks" label="备注"></el-table-column>
+      </el-table>
     </div>
   </div>
 </template>
@@ -693,12 +825,18 @@
 import { getTime } from "common/utils/index";
 import { getJL } from "business/MeterialClass";
 import { DXZH } from "common/utils/content";
+import { uploadURL } from "../../../../network/urlConfig";
 
 export default {
   inject: ["reload"],
   data() {
     return {
+      uploadURLs: "",
+      salesOrder: "",
+      CustomerNumber: "",
+      sx: "",
       fileList: [], //上传
+      fileList1: [], //上传
       ddbh: "", //客户订单编号
       xf: "", //需方
       xfdz: "", //需方地址
@@ -719,7 +857,7 @@ export default {
       OrderNumbers: "",
       OrderNumbersT: "",
       classvalue1: [],
-
+      Approval: "",
       form: {
         OrderNumber: "", //订单编号
         CustomerOrderNumber: "", //客户订单编号
@@ -737,9 +875,12 @@ export default {
         ContactsAddress: "", //联系人地址
         ContactsEmail: "", //联系人邮箱
         ContactsRemarks: "", //联系人备注
-        Purpose: "", //用途
+        Purpose: "生产制造", //用途
         enclosure: "", //附件
         processCode: "0", //流程码
+        allowHG: "true", //是否允许订单回滚
+        Approval: "未审批", //审批状态
+        Approver: "", //审批人
         creater: "", //创建人
         creatdate: "", //创建时间
       },
@@ -764,7 +905,7 @@ export default {
       st: false,
       total: 0,
       id: {},
-      id1: {},
+      id1: "",
       name: "",
       name1: "",
       search: "",
@@ -774,26 +915,40 @@ export default {
       tableVisible: "none",
       tableData: [],
       tableData1: [],
+      tableData3: [],
       MaterialInfo: [],
       tableData2: [],
       flagst: false,
     };
   },
   methods: {
-    dl() {
+    findBOM(row) {
+      this.tableData3 = [];
+      this.OrderNumbers = row.OrderNumber;
+      const loading = this.$loading({
+        lock: true,
+        text: "BOM计算中...",
+        spinner: "el-icon-loading",
+        background: "rgba(0, 0, 0, 0.7)",
+      });
       this.$https({
-        method: "get",
-        url: "http://localhost:3001/test",
-        params: {
-          table: "",
-          where: {},
+        method: "post",
+        url: "api/transaction/materialPlanZKTransaction",
+        data: {
+          OrderNumber: this.OrderNumbers,
+          rows: row,
         },
       })
         .then((res) => {
-          console.log(res);
+          console.log("返回：", res);
+          if (res.status) {
+            this.tableData3 = res.data;
+          }
+          loading.close();
         })
         .catch((err) => {
           console.log(err);
+          loading.close();
         });
     },
     successHandlel(response, file, fileList) {
@@ -804,8 +959,8 @@ export default {
         url: "/api/apiModel/updateByWhere",
         data: {
           table: "salesOrder",
-          where: { OrderNumber: this.OrderNumbersT },
-          form: { enclosure: file.name },
+          where: { OrderNumber: this.salesOrder },
+          form: { enclosure: this.salesOrder + ".pdf" },
         },
       })
         .then((res) => {
@@ -816,8 +971,9 @@ export default {
           console.log(err);
         });
     },
+
     scfj(row) {
-      this.OrderNumbersT = row.OrderNumber;
+      this.salesOrder = row.OrderNumber;
       if (row.enclosure) {
         this.fileList = [{ name: "" }];
         this.fileList[0].name = row.enclosure;
@@ -825,6 +981,7 @@ export default {
         this.fileList = [];
       }
     },
+
     // 计算金额
     async jsNum() {
       let temp = 0;
@@ -916,139 +1073,35 @@ export default {
       //this.tableData1 = ds;
     },
     async handleCirculationstate() {
-      if (!this.flagst) return;
-      //开启流程
       if (this.tableData1.length == 0 || this.tableData1[0].status == "1")
         return;
-
-      //  if (this.st) return;
-      let firm = confirm("是否开启推单模式，下次将不可再次开启！");
-      if (firm) {
-        //库存盈余表检查
-        await this.yyFind(); //
-        //检测是否全部完成，进入推单模式
-        let stt = "8";
-        this.tableData1.forEach((item) => {
-          if (item.Number != "0") {
-            stt = "2";
-          }
-        });
-        //订单编号
-        await this.getProcessState(
-          this.form1.OrderNumber,
-          "salesOrderDetail",
-          "-1",
-          stt
-        );
-        // //循环添加销售发货单和当前销售单明细状态
-        let ddf = JSON.parse(JSON.stringify(this.tableData1));
-
-        for (let j1 = 0; j1 < ddf.length; j1++) {
-          this.handleCirculation(ddf[j1]);
-          this.doManufacturingPlan(ddf[j1]);
-        }
-
-        this.tableData1 = [];
-        this.OrderNumbers = "";
-      }
-    },
-    //////
-    async yyFind() {
-      //let ds = JSON.parse(JSON.stringify(this.tableData1));
-
-      for (let i = 0; i < this.tableData1.length; i++) {
-        // let productN = this.tableData1[i]; //单行产品
-        let num = parseInt(this.tableData1[i].PNum); //数量
-        let productNumber = this.tableData1[i].MaterialNumber; //产品编码
-        //1.查询盈余产品
-
-        let yyproductNum = await this.YYBfind(productNumber); //该物料编码盈余表信息
-
-        let tempNum = yyproductNum - parseInt(num); //盈余表数量-需求数
-        let YYBnum = 0;
-        if (tempNum >= 0) {
-          //库存足
-          this.tableData1[i].Number = "0";
-          YYBnum = tempNum;
-        } else {
-          //库存不足
-          this.tableData1[i].Number = Math.abs(tempNum) + "";
-        }
-        await this.updateYYB(productNumber, YYBnum + "");
-        await this.updateXSMX(
-          this.tableData1[i]._id,
-          this.tableData1[i].Number
-        );
-        // await this.updateYYB(productNumber, "0");
-        // await this.updateXSMX(productN._id, productN.Number);
-      }
-    },
-    async YYBfind(productNumber) {
-      let temp = 0;
-      await this.$https({
-        method: "get",
-        url: "/api/apiModel/find",
-        params: {
-          table: "YYB",
-          where: { MaterialNumber: productNumber },
-        },
-      })
-        .then((res) => {
-          console.log(res);
-          if (res.length > 0) {
-            temp = parseInt(res[0].Number);
-          }
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-      return temp;
-    },
-    async updateYYB(productNumber, num) {
-      await this.$https({
+      this.$https({
         method: "post",
         url: "/api/apiModel/updateByWhere",
         data: {
-          table: "YYB",
-          where: { MaterialNumber: productNumber },
-          form: { Number: num },
+          table: "salesOrder",
+          where: { OrderNumber: this.form1.OrderNumber },
+          form: { state: "1" },
         },
       })
         .then((res) => {
           console.log(res);
+          this.newview();
+          this.tableData1 = [];
         })
         .catch((err) => {
           console.log(err);
         });
     },
-    async updateXSMX(id, num) {
-      await this.$https({
-        method: "post",
-        url: "/api/apiModel/update",
-        data: {
-          table: "salesOrderDetail",
-          id: id,
-          form: { Number: num },
-        },
-      })
-        .then(function (res) {
-          console.log(".....", res);
-        })
-        .catch(function (err) {
-          console.log(err);
-        });
-    },
-    ////////////////////////////////////////
+
     findByPageNums() {
       this.$https({
-        //这里是你自己的请求方式、url和data参数
         method: "get",
         url: "/api/apiModel/find",
         params: {
           table: "__customerManager",
           dataBase: "base",
           where: {},
-          sortJson: { _id: 1 },
         },
       })
         .then((res) => {
@@ -1065,7 +1118,8 @@ export default {
         method: "get",
         url: "/api/apiModel/find",
         params: {
-          table: "__basicMaterialList",
+          table: "__customerContacts",
+          dataBase: "base",
           where: { CustomerNumber: this.form.CustomerNumber },
           sortJson: { _id: 1 },
         },
@@ -1119,6 +1173,35 @@ export default {
       this.form1.MaterialName = cd[0].MaterialName;
       this.form1.Thumbnail = cd[0].Thumbnail;
       this.form1.MaterialSpec = cd[0].MaterialSpec;
+
+      this.sx = "已过期或不存在";
+      this.form1.MaterialPrice = "";
+      this.$https({
+        //这里是你自己的请求方式、url和data参数
+        method: "get",
+        url: "/api/apiModel/find",
+        params: {
+          table: "__customerMaterial",
+          dataBase: "base",
+          where: {
+            MaterialNumber: this.form1.MaterialNumber,
+            CustomerNumber: this.CustomerNumber,
+            Approval: "已审批",
+            prescription: { $gte: getTime() },
+          },
+        },
+      })
+        .then((res) => {
+          console.log("查询结果", res);
+
+          if (res.length > 0) {
+            this.form1.MaterialPrice = res[0].Price;
+            this.sx = res[0].prescription;
+          }
+        })
+        .catch(function (err) {
+          console.log(err);
+        });
     },
     //级联
     getMaterialList() {
@@ -1157,6 +1240,8 @@ export default {
             Class1Num: value[0],
             Class2Num: value[1],
             Class3Num: value[2],
+            Approval: "已审批",
+            prescription: { $gte: getTime() },
           },
         },
       })
@@ -1169,135 +1254,137 @@ export default {
         });
     },
     //状态
-    handleCirculation(row) {
-      console.log("row...", row);
-      this.id1 = { id: row._id };
-      this.$delete(row, "_id");
-      row.status = "1";
-      row.creater = sessionStorage.getItem("loginName");
-      row.creatdate = getTime();
-      this.form1 = row;
-      this.update1(); //修改销售单明细状态为1（不可编辑）
+    // handleCirculation(row) {
+    //   console.log("row...", row);
+    //   this.id1 = row._id;
+    //   this.$delete(row, "_id");
+    //   row.status = "1";
+    //   row.creater = sessionStorage.getItem("loginName");
+    //   row.creatdate = getTime();
+    //   this.form1 = row;
+    //   this.update1(); //修改销售单明细状态为1（不可编辑）
 
-      let dt = {
-        OrderNumber: row.OrderNumber, //订单编号
-        MaterialNumber: row.MaterialNumber, //产品编号
-        MaterialName: row.MaterialName, //产品名称
-        MaterialPrice: row.MaterialPrice, //产品价格
-        Number: row.PNum, //应出数量
-        CustomerMaterialNumber: row.CustomerMaterialNumber, //客户物料编号
-        CustomerMaterialName: row.CustomerMaterialName, //客户物料名称
-        DeliverGoodsTotal: "0", //实际出货总数
-        DeliverGoods: "0", //实际出货数
-        Inventory: "0", //库存数
-        status: "0", //状态
-        creater: sessionStorage.getItem("loginName"), //创建人
-        creatdate: getTime(), //创建时间
-      };
-      this.insertSalesInvoice(dt); //添加销售发货单
-    },
+    //   let dt = {
+    //     OrderNumber: row.OrderNumber, //订单编号
+    //     MaterialNumber: row.MaterialNumber, //产品编号
+    //     MaterialName: row.MaterialName, //产品名称
+    //     MaterialPrice: row.MaterialPrice, //产品价格
+    //     Number: row.PNum, //应出数量
+    //     CustomerMaterialNumber: row.CustomerMaterialNumber, //客户物料编号
+    //     CustomerMaterialName: row.CustomerMaterialName, //客户物料名称
+    //     DeliverGoodsTotal: "0", //实际出货总数
+    //     DeliverGoods: "0", //实际出货数
+    //     Inventory: "0", //库存数
+    //     status: "0", //状态
+    //     creater: sessionStorage.getItem("loginName"), //创建人
+    //     creatdate: getTime(), //创建时间
+    //   };
+    //   this.insertSalesInvoice(dt); //添加销售发货单
+    // },
 
-    async getProcessState(orderNumber, table, statusing, processCode) {
-      await this.$https({
-        method: "get",
-        url: "/api/apiModel/find",
-        params: {
-          table: table,
-          where: { OrderNumber: orderNumber },
-        },
-      })
-        .then((res) => {
-          console.log(res);
-          console.log(statusing);
+    // async getProcessState(orderNumber, table, statusing, processCode) {
+    //   await this.$https({
+    //     method: "get",
+    //     url: "/api/apiModel/find",
+    //     params: {
+    //       table: table,
+    //       where: { OrderNumber: orderNumber },
+    //     },
+    //   })
+    //     .then((res) => {
+    //       console.log(res);
+    //       console.log(statusing);
 
-          ///进入推单模式
-          this.$https({
-            method: "post",
-            url: "/api/apiModel/updateByWhere",
-            data: {
-              table: "salesOrder",
-              where: { OrderNumber: orderNumber },
-              form: { processCode: processCode },
-            },
-          })
-            .then((res) => {
-              console.log(res);
-              this.newview();
-              this.tableData1 = [];
-            })
-            .catch((err) => {
-              console.log(err);
-            });
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    },
+    //       ///进入推单模式
+    //       this.$https({
+    //         method: "post",
+    //         url: "/api/apiModel/updateByWhere",
+    //         data: {
+    //           table: "salesOrder",
+    //           where: { OrderNumber: orderNumber },
+    //           form: { processCode: processCode },
+    //         },
+    //       })
+    //         .then((res) => {
+    //           console.log(res);
+    //           this.newview();
+    //           this.tableData1 = [];
+    //         })
+    //         .catch((err) => {
+    //           console.log(err);
+    //         });
+    //     })
+    //     .catch((err) => {
+    //       console.log(err);
+    //     });
+    // },
     //退送制造计划单
-    doManufacturingPlan(dt) {
-      if (parseInt(dt.Number) == 0) return;
-      let v = {
-        OrderNumber: dt.OrderNumber, //订单编号
-        MaterialNumber: dt.MaterialNumber, //产品编号
-        MaterialName: dt.MaterialName, //产品名称
-        Number: dt.Number, //产品数量
-        SurplusNumber: dt.Number, //剩余分配数量
-        Thumbnail: dt.Thumbnail,
-        MaterialSpec: dt.MaterialSpec,
-        status: "1", //状态1
-        creater: sessionStorage.getItem("loginName"), //创建人
-        creatdate: getTime(), //创建时间
-      };
+    // doManufacturingPlan(dt) {
+    //   if (parseInt(dt.Number) == 0) return;
+    //   let v = {
+    //     OrderNumber: dt.OrderNumber, //订单编号
+    //     MaterialNumber: dt.MaterialNumber, //产品编号
+    //     MaterialName: dt.MaterialName, //产品名称
+    //     Number: dt.Number, //产品数量
+    //     SurplusNumber: dt.Number, //剩余分配数量
+    //     Thumbnail: dt.Thumbnail,
+    //     MaterialSpec: dt.MaterialSpec,
+    //     status: "1", //状态1
+    //     creater: sessionStorage.getItem("loginName"), //创建人
+    //     creatdate: getTime(), //创建时间
+    //   };
 
-      this.$https({
-        method: "post",
-        url: "/api/apiModel/insert",
-        data: {
-          table: "ManufacturingPlan",
-          form: v,
-        },
-      })
-        .then((res) => console.log(res))
-        .catch((err) => console.log(err));
-    },
-    insertSalesInvoice(v) {
-      this.$https({
-        method: "post",
-        url: "/api/apiModel/insert",
-        data: {
-          table: "salesInvoice",
-          form: v,
-        },
-      })
-        .then((res) => console.log(res))
-        .catch((err) => console.log(err));
-    },
+    //   this.$https({
+    //     method: "post",
+    //     url: "/api/apiModel/insert",
+    //     data: {
+    //       table: "ManufacturingPlan",
+    //       form: v,
+    //     },
+    //   })
+    //     .then((res) => console.log(res))
+    //     .catch((err) => console.log(err));
+    // },
+    // insertSalesInvoice(v) {
+    //   this.$https({
+    //     method: "post",
+    //     url: "/api/apiModel/insert",
+    //     data: {
+    //       table: "salesInvoice",
+    //       form: v,
+    //     },
+    //   })
+    //     .then((res) => console.log(res))
+    //     .catch((err) => console.log(err));
+    // },
     //明细添加
     handleAdd1() {
       // alert("this.st" + this.st);
       if (!this.flagst) return;
       this.operation1 = "add";
-
+      this.sx = "";
       this.form1.MaterialNumber = ""; //产品编号
       this.form1.MaterialName = ""; //产品名称
       this.form1.MaterialPrice = ""; //产品价格
       this.form1.Number = ""; //产品数量
       this.form1.CustomerMaterialNumber = ""; //客户物料编号
       this.form1.CustomerMaterialName = ""; //客户物料名称
+
       this.dialogFormVisible1 = true;
     },
     //明细编辑
     handleEdit1(row) {
       this.operation1 = "update";
+      this.sx = "";
       this.dialogFormVisible1 = true;
-      this.id1 = { id: row._id };
+      this.id1 = row._id;
       this.name1 = row.creater;
       this.$delete(row, "_id");
       this.form1 = row;
     },
     //明细删除
     handleDelete1(row) {
-      this.id1 = { id: row._id };
+      this.id1 = row._id;
       this.name1 = row.creater;
       this.del1();
       this.newview1();
@@ -1308,7 +1395,9 @@ export default {
       if (row.processCode != "1") {
         this.flagst = false;
       }
+      this.CustomerNumber = row.CustomerNumber;
       this.tableVisible = "block";
+      this.Approval = row.Approval;
       this.ddbh = row.CustomerOrderNumber; //客户订单编号
       this.xf = row.CustomerName; //需方
       this.xfdz = row.Address; //需方地址
@@ -1323,8 +1412,8 @@ export default {
       this.find1();
     },
     //明细请求
-    find1() {
-      this.$https({
+    async find1() {
+      await this.$https({
         method: "get",
         url: "/api/apiModel/find",
         params: {
@@ -1402,7 +1491,7 @@ export default {
         url: "/api/apiModel/getpage",
         params: {
           table: "salesOrder",
-          pageWhere: { Purpose: { $regex: "生产制造" } },
+          pageWhere: { Purpose: { $regex: "生产制造" }, state: "0" },
         },
       })
         .then((res) => {
@@ -1437,6 +1526,9 @@ export default {
     handleAdd() {
       this.operation = "add";
       this.form = {};
+      this.form.Purpose = "生产制造";
+      this.form.Approval = "未审批"; //审批状态
+      this.form.Approver = ""; //审批人
       this.dialogFormVisible = true;
     },
     //编辑事件
@@ -1536,14 +1628,16 @@ export default {
 
       this.form.enclosure = "";
       this.form.creater = sessionStorage.getItem("loginName");
-      this.form.Purpose = "生产制造";
       this.form.creatdate = getTime();
       this.form.status = "0";
+      this.form.state = "0";
+      this.form.allowHG = "true";
       if (this.operation === "add") {
         this.form.processCode = "1";
-        this.add();
+
+        await this.add();
       } else {
-        this.update();
+        await this.update();
       }
       this.newview();
     },
@@ -1556,16 +1650,19 @@ export default {
         !this.form1.PlannedDeliveryDate
       ) {
         alert("必填内容不能为空");
+        console.log(this.form1.PlannedDeliveryDate);
         return;
       }
       this.dialogFormVisible1 = false;
       this.form1.creater = sessionStorage.getItem("loginName");
       this.form1.creatdate = getTime();
-      // this.form1.PlannedDeliveryDate;//计划交期
+      if ((this.form1.PlannedDeliveryDate + "").includes("/")) {
+        alert("日期未填写！");
+        return;
+      }
       this.form1.PlannedDeliveryDate = getTime(
         this.form1.PlannedDeliveryDate
       ).split(" ")[0];
-
       this.form1.tjine = "";
       this.form1.jine = "";
       this.form1.PNum = this.form1.Number;
@@ -1577,13 +1674,12 @@ export default {
       } else {
         this.update1();
       }
-      this.newview1();
     },
     /////crud
     // 数据添加
-    add() {
+    async add() {
       //  if (this.auth()) return;
-      this.$https({
+      await this.$https({
         //这里是你自己的请求方式、url和data参数
         method: "post",
         url: "/api/apiModel/insert",
@@ -1599,6 +1695,7 @@ export default {
           console.log(err);
         });
     },
+
     add1() {
       //  if (this.auth()) return;
       this.$https({
@@ -1610,8 +1707,9 @@ export default {
           form: this.form1,
         },
       })
-        .then(function (res) {
+        .then((res) => {
           console.log(res);
+          this.newview1();
         })
         .catch(function (err) {
           console.log(err);
@@ -1642,7 +1740,7 @@ export default {
         url: "/api/apiModel/delete",
         data: {
           table: "salesOrderDetail",
-          id: this.id1.id,
+          id: this.id1,
         },
       })
         .then(function (res) {
@@ -1671,9 +1769,9 @@ export default {
         });
     },
     //数据修改
-    update() {
+    async update() {
       // if (this.auth()) return;
-      this.$https({
+      await this.$https({
         method: "post",
         url: "/api/apiModel/update",
         data: {
@@ -1696,12 +1794,13 @@ export default {
         url: "/api/apiModel/update",
         data: {
           table: "salesOrderDetail",
-          id: this.id1.id,
+          id: this.id1,
           form: this.form1,
         },
       })
-        .then(function (res) {
+        .then((res) => {
           console.log(res);
+          this.newview1();
         })
         .catch(function (err) {
           console.log(err);
@@ -1732,7 +1831,7 @@ export default {
           table: "salesOrder",
           PageNum: this.pagenums,
           sortJson: { OrderNumber: -1 },
-          pageWhere: { Purpose: { $regex: "生产制造" } },
+          pageWhere: { Purpose: { $regex: "生产制造" }, state: "0" },
         },
       })
         .then((res) => {
@@ -1767,6 +1866,7 @@ export default {
     this.newview();
     this.getMaterialList(); //级联
     this.findByPageNums();
+    this.uploadURLs = uploadURL;
   },
 };
 </script>
@@ -1947,5 +2047,17 @@ p {
 }
 .te {
   margin-top: -10px;
+}
+.bigImg {
+  height: 20px;
+  width: 20px;
+}
+.bigImg:hover {
+  height: 280px;
+  width: 280px;
+  background-color: teal;
+  position: absolute;
+  z-index: 9999;
+  border: 3px solid rgb(45, 228, 8);
 }
 </style>

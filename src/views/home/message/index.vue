@@ -6,42 +6,70 @@
     </div>
     <div class="nav">
       <el-badge :value="index1" class="item">
-        <el-button class="btns" size="small" @click="findOrderByProcess('1')"
+        <el-button
+          class="btns"
+          size="small"
+          v-preventReClick
+          @click="findOrderByProcess('1')"
           >销售订单明细</el-button
         >
       </el-badge>
 
       <el-badge :value="index2" class="item">
-        <el-button class="btns" size="small" @click="findOrderByProcess('2')"
+        <el-button
+          class="btns"
+          size="small"
+          v-preventReClick
+          @click="findOrderByProcess('2')"
           >物料计划需求单</el-button
         >
       </el-badge>
 
       <el-badge :value="index3" class="item">
-        <el-button class="btns" size="small" @click="findOrderByProcess('3')"
+        <el-button
+          class="btns"
+          size="small"
+          v-preventReClick
+          @click="findOrderByProcess('3')"
           >物料需求单</el-button
         >
       </el-badge>
 
       <el-badge :value="index4" class="item">
-        <el-button class="btns" size="small" @click="findOrderByProcess('4')"
+        <el-button
+          class="btns"
+          size="small"
+          v-preventReClick
+          @click="findOrderByProcess('4')"
           >采购单</el-button
         >
       </el-badge>
       <el-badge :value="index5" class="item">
-        <el-button class="btns" size="small" @click="findOrderByProcess('5')"
+        <el-button
+          class="btns"
+          size="small"
+          v-preventReClick
+          @click="findOrderByProcess('5')"
           >材料到货单</el-button
         >
       </el-badge>
 
       <el-badge :value="index6" class="item">
-        <el-button class="btns" size="small" @click="findOrderByProcess('6')"
+        <el-button
+          class="btns"
+          size="small"
+          v-preventReClick
+          @click="findOrderByProcess('6')"
           >来料质检单</el-button
         >
       </el-badge>
 
       <el-badge :value="index7" class="item">
-        <el-button class="btns" size="small" @click="findOrderByProcess('7')"
+        <el-button
+          class="btns"
+          size="small"
+          v-preventReClick
+          @click="findOrderByProcess('7')"
           >材料入库单</el-button
         >
       </el-badge>
@@ -62,7 +90,7 @@
       </el-badge>
 
       <el-badge :value="index12" class="item">
-        <el-button class="btns" size="small">回复</el-button>
+        <el-button class="btns" size="small" v-preventReClick>回复</el-button>
       </el-badge>
     </div>
 

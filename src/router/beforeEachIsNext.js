@@ -11,6 +11,8 @@ const pathCode = {
 
     "内部需求单": "materialRequisition",
     "功能领料": "functionPicking",
+    "销售计划": "salesOrderPlan",
+
     "销售订单": "salesOrder",
     "销售发货单": "salesInvoice",
     "客户管理": "customerManager",

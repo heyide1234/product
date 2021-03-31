@@ -12,7 +12,7 @@
 
     <el-steps :active="0" finish-status="success" simple style="margin: 5px">
       <el-step title="销售订单"></el-step>
-      <a @click="reload">
+      <a v-preventReClick @click="reload">
         <i class="el-icon-refresh-right"></i>
       </a>
       <!--<el-step title="制程"></el-step>
@@ -159,8 +159,14 @@
         </table>
       </div>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible2 = false">取 消</el-button>
-        <el-button type="primary" v-print="printTable" @click="prints"
+        <el-button v-preventReClick @click="dialogFormVisible2 = false"
+          >取 消</el-button
+        >
+        <el-button
+          type="primary"
+          v-print="printTable"
+          v-preventReClick
+          @click="prints"
           >打 印</el-button
         >
       </div>
@@ -284,8 +290,12 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="onSubmit">确 定</el-button>
+        <el-button v-preventReClick @click="dialogFormVisible = false"
+          >取 消</el-button
+        >
+        <el-button type="primary" v-preventReClick @click="onSubmit"
+          >确 定</el-button
+        >
       </div>
     </el-dialog>
     <el-dialog title="表单" :visible.sync="dialogFormVisible1">
@@ -398,8 +408,12 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible1 = false">取 消</el-button>
-        <el-button type="primary" @click="onSubmit1">确 定</el-button>
+        <el-button v-preventReClick @click="dialogFormVisible1 = false"
+          >取 消</el-button
+        >
+        <el-button type="primary" v-preventReClick @click="onSubmit1"
+          >确 定</el-button
+        >
       </div>
     </el-dialog>
 
@@ -466,6 +480,29 @@
           property="ContactsRemarks"
           label="联系人备注"
         ></el-table-column>
+        <el-table-column label="发票状态">
+          <template slot-scope="scope">
+            <el-button
+              v-if="scope.row.fpenclosure == undefined"
+              type="info"
+              icon="el-icon-paperclip"
+              circle
+              size="mini"
+              plain
+              slot="reference"
+              v-preventReClick
+            ></el-button>
+            <el-button
+              v-if="scope.row.fpenclosure != undefined"
+              type="success"
+              icon="el-icon-paperclip"
+              circle
+              size="mini"
+              slot="reference"
+              v-preventReClick
+            ></el-button>
+          </template>
+        </el-table-column>
         <el-table-column property="Approval" label="审批状态"></el-table-column>
         <el-table-column property="Approver" label="审批人"></el-table-column>
         <el-table-column label="关于" min-width="80">
@@ -483,25 +520,26 @@
         </el-table-column>
         <el-table-column label="操作" min-width="130" fixed="right">
           <template slot="header">
-            <el-button
+            <!-- <el-button
               type="success"
               icon="el-icon-document-add"
               plain
               circle
               size="mini"
+              v-preventReClick
               @click="handleAdd"
-            ></el-button>
+            ></el-button> -->
             <!-- <el-button
               type="danger"
               icon="el-icon-delete-solid"
               plain
               circle
               size="mini"
-              @click="yc"
+              v-preventReClick  @click="yc"
             ></el-button> -->
           </template>
           <template slot-scope="scope">
-            <!-- <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">编辑</el-button> -->
+            <!-- <el-button size="mini" v-preventReClick  @click="handleEdit(scope.$index, scope.row)">编辑</el-button> -->
             <el-button
               title="展开明细"
               type="primary"
@@ -509,6 +547,7 @@
               circle
               size="mini"
               plain
+              v-preventReClick
               @click="findDetail(scope.row)"
             ></el-button>
             <el-popover
@@ -519,7 +558,7 @@
             >
               <el-upload
                 class="upload-demo"
-                :action="`http://172.16.1.10:3001/upload?name=salefj_${salesOrder}.pdf`"
+                :action="`${uploadURLs}/upload?name=salefj_${salesOrder}.pdf`"
                 :on-success="successHandlel"
                 :limit="1"
                 :file-list="fileList"
@@ -534,7 +573,7 @@
                 <div slot="tip" class="el-upload__tip">
                   <a
                     target="_blank"
-                    :href="`http://172.16.1.10:3001/download?name=salefj_${scope.row.enclosure}`"
+                    :href="`${uploadURLs}/download?name=salefj_${scope.row.enclosure}`"
                     >下载模板</a
                   >
                 </div>
@@ -546,6 +585,7 @@
                 size="mini"
                 plain
                 slot="reference"
+                v-preventReClick
                 @click="scfj(scope.row)"
               ></el-button>
             </el-popover>
@@ -557,6 +597,7 @@
               circle
               size="mini"
               plain
+              v-preventReClick
               @click="handleDelete(scope.row)"
             ></el-button>
           </template>
@@ -641,14 +682,15 @@
         </el-table-column>
         <el-table-column label="操作" min-width="120" fixed="right">
           <template slot="header">
-            <el-button
+            <!-- <el-button
               type="success"
               icon="el-icon-document-add"
               plain
               circle
               size="mini"
+              v-preventReClick
               @click="handleAdd1"
-            ></el-button>
+            ></el-button> -->
             <el-button
               title="流程开启"
               type="success"
@@ -656,6 +698,7 @@
               circle
               plain
               size="mini"
+              v-preventReClick
               @click="handleCirculationstate"
             ></el-button>
             <el-button
@@ -665,6 +708,7 @@
               circle
               size="mini"
               icon="el-icon-postcard"
+              v-preventReClick
               @click="jsNum"
             ></el-button>
             <el-button
@@ -674,17 +718,19 @@
               circle
               size="mini"
               plain
+              v-preventReClick
               @click="print"
             ></el-button>
           </template>
           <template slot-scope="scope">
-            <!-- <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">编辑</el-button> -->
+            <!-- <el-button size="mini" v-preventReClick  @click="handleEdit(scope.$index, scope.row)">编辑</el-button> -->
             <el-button
               :disabled="scope.row.status != '0' ? true : false"
               type="primary"
               icon="el-icon-edit"
               circle
               size="mini"
+              v-preventReClick
               @click="handleEdit1(scope.row)"
             ></el-button>
             <el-button
@@ -693,6 +739,7 @@
               icon="el-icon-delete"
               circle
               size="mini"
+              v-preventReClick
               @click="handleDelete1(scope.row)"
             ></el-button>
             <!-- <el-button
@@ -715,15 +762,18 @@
 import { getTime } from "common/utils/index";
 import { getJL } from "business/MeterialClass";
 import { DXZH } from "common/utils/content";
+import { uploadURL } from "../../../../network/urlConfig";
 
 export default {
   inject: ["reload"],
   data() {
     return {
+      uploadURLs: "",
       salesOrder: "",
       CustomerNumber: "",
       sx: "",
       fileList: [], //上传
+      fileList1: [], //上传
       ddbh: "", //客户订单编号
       xf: "", //需方
       xfdz: "", //需方地址
@@ -808,22 +858,6 @@ export default {
     };
   },
   methods: {
-    dl() {
-      this.$https({
-        method: "get",
-        url: "http://localhost:3001/test",
-        params: {
-          table: "",
-          where: {},
-        },
-      })
-        .then((res) => {
-          console.log(res);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    },
     successHandlel(response, file, fileList) {
       console.log(response, file, fileList);
       console.log("上传成功！", file.name);
@@ -844,6 +878,7 @@ export default {
           console.log(err);
         });
     },
+
     scfj(row) {
       this.salesOrder = row.OrderNumber;
       if (row.enclosure) {
@@ -853,6 +888,7 @@ export default {
         this.fileList = [];
       }
     },
+
     // 计算金额
     async jsNum() {
       let temp = 0;
@@ -1392,7 +1428,7 @@ export default {
         url: "/api/apiModel/getpage",
         params: {
           table: "salesOrder",
-          pageWhere: { Purpose: { $regex: "生产制造" } },
+          pageWhere: { Purpose: { $regex: "生产制造" }, state: "1" },
         },
       })
         .then((res) => {
@@ -1730,7 +1766,7 @@ export default {
           table: "salesOrder",
           PageNum: this.pagenums,
           sortJson: { OrderNumber: -1 },
-          pageWhere: { Purpose: { $regex: "生产制造" } },
+          pageWhere: { Purpose: { $regex: "生产制造" }, state: "1" },
         },
       })
         .then((res) => {
@@ -1765,6 +1801,7 @@ export default {
     this.newview();
     this.getMaterialList(); //级联
     this.findByPageNums();
+    this.uploadURLs = uploadURL;
   },
 };
 </script>

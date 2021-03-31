@@ -13,6 +13,9 @@
       :close-on-click-modal="false"
     >
       <el-form ref="form" :model="form">
+        <el-form-item label="供应商申请号">
+          <el-input v-model.trim="form.supplierSQNumber" disabled></el-input>
+        </el-form-item>
         <el-form-item label="供应商编号">
           <el-input v-model.trim="form.supplierNumber"></el-input>
         </el-form-item>
@@ -42,8 +45,12 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="onSubmit">确 定</el-button>
+        <el-button v-preventReClick @click="dialogFormVisible = false"
+          >取 消</el-button
+        >
+        <el-button type="primary" v-preventReClick @click="onSubmit"
+          >确 定</el-button
+        >
       </div>
     </el-dialog>
 
@@ -52,16 +59,11 @@
         ref="tableselectData"
         class="table"
         height="580"
-        :data="
-          tableData.filter(
-            (data) =>
-              !search ||
-              data.supplierName.toLowerCase().includes(search.toLowerCase())
-          )
-        "
+        :data="tableData"
       >
         <el-table-column type="selection" width="50"></el-table-column>
-
+        <el-table-column property="supplierSQNumber" label="供应商申请号">
+        </el-table-column>
         <el-table-column property="supplierNumber" label="供应商编号">
         </el-table-column>
         <el-table-column
@@ -72,6 +74,7 @@
             <el-input
               size="mini"
               v-model="search"
+              @change="searchs"
               prefix-icon="el-icon-search"
               placeholder="供应商名称"
             /> </template
@@ -110,6 +113,9 @@
           label="公司电话"
           min-width="150"
         ></el-table-column>
+        <el-table-column property="Approval" label="审批状态"></el-table-column>
+        <el-table-column property="Approver" label="审批人"></el-table-column>
+        <el-table-column property="prescription" label="时效"></el-table-column>
 
         <el-table-column label="关于" min-width="80">
           <template slot-scope="scope">
@@ -136,7 +142,7 @@
             >
               <el-upload
                 class="upload-demo"
-                :action="`http://172.16.1.10:3001/upload?name=${supplierNameT}`"
+                :action="`${uploadURLs}/upload?name=${supplierNameT}`"
                 :on-success="YYZZsuccessHandlel"
                 :before-upload="beforeUpload"
                 :limit="1"
@@ -152,10 +158,20 @@
                 <div slot="tip" class="el-upload__tip">
                   <a
                     target="_blank"
-                    :href="`http://172.16.1.10:3001/download?name=${scope.row.supplierYYZZ}`"
+                    :href="`${uploadURLs}/download?name=${scope.row.supplierYYZZ}`"
                     >下载模板</a
                   >
                 </div>
+                <a
+                  @click="
+                    deleteFile(
+                      'supplierYYZZ',
+                      scope.row.supplierYYZZ,
+                      scope.row._id
+                    )
+                  "
+                  >删除</a
+                >
               </el-upload>
               <el-button
                 v-if="scope.row.supplierYYZZ == undefined"
@@ -165,6 +181,7 @@
                 size="mini"
                 plain
                 slot="reference"
+                v-preventReClick
                 @click="scfjYYZZ(scope.row)"
               ></el-button>
               <el-button
@@ -174,6 +191,7 @@
                 circle
                 size="mini"
                 slot="reference"
+                v-preventReClick
                 @click="scfjYYZZ(scope.row)"
               ></el-button>
             </el-popover>
@@ -192,7 +210,7 @@
             >
               <el-upload
                 class="upload-demo"
-                :action="`http://172.16.1.10:3001/upload?name=${supplierNameT}`"
+                :action="`${uploadURLs}/upload?name=${supplierNameT}`"
                 :on-success="KHXKZsuccessHandlel"
                 :before-upload="beforeUpload"
                 :limit="1"
@@ -205,13 +223,24 @@
                   plain
                   >上传</el-button
                 >
+
                 <div slot="tip" class="el-upload__tip">
                   <a
                     target="_blank"
-                    :href="`http://172.16.1.10:3001/download?name=${scope.row.supplierKHXKZ}`"
+                    :href="`${uploadURLs}/download?name=${scope.row.supplierKHXKZ}`"
                     >下载模板</a
                   >
                 </div>
+                <a
+                  @click="
+                    deleteFile(
+                      'supplierKHXKZ',
+                      scope.row.supplierKHXKZ,
+                      scope.row._id
+                    )
+                  "
+                  >删除</a
+                >
               </el-upload>
               <el-button
                 v-if="scope.row.supplierKHXKZ == undefined"
@@ -221,6 +250,7 @@
                 size="mini"
                 plain
                 slot="reference"
+                v-preventReClick
                 @click="scfjKHXKZ(scope.row, 'supplierKHXKZ_')"
               ></el-button>
               <el-button
@@ -230,6 +260,7 @@
                 circle
                 size="mini"
                 slot="reference"
+                v-preventReClick
                 @click="scfjKHXKZ(scope.row, 'supplierKHXKZ_')"
               ></el-button>
             </el-popover>
@@ -245,7 +276,7 @@
             >
               <el-upload
                 class="upload-demo"
-                :action="`http://172.16.1.10:3001/upload?name=${supplierNameT}`"
+                :action="`${uploadURLs}/upload?name=${supplierNameT}`"
                 :on-success="ISOsuccessHandlel"
                 :before-upload="beforeUpload"
                 :limit="1"
@@ -261,10 +292,20 @@
                 <div slot="tip" class="el-upload__tip">
                   <a
                     target="_blank"
-                    :href="`http://172.16.1.10:3001/download?name=${scope.row.supplierISO}`"
+                    :href="`${uploadURLs}/download?name=${scope.row.supplierISO}`"
                     >下载模板</a
                   >
                 </div>
+                <a
+                  @click="
+                    deleteFile(
+                      'supplierISO',
+                      scope.row.supplierISO,
+                      scope.row._id
+                    )
+                  "
+                  >删除</a
+                >
               </el-upload>
               <el-button
                 v-if="scope.row.supplierISO == undefined"
@@ -274,6 +315,7 @@
                 size="mini"
                 plain
                 slot="reference"
+                v-preventReClick
                 @click="scfjISO(scope.row, 'supplierISO_')"
               ></el-button>
               <el-button
@@ -283,6 +325,7 @@
                 circle
                 size="mini"
                 slot="reference"
+                v-preventReClick
                 @click="scfjISO(scope.row, 'supplierISO_')"
               ></el-button>
             </el-popover>
@@ -298,7 +341,7 @@
             >
               <el-upload
                 class="upload-demo"
-                :action="`http://172.16.1.10:3001/upload?name=${supplierNameT}`"
+                :action="`${uploadURLs}/upload?name=${supplierNameT}`"
                 :on-success="HBsuccessHandlel"
                 :before-upload="beforeUpload"
                 :limit="1"
@@ -314,10 +357,20 @@
                 <div slot="tip" class="el-upload__tip">
                   <a
                     target="_blank"
-                    :href="`http://172.16.1.10:3001/download?name=${scope.row.supplierHB}`"
+                    :href="`${uploadURLs}/download?name=${scope.row.supplierHB}`"
                     >下载模板</a
                   >
                 </div>
+                <a
+                  @click="
+                    deleteFile(
+                      'supplierHB',
+                      scope.row.supplierHB,
+                      scope.row._id
+                    )
+                  "
+                  >删除</a
+                >
               </el-upload>
               <el-button
                 v-if="scope.row.supplierHB == undefined"
@@ -327,6 +380,7 @@
                 size="mini"
                 plain
                 slot="reference"
+                v-preventReClick
                 @click="scfjHB(scope.row, 'supplierHB_')"
               ></el-button>
               <el-button
@@ -336,6 +390,7 @@
                 circle
                 size="mini"
                 slot="reference"
+                v-preventReClick
                 @click="scfjHB(scope.row, 'supplierHB_')"
               ></el-button>
             </el-popover>
@@ -352,7 +407,7 @@
             >
               <el-upload
                 class="upload-demo"
-                :action="`http://172.16.1.10:3001/upload?name=${supplierNameT}`"
+                :action="`${uploadURLs}/upload?name=${supplierNameT}`"
                 :on-success="DLSQZSsuccessHandlel"
                 :before-upload="beforeUpload"
                 :limit="1"
@@ -368,10 +423,20 @@
                 <div slot="tip" class="el-upload__tip">
                   <a
                     target="_blank"
-                    :href="`http://172.16.1.10:3001/download?name=${scope.row.supplierDLSQZS}`"
+                    :href="`${uploadURLs}/download?name=${scope.row.supplierDLSQZS}`"
                     >下载模板</a
                   >
                 </div>
+                <a
+                  @click="
+                    deleteFile(
+                      'supplierDLSQZS',
+                      scope.row.supplierDLSQZS,
+                      scope.row._id
+                    )
+                  "
+                  >删除</a
+                >
               </el-upload>
               <el-button
                 v-if="scope.row.supplierDLSQZS == undefined"
@@ -381,6 +446,7 @@
                 size="mini"
                 plain
                 slot="reference"
+                v-preventReClick
                 @click="scfjDLSQZS(scope.row, 'supplierDLSQZS_')"
               ></el-button>
               <el-button
@@ -390,6 +456,7 @@
                 circle
                 size="mini"
                 slot="reference"
+                v-preventReClick
                 @click="scfjDLSQZS(scope.row, 'supplierDLSQZS_')"
               ></el-button>
             </el-popover>
@@ -406,7 +473,7 @@
             >
               <el-upload
                 class="upload-demo"
-                :action="`http://172.16.1.10:3001/upload?name=${supplierNameT}`"
+                :action="`${uploadURLs}/upload?name=${supplierNameT}`"
                 :on-success="QTZZsuccessHandlel"
                 :before-upload="beforeUpload"
                 :limit="1"
@@ -422,10 +489,20 @@
                 <div slot="tip" class="el-upload__tip">
                   <a
                     target="_blank"
-                    :href="`http://172.16.1.10:3001/download?name=${scope.row.supplierQTZZ}`"
+                    :href="`${uploadURLs}/download?name=${scope.row.supplierQTZZ}`"
                     >下载模板</a
                   >
                 </div>
+                <a
+                  @click="
+                    deleteFile(
+                      'supplierQTZZ',
+                      scope.row.supplierQTZZ,
+                      scope.row._id
+                    )
+                  "
+                  >删除</a
+                >
               </el-upload>
               <el-button
                 v-if="scope.row.supplierQTZZ == undefined"
@@ -435,6 +512,7 @@
                 size="mini"
                 plain
                 slot="reference"
+                v-preventReClick
                 @click="scfjQTZZ(scope.row, 'supplierQTZZ_')"
               ></el-button>
               <el-button
@@ -444,6 +522,7 @@
                 circle
                 size="mini"
                 slot="reference"
+                v-preventReClick
                 @click="scfjQTZZ(scope.row, 'supplierQTZZ_')"
               ></el-button>
             </el-popover>
@@ -457,24 +536,27 @@
               plain
               circle
               size="mini"
+              v-preventReClick
               @click="handleAdd"
             ></el-button>
-            <el-button
+            <!-- <el-button
               type="danger"
               icon="el-icon-delete-solid"
               plain
               circle
               size="mini"
+              v-preventReClick
               @click="yc"
-            ></el-button>
+            ></el-button> -->
           </template>
           <template slot-scope="scope">
-            <!-- <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">编辑</el-button> -->
+            <!-- <el-button size="mini" v-preventReClick  @click="handleEdit(scope.$index, scope.row)">编辑</el-button> -->
             <el-button
               type="primary"
               icon="el-icon-edit"
               circle
               size="mini"
+              v-preventReClick
               @click="handleEdit(scope.row)"
             ></el-button>
 
@@ -483,18 +565,19 @@
               icon="el-icon-delete"
               circle
               size="mini"
+              v-preventReClick
               @click="handleDelete(scope.row)"
             ></el-button>
           </template>
         </el-table-column>
       </el-table>
       <div class="df">
-        <!-- <el-pagination
+        <el-pagination
           @current-change="handleCurrentChange"
           :page-size="10"
           layout=" prev, pager, next"
           :total="total"
-        ></el-pagination> -->
+        ></el-pagination>
       </div>
     </div>
   </div>
@@ -502,9 +585,11 @@
 
 <script>
 import { getTime } from "common/time/getTime";
+import { uploadURL } from "../../../../network/urlConfig";
 export default {
   data() {
     return {
+      uploadURLs: "",
       supplierYYZZfileList: [],
       supplierKHXKZfileList: [],
       supplierISOfileList: [],
@@ -514,6 +599,7 @@ export default {
       operation: "", //当前操作切换
       pagenums: 0,
       form: {
+        supplierSQNumber: "", //供应商申请号
         supplierNumber: "", //供应商编号
         supplierName: "", //供应商名称
         Class: "", //行业类别
@@ -549,6 +635,61 @@ export default {
     };
   },
   methods: {
+    deleteFile(op, ds, id) {
+      console.log("文件名===", op, ds, id);
+
+      let forms = {};
+      if (op == "supplierYYZZ") forms = { supplierYYZZ: null };
+      else if (op == "supplierKHXKZ") forms = { supplierKHXKZ: null };
+      else if (op == "supplierISO") forms = { supplierISO: null };
+      else if (op == "supplierHB") forms = { supplierHB: null };
+      else if (op == "supplierDLSQZS") forms = { supplierDLSQZS: null };
+      else if (op == "supplierQTZZ") forms = { supplierQTZZ: null };
+      this.$https({
+        method: "post",
+        url: "/api/apiModel/update",
+        data: {
+          table: "__supplierManager",
+          dataBase: "base",
+          id: id,
+          form: forms,
+        },
+      })
+        .then((res) => {
+          console.log(res);
+          this.newview();
+        })
+        .catch(function (err) {
+          console.log(err);
+        });
+    },
+    searchs() {
+      console.log(this.search);
+      let ccs = {};
+
+      if (this.search == "" || this.search == null) {
+        this.findByPageNum(); //找寻对应页面的数据
+        return;
+      }
+      if (this.search != "" && this.search != null) {
+        ccs = { supplierName: { $regex: this.search + "" } };
+      }
+      this.$https({
+        method: "get",
+        url: "/api/apiModel/find",
+        params: {
+          table: "__supplierManager",
+          dataBase: "base",
+          where: ccs,
+        },
+      })
+        .then((res) => {
+          this.tableData = res;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
     //营业执照
     scfjYYZZ(row) {
       this.supplierName = row.supplierName;
@@ -795,6 +936,7 @@ export default {
     handleAdd() {
       this.operation = "add";
       this.form = {};
+      this.form.supplierSQNumber = "";
       this.dialogFormVisible = true;
     },
     //编辑事件
@@ -804,7 +946,7 @@ export default {
       this.id = row._id;
       this.name = row.creater;
       this.$delete(row, "_id");
-      this.form = row;
+      this.form = Object.assign({}, row);
     },
     //删除事件
     handleDelete(row) {
@@ -817,7 +959,7 @@ export default {
     handleCurrentChange(val) {
       console.log(`当前页: ${val}`);
       this.pagenums = (val - 1) * 10;
-      console.log("---====---", this, this.pagenums);
+      console.log("---====---", this.pagenums);
       this.findByPageNum();
     },
     //多选
@@ -833,9 +975,51 @@ export default {
     },
     //刷新界面
     newview() {
-      /// this.getpage(); //刷新分页
-      this.findByPageNums(); //找寻对应页面的数据
+      this.getpage(); //刷新分页
+      this.findByPageNum(); //找寻对应页面的数据
       //this.findB();
+    },
+    async getsupplierSQNumber() {
+      /////////////////
+      let dt = new Date();
+      let Y = dt.getFullYear() + "";
+      let M = dt.getMonth() + 1 + "";
+      let D = dt.getDate() + "";
+      M = M.padStart(2, "0");
+      D = D.padStart(2, "0");
+      let Onumber = Y + M + D + "000";
+      let ds = await this.findorders(Y + M + D);
+      if (ds.length == 1) {
+        Onumber = ds[0].supplierSQNumber;
+      }
+      if (ds.length > 1) {
+        for (let i = 0; i < ds.length; i++) {
+          if (parseInt(ds[i].supplierSQNumber) > parseInt(Onumber))
+            Onumber = ds[i].supplierSQNumber;
+        }
+      }
+      this.form.supplierSQNumber = parseInt(Onumber) + 1 + "";
+    },
+    async findorders(cos) {
+      let codesq = [];
+      await this.$https({
+        //这里是你自己的请求方式、url和data参数
+        method: "get",
+        url: "/api/apiModel/find",
+        params: {
+          table: "__supplierManager",
+          dataBase: "base",
+          where: { supplierSQNumber: { $regex: cos } },
+        },
+      })
+        .then((res) => {
+          console.log("当前数据11==>", res);
+          codesq = res;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+      return codesq;
     },
     //提交按钮
     async onSubmit() {
@@ -843,12 +1027,17 @@ export default {
       this.form.Approval = "未审批";
       this.form.Approver = "";
       this.form.prescription = "";
+      if (
+        this.form.supplierSQNumber == "" ||
+        this.form.supplierSQNumber == null
+      )
+        await this.getsupplierSQNumber();
       this.form.creater = sessionStorage.getItem("loginName");
       this.form.creatdate = getTime();
       if (this.operation === "add") {
         await this.add();
       } else {
-        this.update();
+        await this.update();
       }
       this.newview();
     },
@@ -860,7 +1049,7 @@ export default {
         alert("已存在！");
         return;
       }
-      this.$https({
+      await this.$https({
         //这里是你自己的请求方式、url和data参数
         method: "post",
         url: "/api/apiModel/insert",
@@ -897,9 +1086,8 @@ export default {
         });
     },
     //数据修改
-    update() {
-      if (this.auth()) return;
-      this.$https({
+    async update() {
+      await this.$https({
         method: "post",
         url: "/api/apiModel/update",
         data: {
@@ -926,7 +1114,7 @@ export default {
           table: "__supplierManager",
           dataBase: "base",
           PageNum: this.pagenums,
-          sortJson: { _id: 1 },
+          sortJson: { supplierSQNumber: -1 },
         },
       })
         .then((res) => {
@@ -999,6 +1187,7 @@ export default {
 
   created() {
     this.newview();
+    this.uploadURLs = uploadURL;
   },
 };
 </script>

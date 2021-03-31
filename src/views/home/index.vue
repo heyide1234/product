@@ -1,7 +1,11 @@
 <template>
   <el-container>
     <div class="messtz" v-show="isMessShow" ref="messtzs">
-      <span class="close" title="我已知晓！" @click="isMessShow = false"
+      <span
+        class="close"
+        title="我已知晓！"
+        v-preventReClick
+        @click="isMessShow = false"
         >X</span
       >
       <h2><font> 系统消息：</font></h2>
@@ -14,7 +18,7 @@
           <img src="~assets/logo.png" alt="" />
         </div>
 
-        <div class="navBtn" v-show="flag" @click="showNav">
+        <div class="navBtn" v-show="flag" v-preventReClick @click="showNav">
           <a>
             <img src="~assets/ifont/nav.png" alt="" srcset="" calss="nav-img" />
           </a>
@@ -58,6 +62,8 @@
 
               <el-submenu index="51">
                 <template slot="title">销 售</template>
+
+                <el-menu-item index="salesOrderPlan">销售计划</el-menu-item>
                 <el-menu-item index="salesOrder">销售订单</el-menu-item>
                 <!-- <el-menu-item index="salesOrders">成品备库订单</el-menu-item> -->
 
@@ -205,9 +211,15 @@
           <el-dropdown>
             <el-button circle class="exit">{{ loginNames }}</el-button>
             <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item @click.native="printing">查询</el-dropdown-item>
-              <el-dropdown-item @click.native="user">登陆</el-dropdown-item>
-              <el-dropdown-item @click.native="exit">退出</el-dropdown-item>
+              <el-dropdown-item v-preventReClick @click.native="printing"
+                >查询</el-dropdown-item
+              >
+              <el-dropdown-item v-preventReClick @click.native="user"
+                >登陆</el-dropdown-item
+              >
+              <el-dropdown-item v-preventReClick @click.native="exit"
+                >退出</el-dropdown-item
+              >
             </el-dropdown-menu>
           </el-dropdown>
         </div>
@@ -218,7 +230,11 @@
 
       <!-- <mavon-editor v-model="value" /> -->
 
-      <router-view></router-view>
+      <!-- <router-view></router-view> -->
+      <keep-alive>
+        <router-view v-if="$route.meta.keepAlive" />
+      </keep-alive>
+      <router-view v-if="!$route.meta.keepAlive" />
       <div class="cons" v-if="isMessShowBK"></div>
     </el-main>
   </el-container>
@@ -228,6 +244,7 @@
 export default {
   data() {
     return {
+      includeList: [],
       messContent: "系统维护中。。。",
       value: "1234",
       activeIndex: "status",

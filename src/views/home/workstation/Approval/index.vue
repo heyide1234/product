@@ -139,8 +139,14 @@
         </table>
       </div>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible2 = false">取 消</el-button>
-        <el-button type="primary" v-print="printTable" @click="prints"
+        <el-button v-preventReClick @click="dialogFormVisible2 = false"
+          >取 消</el-button
+        >
+        <el-button
+          type="primary"
+          v-print="printTable"
+          v-preventReClick
+          @click="prints"
           >打 印</el-button
         >
       </div>
@@ -173,8 +179,12 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="onSubmit">确 定</el-button>
+        <el-button v-preventReClick @click="dialogFormVisible = false"
+          >取 消</el-button
+        >
+        <el-button type="primary" v-preventReClick @click="onSubmit"
+          >确 定</el-button
+        >
       </div>
     </el-dialog>
     <el-dialog
@@ -270,8 +280,12 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible1 = false">取 消</el-button>
-        <el-button type="primary" @click="onSubmit1">确 定</el-button>
+        <el-button v-preventReClick @click="dialogFormVisible1 = false"
+          >取 消</el-button
+        >
+        <el-button type="primary" v-preventReClick @click="onSubmit1"
+          >确 定</el-button
+        >
       </div>
     </el-dialog>
     <el-select
@@ -319,7 +333,7 @@
               plain
               circle
               size="mini"
-              @click="handleAdd"
+              v-preventReClick  @click="handleAdd"
             ></el-button> -->
             <!-- <el-button
               type="danger"
@@ -327,18 +341,18 @@
               plain
               circle
               size="mini"
-              @click="yc"
+              v-preventReClick  @click="yc"
             ></el-button> -->
           </template>
           <template slot-scope="scope">
-            <!-- <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">编辑</el-button> -->
+            <!-- <el-button size="mini" v-preventReClick  @click="handleEdit(scope.$index, scope.row)">编辑</el-button> -->
             <!-- <el-button
               type="primary"
               icon="el-icon-unlock"
               circle
               size="mini"
               plain
-              @click="findDetail(scope.row)"
+              v-preventReClick  @click="findDetail(scope.row)"
             ></el-button> -->
             <el-button
               type="success"
@@ -347,6 +361,7 @@
               size="mini"
               plain
               title="点击审批通过"
+              v-preventReClick
               @click="handleunlock(scope.row)"
             ></el-button>
             <el-button
@@ -356,6 +371,7 @@
               size="mini"
               plain
               title="点击审批驳回"
+              v-preventReClick
               @click="handlelock(scope.row)"
             ></el-button>
           </template>

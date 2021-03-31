@@ -2,7 +2,7 @@
   <div class="container">
     <el-steps :active="0" finish-status="success" simple style="margin: 5px">
       <el-step title="用户管理"></el-step>
-      <a @click="reloads" class="reload">刷新</a>
+      <a v-preventReClick @click="reloads" class="reload">刷新</a>
       <!--<el-step title="制程"></el-step>
       <el-step title="配料"></el-step>
       <el-step title="领料"></el-step>
@@ -36,8 +36,12 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="onSubmit">确 定</el-button>
+        <el-button v-preventReClick @click="dialogFormVisible = false"
+          >取 消</el-button
+        >
+        <el-button type="primary" v-preventReClick @click="onSubmit"
+          >确 定</el-button
+        >
       </div>
     </el-dialog>
 
@@ -57,7 +61,7 @@
         <el-table-column property="Role" label="角色"> </el-table-column>
         <el-table-column property="status" label="状态">
           <template slot-scope="scope">
-            <!-- <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">编辑</el-button> -->
+            <!-- <el-button size="mini" v-preventReClick  @click="handleEdit(scope.$index, scope.row)">编辑</el-button> -->
             <el-button
               type="success"
               icon="el-icon-circle-check"
@@ -65,6 +69,7 @@
               plain
               circle
               size="mini"
+              v-preventReClick
               @click="handleEditstatus(scope.row)"
               style="font-size: 20px; padding: 2px"
             ></el-button>
@@ -75,6 +80,7 @@
               plain
               circle
               size="mini"
+              v-preventReClick
               @click="handleEditstatus(scope.row)"
               style="font-size: 20px; padding: 2px"
             ></el-button>
@@ -101,17 +107,19 @@
               plain
               circle
               size="mini"
+              v-preventReClick
               @click="handleAdd"
             ></el-button>
           </template>
           <template slot-scope="scope">
-            <!-- <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">编辑</el-button> -->
+            <!-- <el-button size="mini" v-preventReClick  @click="handleEdit(scope.$index, scope.row)">编辑</el-button> -->
             <el-button
               :disabled="scope.row.status === '1' ? true : false"
               type="primary"
               icon="el-icon-edit"
               circle
               size="mini"
+              v-preventReClick
               @click="handleEdit(scope.row)"
             ></el-button>
           </template>

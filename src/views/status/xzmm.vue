@@ -152,22 +152,46 @@ body {
   <div class="contaner">
     <div class="xzdiv">
       <div class="as" tabindex="1">
-        <img src="~assets/ifont/atm-away.png" @click="dohome($event)" />
+        <img
+          src="~assets/ifont/atm-away.png"
+          v-preventReClick
+          @click="dohome($event)"
+        />
       </div>
       <div class="as" tabindex="2">
-        <img src="~assets/ifont/calculator.png" @click="dohome($event)" />
+        <img
+          src="~assets/ifont/calculator.png"
+          v-preventReClick
+          @click="dohome($event)"
+        />
       </div>
       <div class="as" tabindex="3">
-        <img src="~assets/ifont/calendar-fill.png" @click="dohome($event)" />
+        <img
+          src="~assets/ifont/calendar-fill.png"
+          v-preventReClick
+          @click="dohome($event)"
+        />
       </div>
       <div class="as" tabindex="4">
-        <img src="~assets/ifont/integral.png" @click="dohome($event)" />
+        <img
+          src="~assets/ifont/integral.png"
+          v-preventReClick
+          @click="dohome($event)"
+        />
       </div>
       <div class="as" tabindex="5">
-        <img src="~assets/ifont/product.png" @click="dohome($event)" />
+        <img
+          src="~assets/ifont/product.png"
+          v-preventReClick
+          @click="dohome($event)"
+        />
       </div>
       <div class="as" tabindex="6">
-        <img src="~assets/ifont/similar-product.png" @click="dohome($event)" />
+        <img
+          src="~assets/ifont/similar-product.png"
+          v-preventReClick
+          @click="dohome($event)"
+        />
       </div>
     </div>
     <div class="menuList"></div>

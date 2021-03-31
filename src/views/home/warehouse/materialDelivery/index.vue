@@ -51,9 +51,16 @@
         </table>
       </div>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">取 消</el-button>
-        <!-- <el-button type="primary" @click="printss">打 印</el-button> -->
-        <el-button type="primary" v-print="printTable" @click="prints">
+        <el-button v-preventReClick @click="dialogFormVisible = false"
+          >取 消</el-button
+        >
+        <!-- <el-button type="primary" v-preventReClick  @click="printss">打 印</el-button> -->
+        <el-button
+          type="primary"
+          v-print="printTable"
+          v-preventReClick
+          @click="prints"
+        >
           打 印</el-button
         >
       </div>
@@ -126,6 +133,7 @@
               circle
               size="mini"
               plain
+              v-preventReClick
               @click="zk()"
             ></el-button>
           </template>
@@ -197,7 +205,7 @@
               plain
               circle
               size="mini"
-              @click="hb"
+              v-preventReClick  @click="hb"
             ></el-button> -->
             <el-button
               type="success"
@@ -205,6 +213,7 @@
               circle
               plain
               size="mini"
+              v-preventReClick
               @click="ts"
             ></el-button>
           </template>
@@ -214,7 +223,7 @@
               icon="el-icon-delete"
               circle
               size="mini"
-              @click="handleDelete(scope.row,scope.$index)"
+              v-preventReClick  @click="handleDelete(scope.row,scope.$index)"
             ></el-button>
           </template> -->
         </el-table-column>

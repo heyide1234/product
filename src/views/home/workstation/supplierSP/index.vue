@@ -14,7 +14,7 @@
       size="small"
       v-model="search"
       prefix-icon="el-icon-search"
-      placeholder="输入供应商号"
+      placeholder="输入供应商申请号"
       @change="searchs"
     />
 
@@ -33,7 +33,7 @@
         <template slot-scope="scope">
           <el-upload
             class="upload-demo"
-            :action="`http://172.16.1.10:3001/upload?name=gyszrsh_${scope.row.supplierNumber}.png`"
+            :action="`${uploadURLs}/upload?name=gyszrsh_${scope.row.supplierNumber}.png`"
             :on-success="successHandlel"
             :limit="1"
             :file-list="fileList"
@@ -44,7 +44,7 @@
             <div slot="tip" class="el-upload__tip">
               <a
                 target="_blank"
-                :href="`http://172.16.1.10:3001/download?name=gyszrsh_${scope.row.supplierNumber}.png`"
+                :href="`${uploadURLs}/download?name=gyszrsh_${scope.row.supplierNumber}.png`"
                 >下载模板</a
               >
             </div>
@@ -62,6 +62,8 @@
       >
         <el-table-column type="selection" width="50"></el-table-column>
 
+        <el-table-column property="supplierSQNumber" label="供应商申请号">
+        </el-table-column>
         <el-table-column property="supplierNumber" label="供应商编号">
         </el-table-column>
         <el-table-column
@@ -103,6 +105,11 @@
           label="公司电话"
           min-width="150"
         ></el-table-column>
+        <el-table-column
+          property="Approval"
+          label="审批状态"
+          min-width="150"
+        ></el-table-column>
 
         <el-table-column label="关于" min-width="80">
           <template slot-scope="scope">
@@ -124,7 +131,7 @@
             <div slot="tip" class="el-upload__tip">
               <a
                 target="_blank"
-                :href="`http://172.16.1.10:3001/download?name=${scope.row.supplierYYZZ}`"
+                :href="`${uploadURLs}/download?name=${scope.row.supplierYYZZ}`"
                 >下载模板</a
               >
             </div>
@@ -138,7 +145,7 @@
             <div slot="tip" class="el-upload__tip">
               <a
                 target="_blank"
-                :href="`http://172.16.1.10:3001/download?name=${scope.row.supplierKHXKZ}`"
+                :href="`${uploadURLs}/download?name=${scope.row.supplierKHXKZ}`"
                 >下载模板</a
               >
             </div>
@@ -149,7 +156,7 @@
             <div slot="tip" class="el-upload__tip">
               <a
                 target="_blank"
-                :href="`http://172.16.1.10:3001/download?name=${scope.row.supplierISO}`"
+                :href="`${uploadURLs}/download?name=${scope.row.supplierISO}`"
                 >下载模板</a
               >
             </div>
@@ -160,7 +167,7 @@
             <div slot="tip" class="el-upload__tip">
               <a
                 target="_blank"
-                :href="`http://172.16.1.10:3001/download?name=${scope.row.supplierHB}`"
+                :href="`${uploadURLs}/download?name=${scope.row.supplierHB}`"
                 >下载模板</a
               >
             </div>
@@ -172,7 +179,7 @@
             <div slot="tip" class="el-upload__tip">
               <a
                 target="_blank"
-                :href="`http://172.16.1.10:3001/download?name=${scope.row.supplierDLSQZS}`"
+                :href="`${uploadURLs}/download?name=${scope.row.supplierDLSQZS}`"
                 >下载模板</a
               >
             </div>
@@ -184,7 +191,7 @@
             <div slot="tip" class="el-upload__tip">
               <a
                 target="_blank"
-                :href="`http://172.16.1.10:3001/download?name=${scope.row.supplierQTZZ}`"
+                :href="`${uploadURLs}/download?name=${scope.row.supplierQTZZ}`"
                 >下载模板</a
               >
             </div>
@@ -218,11 +225,13 @@
               <el-button
                 style="float: right"
                 type="primary"
+                v-preventReClick
                 @click="Edit(scope)"
                 >审批</el-button
               >
               <el-button
                 style="float: right; margin: 0 10px"
+                v-preventReClick
                 @click="scope._self.$refs[`popover-${scope.$index}`].doClose()"
                 >取消</el-button
               >
@@ -232,6 +241,7 @@
                 type="success"
                 icon="el-icon-unlock"
                 style="margin-left: 10px"
+                v-preventReClick
                 @click="findsupplierNumber(scope)"
                 circle
                 size="mini"
@@ -256,10 +266,12 @@
 import { getTime } from "common/time/getTime";
 import { getJL } from "business/MeterialClass";
 import { DXZH } from "common/utils/content";
+import { uploadURL } from "../../../../network/urlConfig";
 
 export default {
   data() {
     return {
+      uploadURLs: "",
       fileList: [],
       N: "",
       Y: "",
@@ -352,6 +364,27 @@ export default {
       //   });
     },
     async searchs() {
+      // this.$https({
+      //   method: "post",
+      //   url: "/api/apiModel/updateByWhere",
+      //   data: {
+      //     table: "__supplierManager",
+      //     dataBase: "base",
+      //     where: {},
+      //     form: {
+      //       Approval: "未审批", //审批状态
+      //       Approver: "", //"审批人
+      //       prescription: "", //时效
+      //     },
+      //   },
+      // })
+      //   .then((res) => {
+      //     console.log(res);
+      //   })
+      //   .catch((err) => {
+      //     console.log(err);
+      //   });
+
       this.dsSP = [];
       await this.$https({
         method: "get",
@@ -359,7 +392,7 @@ export default {
         params: {
           table: "__supplierManager",
           dataBase: "base",
-          where: { supplierNumber: this.search, Approval: "未审批" },
+          where: { supplierSQNumber: this.search, Approval: "未审批" },
         },
       })
         .then((res) => {
@@ -1181,6 +1214,7 @@ export default {
     //this.getMaterialList(); //级联
     // this.findByPageNums();
     // this.getorderPurpose();
+    this.uploadURLs = uploadURL;
   },
 };
 </script>

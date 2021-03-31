@@ -40,8 +40,12 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="onSubmit">确 定</el-button>
+        <el-button v-preventReClick @click="dialogFormVisible = false"
+          >取 消</el-button
+        >
+        <el-button type="primary" v-preventReClick @click="onSubmit"
+          >确 定</el-button
+        >
       </div>
     </el-dialog>
     <div class="tabels">
@@ -63,7 +67,11 @@
                 placeholder="输入物料编号"
                 @change="searchs"
               />
-              <el-button size="mini" @click="searchs" style="height: 28px"
+              <el-button
+                size="mini"
+                v-preventReClick
+                @click="searchs"
+                style="height: 28px"
                 >查询</el-button
               >
             </div>
@@ -81,6 +89,11 @@
         <el-table-column
           property="TotalAmount"
           label="总金额"
+        ></el-table-column>
+
+        <el-table-column
+          property="safetyStock"
+          label="安全库存数"
         ></el-table-column>
 
         <!-- <el-table-column label="关于" min-width="80">
@@ -103,7 +116,7 @@
               plain
               circle
               size="mini"
-              @click="handleAdd"
+              v-preventReClick  @click="handleAdd"
             ></el-button> -->
             <el-button
               type="danger"
@@ -112,6 +125,7 @@
               circle
               size="mini"
               title="同步数据库"
+              v-preventReClick
               @click="ressdd"
             ></el-button>
           </template>
@@ -122,6 +136,7 @@
               circle
               size="mini"
               p
+              v-preventReClick
               @click="handleEdit(scope.row)"
             ></el-button>
             <el-popover
@@ -132,6 +147,12 @@
             >
               <el-form ref="form" :model="form" label-width="90px">
                 <el-form-item
+                  label="安全库存"
+                  :rules="[{ required: true, message: '不能为空' }]"
+                >
+                  <el-input v-model="safetyStock"></el-input>
+                </el-form-item>
+                <el-form-item
                   label="盈余数量"
                   :rules="[{ required: true, message: '不能为空' }]"
                 >
@@ -141,11 +162,13 @@
               <el-button
                 style="float: right"
                 type="primary"
+                v-preventReClick
                 @click="Edityy(scope)"
                 >确定</el-button
               >
               <el-button
                 style="float: right; margin: 0 10px"
+                v-preventReClick
                 @click="scope._self.$refs[`popover-${scope.$index}`].doClose()"
                 >取消</el-button
               >
@@ -154,6 +177,7 @@
                 slot="reference"
                 type="primary"
                 icon="el-icon-edit"
+                @click="aqku(scope.row)"
                 circle
                 size="mini"
                 style="margin: 0 5px"
@@ -166,6 +190,7 @@
               plain
               circle
               size="mini"
+              v-preventReClick
               @click="finds(scope.row)"
             ></el-button>
           </template>
@@ -186,8 +211,10 @@
 <script>
 // import { getTime } from "common/time/getTime";
 export default {
+  name: "YYB",
   data() {
     return {
+      safetyStock: "",
       numsdd: "",
       operation: "", //当前操作切换
       pagenums: 0,
@@ -217,6 +244,10 @@ export default {
     };
   },
   methods: {
+    aqku(row) {
+      this.numsdd = row.Number;
+      this.safetyStock = row.safetyStock;
+    },
     finds(row) {
       this.$https({
         method: "get",
@@ -244,7 +275,7 @@ export default {
         data: {
           table: "YYB",
           id: scope.row._id,
-          form: { Number: this.numsdd },
+          form: { Number: this.numsdd, safetyStock: this.safetyStock },
         },
       })
         .then((res) => {

@@ -64,8 +64,10 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="gysDialog = false">取 消</el-button>
-        <el-button type="primary" @click="showGYSInfo">确 定</el-button>
+        <el-button v-preventReClick @click="gysDialog = false">取 消</el-button>
+        <el-button type="primary" v-preventReClick @click="showGYSInfo"
+          >确 定</el-button
+        >
       </div>
     </el-dialog>
     <div class="tabels">
@@ -145,7 +147,7 @@
         </el-table-column>
         <el-table-column label="操作" min-width="90" fixed="right">
           <template slot-scope="scope">
-            <!-- <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">编辑</el-button> -->
+            <!-- <el-button size="mini" v-preventReClick  @click="handleEdit(scope.$index, scope.row)">编辑</el-button> -->
 
             <el-button
               type="primary"
@@ -153,6 +155,7 @@
               circle
               size="mini"
               plain
+              v-preventReClick
               @click="zk(scope.row)"
             ></el-button>
           </template>
@@ -256,7 +259,12 @@
         </el-table-column>
         <el-table-column label="生成在采购单" min-width="90" fixed="right">
           <template slot="header">
-            <el-button type="warning" plain size="mini" @click="opengysDialog"
+            <el-button
+              type="warning"
+              plain
+              size="mini"
+              v-preventReClick
+              @click="opengysDialog"
               >供应商分配</el-button
             >
           </template>
@@ -333,11 +341,13 @@
               <el-button
                 style="float: right"
                 type="primary"
+                v-preventReClick
                 @click="Edit(scope)"
                 >确定</el-button
               >
               <el-button
                 style="float: right; margin: 0 10px"
+                v-preventReClick
                 @click="scope._self.$refs[`popover-${scope.$index}`].doClose()"
                 >取消</el-button
               >
@@ -347,6 +357,7 @@
                 slot="reference"
                 type="primary"
                 icon="el-icon-edit"
+                v-preventReClick
                 @click="findsupplierNumber(scope)"
                 circle
                 size="mini"

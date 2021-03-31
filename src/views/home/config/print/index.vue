@@ -49,7 +49,9 @@
         </table>
       </div>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">取 消</el-button>
+        <el-button v-preventReClick @click="dialogFormVisible = false"
+          >取 消</el-button
+        >
         <el-button type="primary" v-print="printTable">打 印</el-button>
       </div>
     </el-dialog>
@@ -154,10 +156,12 @@
             style="float: left"
             circle
             title="将系统订单从预采购回滚到销售订单"
-            @click="bdhg"
+            v-preventReClick  @click="bdhg"
           ></el-button> -->
           <el-button>取消</el-button>
-          <el-button type="primary" @click="onSubmit">查询</el-button>
+          <el-button type="primary" v-preventReClick @click="onSubmit"
+            >查询</el-button
+          >
         </el-form-item>
       </el-form>
     </div>

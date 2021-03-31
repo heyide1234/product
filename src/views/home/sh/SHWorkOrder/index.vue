@@ -79,8 +79,12 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="onSubmit">确 定</el-button>
+        <el-button v-preventReClick @click="dialogFormVisible = false"
+          >取 消</el-button
+        >
+        <el-button type="primary" v-preventReClick @click="onSubmit"
+          >确 定</el-button
+        >
       </div>
     </el-dialog>
     <el-dialog
@@ -201,8 +205,12 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible1 = false">取 消</el-button>
-        <el-button type="primary" @click="onSubmit1">确 定</el-button>
+        <el-button v-preventReClick @click="dialogFormVisible1 = false"
+          >取 消</el-button
+        >
+        <el-button type="primary" v-preventReClick @click="onSubmit1"
+          >确 定</el-button
+        >
       </div>
     </el-dialog>
     <div class="tabels">
@@ -257,6 +265,7 @@
               plain
               circle
               size="mini"
+              v-preventReClick
               @click="handleAdd"
             ></el-button>
           </template>
@@ -267,6 +276,7 @@
               circle
               size="mini"
               plain
+              v-preventReClick
               @click="findDetail(scope.row)"
             ></el-button>
             <el-button
@@ -275,6 +285,7 @@
               circle
               size="mini"
               :disabled="scope.row.status != '0'"
+              v-preventReClick
               @click="handleEdit(scope.row)"
             ></el-button>
             <el-button
@@ -284,6 +295,7 @@
               circle
               size="mini"
               :disabled="scope.row.status != '0'"
+              v-preventReClick
               @click="handleDelete(scope.row)"
             ></el-button>
           </template>
@@ -406,6 +418,7 @@
               plain
               circle
               size="mini"
+              v-preventReClick
               @click="handleAdd1"
             ></el-button>
           </template>
@@ -416,6 +429,7 @@
               circle
               size="mini"
               :disabled="scope.row.status != '0'"
+              v-preventReClick
               @click="handleEdit1(scope.row)"
             ></el-button>
             <el-button
@@ -425,6 +439,7 @@
               circle
               size="mini"
               :disabled="scope.row.status != '0'"
+              v-preventReClick
               @click="handleDelete1(scope.row)"
             ></el-button>
           </template>

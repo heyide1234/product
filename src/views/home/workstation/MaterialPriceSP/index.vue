@@ -33,7 +33,7 @@
         <template slot-scope="scope">
           <el-upload
             class="upload-demo"
-            :action="`http://172.16.1.10:3001/upload?name=wljgspm_${scope.row.MaterialPriceSPNumber}.png`"
+            :action="`${uploadURLs}/upload?name=wljgspm_${scope.row.MaterialPriceSPNumber}.png`"
             :on-success="successHandlel"
             :limit="1"
             :file-list="fileList"
@@ -44,7 +44,7 @@
             <div slot="tip" class="el-upload__tip">
               <a
                 target="_blank"
-                :href="`http://172.16.1.10:3001/download?name=wljgspm_${scope.row.MaterialPriceSPNumber}.png`"
+                :href="`${uploadURLs}/download?name=wljgspm_${scope.row.MaterialPriceSPNumber}.png`"
                 >下载模板</a
               >
             </div>
@@ -120,11 +120,13 @@
               <el-button
                 style="float: right"
                 type="primary"
+                v-preventReClick
                 @click="Edit(scope)"
                 >审批</el-button
               >
               <el-button
                 style="float: right; margin: 0 10px"
+                v-preventReClick
                 @click="scope._self.$refs[`popover-${scope.$index}`].doClose()"
                 >取消</el-button
               >
@@ -134,6 +136,7 @@
                 type="success"
                 icon="el-icon-unlock"
                 style="margin-left: 10px"
+                v-preventReClick
                 @click="findsupplierNumber(scope)"
                 circle
                 size="mini"
@@ -158,10 +161,12 @@
 import { getTime } from "common/time/getTime";
 import { getJL } from "business/MeterialClass";
 import { DXZH } from "common/utils/content";
+import { uploadURL } from "../../../../network/urlConfig";
 
 export default {
   data() {
     return {
+      uploadURLs: "",
       fileList: [],
       N: "",
       Y: "",
@@ -1249,6 +1254,7 @@ export default {
     //this.getMaterialList(); //级联
     // this.findByPageNums();
     // this.getorderPurpose();
+    this.uploadURLs = uploadURL;
   },
 };
 </script>

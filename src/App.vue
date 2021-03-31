@@ -1,6 +1,10 @@
 <template>
   <div id="app">
     <router-view v-if="isRoterAlive" />
+    <!-- <keep-alive >
+      <router-view v-if="$route.meta.keepAlive" />
+    </keep-alive>
+    <router-view v-if="!$route.meta.keepAlive" /> -->
   </div>
 </template>
 
@@ -13,9 +17,28 @@ export default {
   },
   data() {
     return {
+      includeList: [],
       isRoterAlive: true,
     };
   },
+  // watch: {
+  //   $route(to, from) {
+  //     // 如果要to(进入)的页面是需要keepAlive缓存的，把name push进include数组中
+  //     console.log("this.includeList==", this.includeList);
+  //     console.log(
+  //       " !this.includeList.includes(to.name)==",
+  //       !this.includeList.includes(to.name)
+  //     );
+  //     if (to.meta.keepAlive) {
+  //       !this.includeList.includes(to.name) && this.includeList.push(to.name);
+  //     }
+  //     console.log("this.includeList==", this.includeList);
+  //     // if (from.meta.keepAlive) {
+  //     //   const index = this.includeList.indexOf(from.name);
+  //     //   index !== -1 && this.includeList.splice(index, 1);
+  //     // }
+  //   },
+  // },
   methods: {
     reload() {
       this.isRoterAlive = false;

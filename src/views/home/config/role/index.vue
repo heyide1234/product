@@ -59,17 +59,19 @@
             plain
             circle
             size="mini"
+            v-preventReClick
             @click="handleAdd"
           ></el-button>
         </template>
         <template slot-scope="scope">
-          <!-- <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">编辑</el-button> -->
+          <!-- <el-button size="mini" v-preventReClick  @click="handleEdit(scope.$index, scope.row)">编辑</el-button> -->
           <el-button
             :disabled="scope.row.status === '0' ? true : false"
             type="primary"
             icon="el-icon-edit"
             circle
             size="mini"
+            v-preventReClick
             @click="handleEdit(scope.row)"
           ></el-button>
         </template>

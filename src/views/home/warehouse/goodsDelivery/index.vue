@@ -67,9 +67,15 @@
         </div>
       </div>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible2 = false">取 消</el-button>
-        <!-- <el-button type="primary" @click="dys">打 印</el-button> -->
-        <el-button type="primary" v-print="printTable2" @click="dy"
+        <el-button v-preventReClick @click="dialogFormVisible2 = false"
+          >取 消</el-button
+        >
+        <!-- <el-button type="primary" v-preventReClick  @click="dys">打 印</el-button> -->
+        <el-button
+          type="primary"
+          v-print="printTable2"
+          v-preventReClick
+          @click="dy"
           >打 印</el-button
         >
       </div>
@@ -260,9 +266,15 @@
         </div>
       </div>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible1 = false">取 消</el-button>
-        <!-- <el-button type="primary" @click="dys">打 印</el-button> -->
-        <el-button type="primary" v-print="printTable1" @click="dy"
+        <el-button v-preventReClick @click="dialogFormVisible1 = false"
+          >取 消</el-button
+        >
+        <!-- <el-button type="primary" v-preventReClick  @click="dys">打 印</el-button> -->
+        <el-button
+          type="primary"
+          v-print="printTable1"
+          v-preventReClick
+          @click="dy"
           >打 印</el-button
         >
       </div>
@@ -312,9 +324,15 @@
         </table>
       </div>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">取 消</el-button>
-        <!-- <el-button type="primary" @click="dys">打 印</el-button> -->
-        <el-button type="primary" v-print="printTable" @click="dy"
+        <el-button v-preventReClick @click="dialogFormVisible = false"
+          >取 消</el-button
+        >
+        <!-- <el-button type="primary" v-preventReClick  @click="dys">打 印</el-button> -->
+        <el-button
+          type="primary"
+          v-print="printTable"
+          v-preventReClick
+          @click="dy"
           >打 印</el-button
         >
       </div>
@@ -407,11 +425,12 @@
               circle
               size="mini"
               plain
+              v-preventReClick
               @click="zk()"
             ></el-button>
           </template>
           <template slot-scope="scope">
-            <!-- <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">编辑</el-button> -->
+            <!-- <el-button size="mini" v-preventReClick  @click="handleEdit(scope.$index, scope.row)">编辑</el-button> -->
             <el-popover
               placement="left"
               width="300"
@@ -439,15 +458,18 @@
               <el-button
                 style="float: right"
                 type="primary"
+                v-preventReClick
                 @click="editSNlist(scope)"
                 >确定</el-button
               >
               <el-button
                 style="float: right; margin: 0 10px"
+                v-preventReClick
                 @click="scope._self.$refs[`popover-${scope.$index}`].doClose()"
                 >取消</el-button
               >
               <el-button
+                v-preventReClick
                 @click="findwlSN(scope)"
                 slot="reference"
                 type="primary"
@@ -525,6 +547,7 @@
               plain
               circle
               size="mini"
+              v-preventReClick
               @click="tsw"
             ></el-button>
           </template>
@@ -534,7 +557,7 @@
               icon="el-icon-delete"
               circle
               size="mini"
-              @click="handleDelete(scope.row,scope.$index)"
+              v-preventReClick  @click="handleDelete(scope.row,scope.$index)"
             ></el-button>
           </template> -->
         </el-table-column>
