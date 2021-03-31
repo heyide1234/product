@@ -586,6 +586,7 @@
 <script>
 import { getTime } from "common/time/getTime";
 import { uploadURL } from "../../../../network/urlConfig";
+import { testuploadURL } from "../../../../network/testurlConfig";
 export default {
   data() {
     return {
@@ -1187,7 +1188,11 @@ export default {
 
   created() {
     this.newview();
-    this.uploadURLs = uploadURL;
+    if (sessionStorage.getItem("model") == "test") {
+      this.uploadURLs = testuploadURL;
+    } else {
+      this.uploadURLs = uploadURL;
+    }
   },
 };
 </script>

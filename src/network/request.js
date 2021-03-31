@@ -72,20 +72,28 @@
 //          })
 //   })
 // }
-import { productURL, developURL } from "./urlConfig"
+import { productURL, developURL } from "./urlConfig";
+import { testproductURL, testdevelopURL } from "./testurlConfig";
+
 import axios from "axios";
 
 // let _baseURL = "http://172.16.1.10:3000";
 
 // let _baseURL = config.BASE_URL;
-let _baseURL = process.env.NODE_ENV === "production" ? productURL : developURL;
+let _baseURL = null;
 
 //let _baseURL = "http://172.16.1.52:3000";
 
 export function https(options) {
 
   return new Promise((resolve, reject) => {
-
+    if (sessionStorage.getItem("model") == "test") {
+      console.log(testproductURL, testdevelopURL)
+      _baseURL = process.env.NODE_ENV === "production" ? testproductURL : testdevelopURL
+    } else {
+      _baseURL = process.env.NODE_ENV === "production" ? productURL : developURL;
+    }
+    console.log("请求地址为===", sessionStorage.getItem("model"), _baseURL)
     const defaultOptions = {};
     const newOptions = {
       ...defaultOptions,

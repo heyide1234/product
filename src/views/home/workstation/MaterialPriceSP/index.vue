@@ -162,6 +162,7 @@ import { getTime } from "common/time/getTime";
 import { getJL } from "business/MeterialClass";
 import { DXZH } from "common/utils/content";
 import { uploadURL } from "../../../../network/urlConfig";
+import { testuploadURL } from "../../../../network/testurlConfig";
 
 export default {
   data() {
@@ -1254,7 +1255,11 @@ export default {
     //this.getMaterialList(); //级联
     // this.findByPageNums();
     // this.getorderPurpose();
-    this.uploadURLs = uploadURL;
+    if (sessionStorage.getItem("model") == "test") {
+      this.uploadURLs = testuploadURL;
+    } else {
+      this.uploadURLs = uploadURL;
+    }
   },
 };
 </script>

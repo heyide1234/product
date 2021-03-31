@@ -332,6 +332,9 @@ export default {
   },
   created() {
     this.loginNames = sessionStorage.getItem("loginNames") || "未登陆";
+    if (sessionStorage.getItem("model") == "test") {
+      this.loginNames = "【测试库】" + this.loginNames;
+    }
     //
     // this.$https({
     //   //这里是你自己的请求方式、url和data参数

@@ -352,6 +352,7 @@
 import { getTime } from "common/utils/index";
 import { DXZH } from "common/utils/content";
 import { uploadURL } from "../../../../network/urlConfig";
+import { testuploadURL } from "../../../../network/testurlConfig";
 
 export default {
   data() {
@@ -724,7 +725,11 @@ export default {
   },
   created() {
     this.newview();
-    this.uploadURLs = uploadURL;
+    if (sessionStorage.getItem("model") == "test") {
+      this.uploadURLs = testuploadURL;
+    } else {
+      this.uploadURLs = uploadURL;
+    }
   },
 };
 </script>

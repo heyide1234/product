@@ -14,7 +14,17 @@
         </div>
       </div>
       <div>
+        <el-switch
+          v-model="value"
+          active-color="#13ce66"
+          inactive-color="#444"
+          title="正式库"
+          @change="handlerChange"
+        >
+        </el-switch>
+
         <h2>用户登录</h2>
+
         <form>
           <div class="user-box">
             <input type="text" name required v-model="form.username" />
@@ -29,6 +39,7 @@
             />
             <label>密码</label>
           </div>
+
           <a href="javascript:void(0);" v-preventReClick @click.prevent="login">
             <span></span>
             <span></span>
@@ -47,6 +58,7 @@ export default {
   data() {
     return {
       modes: false,
+      value: true,
       form: {
         username: "",
         password: "",
@@ -54,6 +66,51 @@ export default {
     };
   },
   methods: {
+    async handlerChange() {
+      var kl = prompt("输入口令");
+      var temps = false;
+      await this.$https({
+        method: "get",
+        url: "/api/apiModel/find",
+        params: {
+          table: "__comm",
+          dataBase: "base",
+          where: {
+            KeyName: "changeStorck",
+            values: kl,
+          },
+        },
+      })
+        .then((res) => {
+          if (res.length > 0) {
+            temps = true;
+          } else {
+            temps = false;
+            alert("口令错误！");
+            this.value = !this.value;
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+      if (temps) {
+        if (this.value) {
+          sessionStorage.setItem("model", "online");
+          this.$message({
+            message: "正式库开启",
+            type: "success",
+          });
+        } else {
+          sessionStorage.setItem("model", "test");
+          this.$message({
+            message: "测试库开启",
+            type: "warning",
+          });
+        }
+      }
+
+      ////////////////
+    },
     enterListerner(e) {
       if (e.keyCode == 13) this.login();
     },
@@ -93,6 +150,20 @@ export default {
     },
   },
   mounted() {
+    if (
+      sessionStorage.getItem("model") == undefined ||
+      sessionStorage.getItem("model") == null
+    ) {
+      this.value = true;
+      sessionStorage.setItem("model", "online");
+    } else {
+      if (sessionStorage.getItem("model") == "test") {
+        this.value = false;
+      } else {
+        this.value = true;
+      }
+    }
+
     this.onsizeclientwidth();
     // 监听窗口大小
     window.onresize = () => {
@@ -310,4 +381,16 @@ export default {
     bottom: 100%;
   }
 } */
+>>> .el-switch__core {
+  width: 25px !important;
+  height: 15px;
+  position: absolute;
+  left: 220px;
+}
+>>> .el-switch__core::after {
+  width: 14px;
+  height: 14px;
+  margin-top: -1px;
+  margin-bottom: 2px;
+}
 </style>
