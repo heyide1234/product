@@ -163,7 +163,6 @@ export default {
         this.value = true;
       }
     }
-
     this.onsizeclientwidth();
     // 监听窗口大小
     window.onresize = () => {
@@ -381,13 +380,13 @@ export default {
     bottom: 100%;
   }
 } */
->>> .el-switch__core {
+.el-switch >>> .el-switch__core {
   width: 25px !important;
   height: 15px;
   position: absolute;
   left: 220px;
 }
->>> .el-switch__core::after {
+.el-switch >>> .el-switch__core::after {
   width: 14px;
   height: 14px;
   margin-top: -1px;

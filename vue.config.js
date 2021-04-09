@@ -16,6 +16,31 @@ module.exports = {
   //     .set("common", resolve("src/common"))
   //     .set("assets", resolve("src/assets"));
   // },
+  ////////////////////////////////
+  // devServer: {
+  //   host: "0.0.0.0",
+  //   disableHostCheck: true,
+  //   //  https: true,
+  //   proxy: {
+  //     "/api/": {
+  //       "target": "http://localhost:8090/",
+  //       changeOrigin: true,
+  //       ws: true,
+
+  //       pathRewrite: {
+  //         '^/api': '/'
+  //       }
+  //     }, "/rest/": {
+  //       "target": "http://localhost:8000/",
+  //       changeOrigin: true,
+  //       ws: true,
+  //       pathRewrite: {
+  //         '^/rest': '/'
+  //       }
+  //     }
+  //   }
+  // }
+  // ,
   configureWebpack: {
     resolve: {
       alias: {
@@ -29,7 +54,6 @@ module.exports = {
     },
 
     // devtool: "source-map"
-
 
     //打包进行压缩gz
 

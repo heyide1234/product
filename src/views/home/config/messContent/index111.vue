@@ -1,8 +1,17 @@
 
-
+<template>
+  <div>
+    <div class="ds">
+      <el-input type="text" v-model="counts" />
+      <el-button @click="addCount(11)">添加</el-button>
+      <el-button @click="asyncaddcount(100)">async添加</el-button>
+    </div>
+    {{ getstringCount("李四") }}
+  </div>
+</template>
 <script>
 import { getTime } from "common/time/getTime";
-
+import { mapState, mapMutations, mapGetters, mapActions } from "vuex";
 export default {
   name: "messContent",
   data() {
@@ -11,41 +20,16 @@ export default {
       isFirstEnter: true,
     };
   },
-  render(h) {
-    return h(
-      "div",
-      {
-        class: "ds",
-      },
-      [
-        h("textarea", {
-          // type: "textarea",
-          props: { value: this.mess },
-          on: {
-            input: (event) => {
-              this.mess = event.target.value;
-            },
-          },
-          style: {
-            width: "100%",
-            height: "40px",
-          },
-        }),
-        h(
-          "el-button",
-          {
-            on: {
-              click: this.FBmess,
-            },
-          },
-          "发布消息"
-        ),
-      ]
-    );
-
-    // return <ul></ul>;
+  computed: {
+    ...mapState({
+      counts: "count",
+    }),
+    ...mapGetters(["getstringCount"]),
   },
+
   methods: {
+    ...mapMutations(["addCount"]),
+    ...mapActions(["asyncaddcount"]),
     FBmess() {
       this.$https({
         //这里是你自己的请求方式、url和data参数

@@ -88,12 +88,12 @@ export function https(options) {
 
   return new Promise((resolve, reject) => {
     if (sessionStorage.getItem("model") == "test") {
-      console.log(testproductURL, testdevelopURL)
+
       _baseURL = process.env.NODE_ENV === "production" ? testproductURL : testdevelopURL
     } else {
       _baseURL = process.env.NODE_ENV === "production" ? productURL : developURL;
     }
-    console.log("请求地址为===", sessionStorage.getItem("model"), _baseURL)
+
     const defaultOptions = {};
     const newOptions = {
       ...defaultOptions,
@@ -106,12 +106,11 @@ export function https(options) {
     //       return;
 
 
-
-
     //headers默认传递json格式数据，这里也可以设置token，每次调用都会携带
     newOptions.headers = {
       //"Content-Type": "application/x-www-form-urlencoded;charset=UTF-8",
       "Content-Type": "application/json;charset=UTF-8",
+      "accessToken": sessionStorage.getItem("loginName"),
       ...newOptions.headers,
     };
 
@@ -137,8 +136,6 @@ export function https(options) {
             newOptions.method != null &&
             newOptions.method != "get"
           ) {
-
-
             this.$myalert({
               content: "OK",
               type: "success"

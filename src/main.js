@@ -1,17 +1,15 @@
 import Vue from "vue";
 import App from "./App.vue";
 import router from "./router";
-
+import store from "./store"
 import myalert from "components/common/alert/index.js";
 Vue.prototype.$myalert = myalert.install;
 
 import myloading from "components/common/loading/index.js";
 Vue.prototype.$myloading = myloading.install;
 
-
 import ElementUI from "element-ui";
 import "element-ui/lib/theme-chalk/index.css";
-
 // // import Resource from "vue-resource";
 // // Vue.use(Resource); //跨域
 // import mavonEditor from 'mavon-editor'
@@ -53,6 +51,7 @@ Vue.directive('preventReClick', {
 
 const _vue = new Vue({
   router,
+  store,
   render: (h) => h(App),
 }).$mount("#app");
 export default _vue;

@@ -68,6 +68,7 @@ body {
   color: #6c757d;
   text-align: left;
   background-color: #fafbfe;
+  -webkit-text-size-adjust: none;
 }
 a:hover {
   cursor: pointer;

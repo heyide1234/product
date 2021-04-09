@@ -90,10 +90,13 @@
           label="物料编号"
         ></el-table-column>
 
-        <el-table-column
-          property="MaterialName"
-          label="物料名称"
-        ></el-table-column>
+        <el-table-column property="MaterialName" label="物料名称">
+          <template slot-scope="scope">
+            <span :title="scope.row.MaterialName">{{
+              scope.row.MaterialName
+            }}</span>
+          </template>
+        </el-table-column>
 
         <el-table-column property="Thumbnail" label="缩略图">
           <template slot-scope="scope">
