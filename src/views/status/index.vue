@@ -25,7 +25,6 @@
     order: 2;
   }
 }
-
 .container {
   height: 100%;
   width: 100%;
@@ -39,7 +38,7 @@
     // background-image: linear-gradient(-180deg, #0e0c47, #030330);
     background-color: #0e0c47;
     text-align: center;
-    box-shadow: 0.153846rem 0.153846rem 0rem rgba(0, 0, 0, 0.3);
+    box-shadow: 2px 2px 1px rgba(10, 20, 30, 0.2);
     a {
       position: absolute;
       right: 0.769231rem;
@@ -70,7 +69,7 @@
     width: 100%;
     height: 32.5%;
     border-radius: 0.307692rem;
-    box-shadow: 2px 2px 8px rgba(253, 252, 252, 0.2);
+    box-shadow: 2px 2px 1px rgba(10, 20, 30, 0.2);
   }
 }
 //内容中间
@@ -83,14 +82,13 @@
   padding: 5px 0.384615rem;
   box-sizing: border-box;
   // flex: 1;
-
   & > div:nth-of-type(1) {
     width: 100%;
     height: 14%;
     box-sizing: border-box;
     padding: 0.461538rem;
     background-color: #02164c;
-    box-shadow: 2px 2px 8px rgba(253, 252, 252, 0.2);
+    box-shadow: 2px 2px 1px rgba(10, 20, 30, 0.2);
   }
   & > div:nth-of-type(2) {
     width: 100%;
@@ -103,7 +101,7 @@
     height: 32.5%;
     // background-color: #02164c;
     border-radius: 0.307692rem;
-    box-shadow: 2px 2px 8px rgba(253, 252, 252, 0.2);
+    box-shadow: 2px 2px 1px rgba(10, 20, 30, 0.2);
   }
 }
 //视图盒子
@@ -111,6 +109,7 @@
   position: relative;
   background-color: #02164c;
   box-sizing: border-box;
+  overflow: hidden;
 }
 .divBox::before,
 .divBox::after {
@@ -147,21 +146,20 @@
   height: 0.769231rem;
   width: 0.769231rem;
 }
-.divBox_border::before {
-  top: 0px;
-  left: 0px;
-  border-bottom-left-radius: 0.307692rem;
-  border-left: 0.230769rem solid #303e75;
-  border-bottom: 0.230769rem solid #303e75;
-}
-.divBox_border::after {
-  top: 0px;
-  right: 0px;
-  border-bottom-right-radius: 0.307692rem;
-  border-right: 0.230769rem solid #303e75;
-  border-bottom: 0.230769rem solid #303e75;
-}
-
+// .divBox_border::before {
+//   top: 0px;
+//   left: 0px;
+//   border-bottom-left-radius: 0.307692rem;
+//   border-left: 0.230769rem solid #303e75;
+//   border-bottom: 0.230769rem solid #303e75;
+// }
+// .divBox_border::after {
+//   top: 0px;
+//   right: 0px;
+//   border-bottom-right-radius: 0.307692rem;
+//   border-right: 0.230769rem solid #303e75;
+//   border-bottom: 0.230769rem solid #303e75;
+// }
 .content-center-top-top {
   border: 1px #24214b solid;
   border-radius: 0.307692rem;
@@ -177,7 +175,6 @@
   color: rgb(243, 243, 157);
   font-weight: 700;
 }
-
 .content-center-top-bottom {
   margin: 0.153846rem;
   display: flex;
@@ -224,7 +221,6 @@ h4 {
   left: 50%;
   transform: translate(-50%, 0);
   opacity: 1;
-
   animation: animaJE 10s infinite;
 }
 @keyframes animaJE {
@@ -402,14 +398,11 @@ export default {
         .catch((err) => {
           console.log(err);
         });
-
       for (let i = 0; i < ress.length; i++) {
         if (ress[i].TotalAmount == undefined) continue;
-
         let tempObje = {};
         tempObje.OddNumbers = ress[i].OrderNumber; //订单号
         tempObje.TotalAmount = ress[i].TotalAmount; //订单金额
-
         let completeNum = 0; //完成数
         await this.$https({
           method: "get",
@@ -436,7 +429,6 @@ export default {
           .catch((err) => {
             console.log(err);
           });
-
         tempObje.completeNum = completeNum + "";
         tempObje.completeLv = parseInt(
           (parseFloat(tempObje.completeNum) * 100) /
@@ -473,14 +465,11 @@ export default {
         .catch((err) => {
           console.log(err);
         });
-
       for (let i = 0; i < ress.length; i++) {
         if (!ress[i].TotalAmount) continue;
-
         let tempObje = {};
         tempObje.OddNumbers = ress[i].PurchaseNumber; //订单号
         tempObje.TotalAmount = ress[i].TotalAmount; //订单金额
-
         let completeNum = 0; //完成数
         await this.$https({
           method: "get",
@@ -507,7 +496,6 @@ export default {
           .catch((err) => {
             console.log(err);
           });
-
         tempObje.completeNum = completeNum + "";
         tempObje.completeLv = parseInt(
           (parseFloat(tempObje.completeNum) * 100) /
@@ -524,7 +512,6 @@ export default {
     myv: () => import("./1"),
     xzmm: () => import("./xzmm"), //旋转木马
     kcpy: () => import("./kcpy"), //库存盘盈
-
     nsfmx: () => import("./nsfmx"), //年收付明细率
   },
   async created() {
@@ -554,15 +541,12 @@ export default {
       "采购付款",
       parseInt((cgTs / cgT) * 100)
     );
-
     this.sssk = { value: parseInt(s * 100), lx: "销售收款" };
     this.cgfk = { value: parseInt(c * 100), lx: "采购付款" };
   },
-
   mounted() {
     document.documentElement.style.backgroundColor = "#15135c";
     //制造在制
-
     this.$https({
       //这里是你自己的请求方式、url和data参数
       method: "get",
@@ -596,7 +580,6 @@ export default {
       .catch((err) => {
         console.log(err);
       });
-
     // window.onresize = function () {
     //   document.documentElement.style.backgroundColor = "#15135c";
     // };
@@ -619,4 +602,3 @@ export default {
   },
 };
 </script>
-
