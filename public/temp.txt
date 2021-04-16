@@ -1,0 +1,13 @@
+Snipaste.exe
+Typora
+
+vscode
+Auto Rename Tag//标签名自动同步
+Chinese//中文语言包
+Live Server
+LiveReload//html or css自动刷新
+Material Icon Theme//文件图标
+cssrem//csspx转rem
+Vetur//模板高亮
+
+
